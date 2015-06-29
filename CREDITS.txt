@@ -1,0 +1,10 @@
+I would like to thank the following people for making this program possible:
+
+- The users of Super Monkey Ball Hacking Domain (http://smbhd.x10.mx/) for support and encouragement.
+- The authors of the MiscUtil and OpenTK libraries for assisting development of this program with free, open source code.
+- The creators of YAGCD (Yet Another GameCube Documentation) and Dolphin for providing information about the GameCube texture formats.
+- A public domain DXT encoder is included, created by fabian "ryg" giesen and stb.
+
+Additional credits for the old C++ version of the model viewer:
+- The creators of the Qt library, for making it easy to create cross-platform GUI applications.
+- The creators of libQGLViewer, for making possible to someone like me to create a model viewer.
