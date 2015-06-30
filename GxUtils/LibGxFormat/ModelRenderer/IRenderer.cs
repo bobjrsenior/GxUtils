@@ -42,6 +42,6 @@ namespace LibGxFormat.ModelRenderer
 
         /// <summary>Add a triangle strip to the current object geometry.</summary>
         /// <param name="vertexList">The list of vertices in the triangle strip.</param>
-        void WriteTriangleStrip(IList<IVertex> vertexList);
+        void WriteTriangleStrip(IList<ModelVertex> vertexList);
     }
 }

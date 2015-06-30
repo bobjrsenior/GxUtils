@@ -74,7 +74,7 @@
     <Compile Include="ModelRenderer\IModel.cs" />
     <Compile Include="ModelRenderer\IRenderer.cs" />
     <Compile Include="ModelRenderer\ITexture.cs" />
-    <Compile Include="ModelRenderer\IVertex.cs" />
+    <Compile Include="ModelRenderer\ModelVertex.cs" />
     <Compile Include="ModelRenderer\ObjMtlExporter.cs" />
     <Compile Include="ModelRenderer\ObjMtlRenderer.cs" />
     <Compile Include="ModelRenderer\OpenGlModelContext.cs" />

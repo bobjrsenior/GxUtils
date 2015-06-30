@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace LibGxFormat.Gma
 {
-    public class GcmfVertex : IVertex
+    public class GcmfVertex
     {
         /// <summary>
         /// Currently known vertex flags. Vertex fields are stored from the LSB to the MSB.

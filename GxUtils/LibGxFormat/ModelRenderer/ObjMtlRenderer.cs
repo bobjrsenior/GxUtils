@@ -168,11 +168,11 @@ namespace LibGxFormat.ModelRenderer
             public int TexCoordIdx;
         }
         
-        public void WriteTriangleStrip(IList<IVertex> triangleStrip)
+        public void WriteTriangleStrip(IList<ModelVertex> triangleStrip)
         {
             // Write vertex data to .OBJ file
             List<ObjVertexIdxs> vertexIdxs = new List<ObjVertexIdxs>();
-            foreach (IVertex vtx in triangleStrip)
+            foreach (ModelVertex vtx in triangleStrip)
             {
                 vertexIdxs.Add(new ObjVertexIdxs() {
                     CoordIdx = WriteVertexCoordinate(vtx),
@@ -205,13 +205,13 @@ namespace LibGxFormat.ModelRenderer
             }
         }
 
-        private int WriteVertexCoordinate(IVertex vertex)
+        private int WriteVertexCoordinate(ModelVertex vertex)
         {
             objStream.WriteLine("v {0} {1} {2}", vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
             return currentVertexCoordinateIdx++;
         }
 
-        private int WriteVertexNormal(IVertex vertex)
+        private int WriteVertexNormal(ModelVertex vertex)
         {
             if (!vertex.Normal.HasValue)
                 return 0;
@@ -220,7 +220,7 @@ namespace LibGxFormat.ModelRenderer
             return currentVertexNormalIdx++;
         }
 
-        private int WriteVertexTexCoord(IVertex vertex)
+        private int WriteVertexTexCoord(ModelVertex vertex)
         {
             if (!vertex.PrimaryTexCoord.HasValue)
                 return 0;

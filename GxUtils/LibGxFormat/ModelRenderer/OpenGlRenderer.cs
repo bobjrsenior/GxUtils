@@ -206,7 +206,7 @@ namespace LibGxFormat.ModelRenderer
             GL.LightModel(LightModelParameter.LightModelTwoSide, enable ? 1 : 0);
         }
 
-        public void WriteTriangleStrip(IList<IVertex> triangleStrip)
+        public void WriteTriangleStrip(IList<ModelVertex> triangleStrip)
         {
             if (currentObject == null)
                 throw new InvalidOperationException("Called WriteTriangleStrip while not inside an object.");
@@ -214,7 +214,7 @@ namespace LibGxFormat.ModelRenderer
 
             GL.Begin(PrimitiveType.TriangleStrip);
 
-            foreach (IVertex vtx in triangleStrip)
+            foreach (ModelVertex vtx in triangleStrip)
             {
                 if (vtx.Normal.HasValue)
                     GL.Normal3(vtx.Normal.Value.X, vtx.Normal.Value.Y, vtx.Normal.Value.Z);

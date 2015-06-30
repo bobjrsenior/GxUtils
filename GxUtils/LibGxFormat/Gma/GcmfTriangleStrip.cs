@@ -17,49 +17,39 @@ namespace LibGxFormat.Gma
         internal void Render(IRenderer renderer, GcmfRenderContext context)
         {
             // Convert GcmfVertex list to ModelVertex list
-            IList<IVertex> modelVertices;
-            if (!context.Gcmf.IsIndexed)
+            int numVertices = !context.Gcmf.IsIndexed ? vertices.Count : vertexIdxs.Count;
+            ModelVertex[] modelVertices = new ModelVertex[numVertices];
+            for (int i = 0; i < numVertices; i++)
             {
-                modelVertices = vertices.Cast<IVertex>().ToList();
-            }
-            else
-            {
-                modelVertices = new List<IVertex>();
-                foreach (int index in vertexIdxs)
-                    modelVertices.Add(context.Gcmf.VertexPool[index]);
-            }
+                GcmfVertex gcmfVtx = !context.Gcmf.IsIndexed ? vertices[i] : context.Gcmf.VertexPool[vertexIdxs[i]];
 
-            // Transform vertices (TODO: Make less hacky!!!)
-            for (int i = 0; i < modelVertices.Count; i++)
-            {
-                GcmfVertex vtxOld = (GcmfVertex)modelVertices[i];
-                GcmfVertex vtxNew = new GcmfVertex();
-                vtxNew.Position = vtxOld.Position;
-                vtxNew.Normal = vtxOld.Normal;
-                vtxNew.PrimaryTexCoord = vtxOld.PrimaryTexCoord;
-                vtxNew.VertexColor = vtxOld.VertexColor;
-                if (vtxOld.TransformMatrixRef.HasValue)
+                // Copy the data from the GCMF vertex to the ModelVertex
+                ModelVertex modelVtx = new ModelVertex()
                 {
-                    if (vtxOld.TransformMatrixRef.Value > 24 || (vtxOld.TransformMatrixRef % 3) != 0)
-                        throw new InvalidGmaFileException("Invalid TransformMatrixRef for the transform matrix hack.");
-                    int rIdx = (vtxOld.TransformMatrixRef.Value / 3) - 1;
+                    Position = gcmfVtx.Position,
+                    Normal = gcmfVtx.Normal,
+                    VertexColor = gcmfVtx.VertexColor,
+                    PrimaryTexCoord = gcmfVtx.PrimaryTexCoord
+                };
 
-                    if (rIdx != -1 && context.TransformMatrixIdxs[rIdx] != byte.MaxValue)
-                    {
-                        GcmfTransformMatrix tMtx = context.Gcmf.TransformMatrices[context.TransformMatrixIdxs[rIdx]];
-                        Matrix4 mtx = new Matrix4(tMtx.Matrix.Row0,
-                            tMtx.Matrix.Row1, tMtx.Matrix.Row2, new Vector4(0, 0, 0, 1));
-                        mtx.Transpose();
-                        Vector3 pos = vtxNew.Position;
-                        float newX = mtx[0,0] * pos.X + mtx[0,1] * pos.Y + mtx[0,2] * pos.Z + mtx[0,3];
-                        float newY = mtx[1,0] * pos.X + mtx[1,1] * pos.Y + mtx[1,2] * pos.Z + mtx[1,3];
-                        float newZ = mtx[2,0] * pos.X + mtx[2,1] * pos.Y + mtx[2,2] * pos.Z + mtx[2,3];
-                        vtxNew.Position = Vector3.TransformPosition(pos, mtx);
-                        if (vtxNew.Normal.HasValue)
-                            vtxNew.Normal = Vector3.TransformNormal(vtxNew.Normal.Value, mtx);
-                    }
+                // Apply transformation matrices to the vertex
+                if (gcmfVtx.TransformMatrixRef != null && gcmfVtx.TransformMatrixRef.Value != 0)
+                {
+                    if (gcmfVtx.TransformMatrixRef.Value > 24 || (gcmfVtx.TransformMatrixRef % 3) != 0)
+                        throw new InvalidGmaFileException("Invalid TransformMatrixRef for the transform matrix rendering.");
+                    int rIdx = (gcmfVtx.TransformMatrixRef.Value / 3) - 1;
+
+                    if (context.TransformMatrixIdxs[rIdx] == byte.MaxValue)
+                        throw new InvalidGmaFileException("The transform matrix associated to the matrix reference is not defined.");
+                    
+                    // Transform the position and normal vectors according to the transform matrix
+                    GcmfTransformMatrix tMtx = context.Gcmf.TransformMatrices[context.TransformMatrixIdxs[rIdx]];
+                    modelVtx.Position = tMtx.TransformPosition(modelVtx.Position);
+                    if (modelVtx.Normal != null)
+                        modelVtx.Normal = tMtx.TransformNormal(modelVtx.Normal.Value);
                 }
-                modelVertices[i] = vtxNew;
+
+                modelVertices[i] = modelVtx;
             }
 
             // Write triangle strip
