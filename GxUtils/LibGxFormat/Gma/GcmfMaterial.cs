@@ -1,11 +1,15 @@
-﻿using LibGxFormat.ModelRenderer;
+﻿using LibGxFormat.ModelLoader;
+using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace LibGxFormat.Gma
 {
     /// <summary>
-    /// A Gcmf material entry contains the definition of a single model material.
+    /// A Gcmf material entry contains the definition of a single object material.
     /// </summary>
     public class GcmfMaterial
     {
@@ -26,13 +30,34 @@ namespace LibGxFormat.Gma
         public byte Unk6 { get; private set; }
         public byte AnisotropyLevel { get; private set; } // ANISO level (0 = ANISO 1, 1 = ANISO 2, 2 = ANISO 4)
         public ushort UnkC { get; private set; }
-        public ushort Index { get; private set; }
         public uint Unk10 { get; private set; }
+
+        public GcmfMaterial()
+        {
+            Flags = 0;
+            TextureIdx = ushort.MaxValue;
+            Unk6 = 0;
+            AnisotropyLevel = 0;
+            UnkC = 0x2E00;
+            Unk10 = 0x00000030;
+        }
+
+        public GcmfMaterial(ObjMtlMaterial mtl, Dictionary<Bitmap, int> modelTextureMapping)
+            : this()
+        {
+            Flags = 0x7D4; // TODOXXX
+            if (mtl.DiffuseTextureMap != null)
+            {
+                if (!modelTextureMapping.ContainsKey(mtl.DiffuseTextureMap))
+                    throw new InvalidOperationException("Diffuse texture map not found in modelTextureMapping.");
+                TextureIdx = Convert.ToUInt16(modelTextureMapping[mtl.DiffuseTextureMap]);
+            }
+        }
 
         /// <summary>
         /// Set up this Gcmf material definition in the given material renderer.
         /// </summary>
-        internal void Render(IRenderer renderer)
+        internal void Render(IRenderer renderer, int materialIndex)
         {
             TextureWrapMode wrapS, wrapT;
 
@@ -52,13 +77,13 @@ namespace LibGxFormat.Gma
                 default: throw new InvalidGmaFileException("Invalid wrapT mode.");
             }
 
-            renderer.DefineMaterial(Index, TextureIdx, wrapS, wrapT);
+            renderer.DefineMaterial(materialIndex, TextureIdx, wrapS, wrapT);
         }
 
         /// <summary>
         /// Load a Gcmf material definition from the given .GMA stream.
         /// </summary>
-        internal void Load(EndianBinaryReader input)
+        internal void Load(EndianBinaryReader input, int materialIndex)
         {
             Flags = input.ReadUInt32();
             TextureIdx = input.ReadUInt16();
@@ -67,7 +92,9 @@ namespace LibGxFormat.Gma
             if (input.ReadUInt32() != 0)
                 throw new InvalidGmaFileException("Expected GcmfMaterial[0x08] == 0");
             UnkC = input.ReadUInt16();
-            Index = input.ReadUInt16();
+            ushort checkMaterialIndex = input.ReadUInt16();
+            if (checkMaterialIndex != materialIndex)
+                throw new InvalidGmaFileException("Expected GcmfMaterial[0x0E] to match the material index.");
             Unk10 = input.ReadUInt32();
             if (input.ReadUInt32() != 0)
                 throw new InvalidGmaFileException("Expected GcmfMaterial[0x14] == 0");
@@ -88,7 +115,7 @@ namespace LibGxFormat.Gma
         /// <summary>
         /// Write this Gcmf material definition to the given .GMA stream.
         /// </summary>
-        internal void Save(EndianBinaryWriter output)
+        internal void Save(EndianBinaryWriter output, int materialIndex)
         {
             output.Write(Flags);
             output.Write(TextureIdx);
@@ -96,7 +123,7 @@ namespace LibGxFormat.Gma
             output.Write(AnisotropyLevel);
             output.Write((uint)0);
             output.Write(UnkC);
-            output.Write(Index);
+            output.Write(Convert.ToUInt16(materialIndex));
             output.Write(Unk10);
             output.Write((uint)0);
             output.Write((uint)0);

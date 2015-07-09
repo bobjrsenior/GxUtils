@@ -88,8 +88,10 @@ namespace LibGxTexture
                 throw new ArgumentOutOfRangeException("width");
             if (height < 0)
                 throw new ArgumentOutOfRangeException("height");
-            if (stride < width * 4)
+            if (stride < 0)
                 throw new ArgumentOutOfRangeException("stride");
+            if (stride < width * 4)
+                throw new ArgumentOutOfRangeException("stride", "Stride is too small to contain a row of data.");
             if (src == null)
                 throw new ArgumentNullException("src");
             if (srcPos < 0)
@@ -249,14 +251,16 @@ namespace LibGxTexture
                 throw new ArgumentNullException("dst");
             if (srcPos < 0)
                 throw new ArgumentOutOfRangeException("dstPos");
-            if (srcPos + height * stride > src.Length) // Image doesn't fit in destination buffer
-                throw new ArgumentException("dst");
+            if (srcPos + height * stride > src.Length) // Image doesn't fit in source buffer
+                throw new ArgumentOutOfRangeException("src", "src is too small to contain an image with the given parameters.");
             if (width < 0)
                 throw new ArgumentOutOfRangeException("width");
             if (height < 0)
                 throw new ArgumentOutOfRangeException("height");
-            if (stride < width * 4)
+            if (stride < 0)
                 throw new ArgumentOutOfRangeException("stride");
+            if (stride < width * 4)
+                throw new ArgumentOutOfRangeException("stride", "Stride is too small to contain a row of input data.");
             if (dst == null)
                 throw new ArgumentNullException("dst");
             if (dstPos < 0)

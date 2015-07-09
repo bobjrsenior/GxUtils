@@ -326,7 +326,7 @@ namespace LibGxFormat.Lz
                 throw new ArgumentNullException("inputStream");
             if (outputStream == null)
                 throw new ArgumentNullException("outputStream");
-            if (game != GxGame.FZeroGX && game != GxGame.SuperMonkeyBall)
+            if (!Enum.IsDefined(typeof(GxGame), game))
                 throw new ArgumentOutOfRangeException("game");
 
             // Read the input data and compress with LZSS

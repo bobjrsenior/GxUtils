@@ -1,4 +1,5 @@
-﻿using LibGxFormat.ModelRenderer;
+﻿using LibGxFormat.ModelLoader;
+using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
 using System;
 using System.Collections.Generic;
@@ -6,25 +7,28 @@ using System.Linq;
 
 namespace LibGxFormat.Gma
 {
-    public class GcmfTriangleStripGroup
+    public class GcmfTriangleStripGroup : NonNullableCollection<GcmfTriangleStrip>
     {
-        List<GcmfTriangleStrip> strips = new List<GcmfTriangleStrip>();
-
-        internal void Render(IRenderer renderer, GcmfRenderContext context)
+        public GcmfTriangleStripGroup()
         {
-            foreach (GcmfTriangleStrip strip in strips)
-                strip.Render(renderer, context);
         }
 
-        internal bool IsEmpty
+        public GcmfTriangleStripGroup(ObjMtlMesh objMesh)
+            : this()
         {
-            get
+            foreach (ObjMtlFace face in objMesh.Faces)
             {
-                return strips.Count == 0;
+                Items.Add(new GcmfTriangleStrip(this, face));
             }
         }
 
-        internal void LoadNonIndexed(EndianBinaryReader input, int size, uint vertexFlags)
+        internal void Render(IRenderer renderer, GcmfRenderContext context)
+        {
+            foreach (GcmfTriangleStrip strip in Items)
+                strip.Render(renderer, context);
+        }
+        
+        internal void LoadNonIndexed(EndianBinaryReader input, int size, uint vertexFlags, bool is16Bit)
         {
             // AFAIK the number of strips isn't written anywhere, it should be found like below
             int endOffset = Convert.ToInt32(input.BaseStream.Position) + size;
@@ -35,9 +39,9 @@ namespace LibGxFormat.Gma
             while (Convert.ToInt32(input.BaseStream.Position) != endOffset)
             {
                 GcmfTriangleStrip strip = new GcmfTriangleStrip();
-                if (!strip.LoadNonIndexed(input, vertexFlags))
+                if (!strip.LoadNonIndexed(input, vertexFlags, is16Bit))
                     break;
-                strips.Add(strip);
+                Items.Add(strip);
             }
 
             if (Convert.ToInt32(input.BaseStream.Position) + 0x20 < endOffset)
@@ -46,16 +50,16 @@ namespace LibGxFormat.Gma
             input.BaseStream.Position = endOffset;
         }
 
-        internal int SizeOfNonIndexed()
+        internal int SizeOfNonIndexed(bool is16Bit)
         {
-            return PaddingUtils.Align(1 + strips.Sum(strip => strip.SizeOfNonIndexed()), 0x20);
+            return PaddingUtils.Align(1 + Items.Sum(strip => strip.SizeOfNonIndexed(is16Bit)), 0x20);
         }
 
-        internal void SaveNonIndexed(EndianBinaryWriter output)
+        internal void SaveNonIndexed(EndianBinaryWriter output, bool is16Bit)
         {
             output.Write((byte)0);
-            foreach (GcmfTriangleStrip strip in strips)
-                strip.SaveNonIndexed(output);
+            foreach (GcmfTriangleStrip strip in Items)
+                strip.SaveNonIndexed(output, is16Bit);
             // Here, it's NOT mandatory to write a 0x00 to end the triangle strip list
             // As can be seen in the read loop, the end condition is either find a 0x00
             // OR end of size. In the case where we are aligned at a 0x20 boundary,
@@ -63,25 +67,25 @@ namespace LibGxFormat.Gma
             output.Align(0x20);
         }
 
-        internal void LoadIndexed(EndianBinaryReader input, int size, IList<GcmfVertex> vertexPool, uint vertexFlags)
+        internal void LoadIndexed(EndianBinaryReader input, int size, OrderedSet<GcmfVertex> vertexPool, uint vertexFlags)
         {
             for (int nIntsRead = 0; nIntsRead < size; )
             {
                 GcmfTriangleStrip strip = new GcmfTriangleStrip();
                 nIntsRead += strip.LoadIndexed(input, vertexPool, vertexFlags);
-                strips.Add(strip);
+                Items.Add(strip);
             }
         }
 
         internal int SizeOfIndexed()
         {
-            return strips.Sum(strip => strip.SizeOfIndexed());
+            return Items.Sum(strip => strip.SizeOfIndexed());
         }
 
-        internal void SaveIndexed(EndianBinaryWriter output)
+        internal void SaveIndexed(EndianBinaryWriter output, Dictionary<GcmfVertex, int> vertexPool)
         {
-            foreach (GcmfTriangleStrip strip in strips)
-                strip.SaveIndexed(output);
+            foreach (GcmfTriangleStrip strip in Items)
+                strip.SaveIndexed(output, vertexPool);
         }
     }
 }

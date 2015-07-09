@@ -1,4 +1,5 @@
-﻿using LibGxFormat.ModelRenderer;
+﻿using LibGxFormat.ModelLoader;
+using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
 using OpenTK;
 using System;
@@ -9,10 +10,29 @@ namespace LibGxFormat.Gma
     public class GcmfVertex
     {
         /// <summary>
+        /// This value is used to initialize type 2 vertices, which are in a vertex pool.
+        /// For this kind of vertices, we don't know the vertex type until we read the mesh data.
+        /// So, when reading the vertex data, set this flag to true, and when we know the type, set it to false.
+        /// </summary>
+        bool indexedVertexPendingFlagsAssignment;
+
+        public byte? TransformMatrixRef { get; set; }
+        public Vector3 Position { get; set; }
+        public Vector3? Normal { get; set; }
+        public Color? VertexColor { get; set; }
+        public Vector2? PrimaryTexCoord { get; set; }
+        public Vector2? SecondaryTexCoord { get; set; }
+        public Vector2? TertiaryTexCoord { get; set; }
+        uint? unknown5_1, unknown5_2, unknown5_3, unknown5_4, unknown5_5, unknown5_6, unknown5_7, unknown5_8, unknown5_9;
+
+        Color colorIndexedRaw;
+        uint unknown7_1, unknown7_2, unknown7_3;
+
+        /// <summary>
         /// Currently known vertex flags. Vertex fields are stored from the LSB to the MSB.
         /// </summary>
         [Flags]
-        enum GcmfVertexFlags : uint
+        internal enum GcmfVertexFlags : uint
         {
             /// <summary>
             /// Reference to the transform matrix index table. uint8_t[1].
@@ -58,28 +78,9 @@ namespace LibGxFormat.Gma
         }
 
         /// <summary>
-        /// This value is used to initialize type 2 vertices, which are in a vertex pool.
-        /// For this kind of vertices, we don't know the vertex type until we read the mesh data.
-        /// So, when reading the vertex data, set this flag to true, and when we know the type, set it to false.
-        /// </summary>
-        bool indexedVertexPendingFlagsAssignment;
-
-        public byte? TransformMatrixRef { get; set; }
-        public Vector3 Position { get; set; }
-        public Vector3? Normal { get; set; }
-        public Color? VertexColor { get; set; }
-        public Vector2? PrimaryTexCoord { get; set; }
-        public Vector2? SecondaryTexCoord { get; set; }
-        public Vector2? TertiaryTexCoord { get; set; }
-        uint? unknown5_1, unknown5_2, unknown5_3, unknown5_4, unknown5_5, unknown5_6, unknown5_7, unknown5_8, unknown5_9;
-
-        Color colorIndexedRaw;
-        uint unknown7_1, unknown7_2, unknown7_3;
-
-        /// <summary>
         /// Calculate the vertex flags corresponding to this vertex.
         /// </summary>
-        private uint VertexFlags
+        internal uint VertexFlags
         {
             get
             {
@@ -123,25 +124,35 @@ namespace LibGxFormat.Gma
                     (color.B << 8));
         }
 
-        private static float ReadNumberOfType(EndianBinaryReader input, GcmfNonIndexedVertexDataType dataType)
+        public GcmfVertex()
         {
-            if (dataType == GcmfNonIndexedVertexDataType.Float)
+        }
+
+        public GcmfVertex(ObjMtlVertex vtx)
+        {
+            this.Position = vtx.Position;
+            this.Normal = vtx.Normal;
+            this.PrimaryTexCoord = vtx.TexCoord;
+
+            /* OBJ considers (0,0) to be the top left, GMA and OpenGL consider it to be the bottom left.
+             * See http://stackoverflow.com/a/5605027 (Thanks to Tommy @ StackOverflow). */
+            if (this.PrimaryTexCoord.HasValue)
+                this.PrimaryTexCoord = new Vector2(this.PrimaryTexCoord.Value.X, 1 - this.PrimaryTexCoord.Value.Y);
+        }
+
+        private static float ReadNumberOfType(EndianBinaryReader input, bool is16Bit)
+        {
+            if (is16Bit)
             {
-                return input.ReadSingle();
-            }
-            else if (dataType == GcmfNonIndexedVertexDataType.Uint16)
-            {
-                // Don't know if this is exactly the right factor, but it makes most of the models look right
-                // falcon_500 doesn't look perfectly, but I don't believe it's because of this
                 return (float)input.ReadInt16() / 8191.0f;
             }
             else
             {
-                throw new InvalidGmaFileException("Unknown GcmfVertex data type.");
+                return input.ReadSingle();
             }
         }
 
-        internal void LoadNonIndexed(EndianBinaryReader input, GcmfNonIndexedVertexDataType dataType, uint vertexFlags)
+        internal void LoadNonIndexed(EndianBinaryReader input, uint vertexFlags, bool is16Bit)
         {
             // Make sure that only known flags are set
             if ((vertexFlags & (uint)~(GcmfVertexFlags.TransformMatrixRef |
@@ -167,16 +178,16 @@ namespace LibGxFormat.Gma
             }
 
             Position = new Vector3(
-                ReadNumberOfType(input, dataType),
-                ReadNumberOfType(input, dataType),
-                ReadNumberOfType(input, dataType));
+                ReadNumberOfType(input, is16Bit),
+                ReadNumberOfType(input, is16Bit),
+                ReadNumberOfType(input, is16Bit));
 
             if ((vertexFlags & (uint)GcmfVertexFlags.Normals) != 0)
             {
                 Normal = new Vector3(
-                    ReadNumberOfType(input, dataType),
-                    ReadNumberOfType(input, dataType),
-                    ReadNumberOfType(input, dataType));
+                    ReadNumberOfType(input, is16Bit),
+                    ReadNumberOfType(input, is16Bit),
+                    ReadNumberOfType(input, is16Bit));
             }
 
             if ((vertexFlags & (uint)GcmfVertexFlags.Color) != 0)
@@ -187,22 +198,22 @@ namespace LibGxFormat.Gma
             if ((vertexFlags & (uint)GcmfVertexFlags.PrimaryTextureCoordinates) != 0)
             {
                 PrimaryTexCoord = new Vector2(
-                    ReadNumberOfType(input, dataType),
-                    ReadNumberOfType(input, dataType));
+                    ReadNumberOfType(input, is16Bit),
+                    ReadNumberOfType(input, is16Bit));
             }
 
             if ((vertexFlags & (uint)GcmfVertexFlags.SecondaryTextureCoordinates) != 0)
             {
                 SecondaryTexCoord = new Vector2(
-                    ReadNumberOfType(input, dataType),
-                    ReadNumberOfType(input, dataType));
+                    ReadNumberOfType(input, is16Bit),
+                    ReadNumberOfType(input, is16Bit));
             }
 
             if ((vertexFlags & (uint)GcmfVertexFlags.TertiaryTextureCoordinates) != 0)
             {
                 TertiaryTexCoord = new Vector2(
-                    ReadNumberOfType(input, dataType),
-                    ReadNumberOfType(input, dataType));
+                    ReadNumberOfType(input, is16Bit),
+                    ReadNumberOfType(input, is16Bit));
             }
 
             if ((vertexFlags & (uint)GcmfVertexFlags.Unknown5) != 0)
@@ -220,45 +231,41 @@ namespace LibGxFormat.Gma
             }
         }
 
-        private static int SizeOfNumberOfType(GcmfNonIndexedVertexDataType type)
+        private static int SizeOfNumberOfType(bool is16Bit)
         {
-            if (type == GcmfNonIndexedVertexDataType.Float)
+            if (is16Bit)
             {
-                return 4;
-            }
-            else if (type == GcmfNonIndexedVertexDataType.Uint16)
-            {
-                return 2;
+                return 2; // Save as uint16
             }
             else
             {
-                throw new InvalidGmaFileException("Unknown GcmfVertex data type.");
+                return 4; // Save as float
             }
         }
 
-        internal int SizeOfNonIndexed(GcmfNonIndexedVertexDataType dataType)
+        internal int SizeOfNonIndexed(bool is16Bit)
         {
             int size = 0;
 
             if (TransformMatrixRef != null)
                 size += 1;
 
-            size += SizeOfNumberOfType(dataType) * 3;
+            size += SizeOfNumberOfType(is16Bit) * 3;
 
             if (Normal != null)
-                size += SizeOfNumberOfType(dataType) * 3;
+                size += SizeOfNumberOfType(is16Bit) * 3;
 
             if (VertexColor != null)
                 size += 4;
 
             if (PrimaryTexCoord != null)
-                size += SizeOfNumberOfType(dataType) * 2;
+                size += SizeOfNumberOfType(is16Bit) * 2;
 
             if (SecondaryTexCoord != null)
-                size += SizeOfNumberOfType(dataType) * 2;
+                size += SizeOfNumberOfType(is16Bit) * 2;
 
             if (TertiaryTexCoord != null)
-                size += SizeOfNumberOfType(dataType) * 2;
+                size += SizeOfNumberOfType(is16Bit) * 2;
 
             if (unknown5_1 != null)
                 size += 4 * 9;
@@ -266,38 +273,34 @@ namespace LibGxFormat.Gma
             return size;
         }
 
-        static void WriteNumberOfType(EndianBinaryWriter output, GcmfNonIndexedVertexDataType dataType, float value)
+        static void WriteNumberOfType(EndianBinaryWriter output, bool is16Bit, float value)
         {
-            if (dataType == GcmfNonIndexedVertexDataType.Float)
-            {
-                output.Write(value);
-            }
-            else if (dataType == GcmfNonIndexedVertexDataType.Uint16)
+            if (is16Bit)
             {
                 output.Write((short)(Math.Round(value * 8191.0f)));
             }
             else
             {
-                throw new InvalidGmaFileException("Unknown GcmfVertex data type.");
+                output.Write(value);
             }
         }
 
-        internal void SaveNonIndexed(EndianBinaryWriter output, GcmfNonIndexedVertexDataType dataType)
+        internal void SaveNonIndexed(EndianBinaryWriter output, bool is16Bit)
         {
             if (TransformMatrixRef != null)
             {
                 output.Write(TransformMatrixRef.Value);
             }
 
-            WriteNumberOfType(output, dataType, Position.X);
-            WriteNumberOfType(output, dataType, Position.Y);
-            WriteNumberOfType(output, dataType, Position.Z);
+            WriteNumberOfType(output, is16Bit, Position.X);
+            WriteNumberOfType(output, is16Bit, Position.Y);
+            WriteNumberOfType(output, is16Bit, Position.Z);
 
             if (Normal != null)
             {
-                WriteNumberOfType(output, dataType, Normal.Value.X);
-                WriteNumberOfType(output, dataType, Normal.Value.Y);
-                WriteNumberOfType(output, dataType, Normal.Value.Z);
+                WriteNumberOfType(output, is16Bit, Normal.Value.X);
+                WriteNumberOfType(output, is16Bit, Normal.Value.Y);
+                WriteNumberOfType(output, is16Bit, Normal.Value.Z);
             }
 
             if (VertexColor != null)
@@ -307,20 +310,20 @@ namespace LibGxFormat.Gma
 
             if (PrimaryTexCoord != null)
             {
-                WriteNumberOfType(output, dataType, PrimaryTexCoord.Value.X);
-                WriteNumberOfType(output, dataType, PrimaryTexCoord.Value.Y);
+                WriteNumberOfType(output, is16Bit, PrimaryTexCoord.Value.X);
+                WriteNumberOfType(output, is16Bit, PrimaryTexCoord.Value.Y);
             }
 
             if (SecondaryTexCoord != null)
             {
-                WriteNumberOfType(output, dataType, SecondaryTexCoord.Value.X);
-                WriteNumberOfType(output, dataType, SecondaryTexCoord.Value.Y);
+                WriteNumberOfType(output, is16Bit, SecondaryTexCoord.Value.X);
+                WriteNumberOfType(output, is16Bit, SecondaryTexCoord.Value.Y);
             }
 
             if (TertiaryTexCoord != null)
             {
-                WriteNumberOfType(output, dataType, TertiaryTexCoord.Value.X);
-                WriteNumberOfType(output, dataType, TertiaryTexCoord.Value.Y);
+                WriteNumberOfType(output, is16Bit, TertiaryTexCoord.Value.X);
+                WriteNumberOfType(output, is16Bit, TertiaryTexCoord.Value.Y);
             }
 
             if (unknown5_1 != null)

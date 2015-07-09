@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using LibGxFormat.ModelLoader;
+using System.IO;
+using System.Collections.Generic;
 
 namespace GxModelViewer
 {

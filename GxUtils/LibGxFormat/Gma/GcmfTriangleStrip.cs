@@ -1,4 +1,5 @@
-﻿using LibGxFormat.ModelRenderer;
+﻿using LibGxFormat.ModelLoader;
+using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
 using OpenTK;
 using System;
@@ -7,21 +8,34 @@ using System.Linq;
 
 namespace LibGxFormat.Gma
 {
-    public class GcmfTriangleStrip
+    public class GcmfTriangleStrip : NonNullableCollection<GcmfVertex>
     {
-        GcmfNonIndexedVertexDataType nonIndexedType;
-        List<GcmfVertex> vertices = new List<GcmfVertex>();
+        enum GcmfNonIndexedVertexDataType : byte
+        {
+            Float = 0x98,
+            Uint16 = 0x99
+        }
 
-        List<int> vertexIdxs = new List<int>();
+        /// <summary>
+        /// Create a new empty Gcmf triangle strip.
+        /// </summary>
+        public GcmfTriangleStrip()
+        {
+        }
+
+        public GcmfTriangleStrip(GcmfTriangleStripGroup parentStripGroup, IEnumerable<ObjMtlVertex> vertexList)
+        {
+            foreach (ObjMtlVertex vtx in vertexList)
+                Add(new GcmfVertex(vtx));
+        }
         
         internal void Render(IRenderer renderer, GcmfRenderContext context)
         {
             // Convert GcmfVertex list to ModelVertex list
-            int numVertices = !context.Gcmf.IsIndexed ? vertices.Count : vertexIdxs.Count;
-            ModelVertex[] modelVertices = new ModelVertex[numVertices];
-            for (int i = 0; i < numVertices; i++)
+            ModelVertex[] modelVertices = new ModelVertex[Items.Count];
+            for (int i = 0; i < Items.Count; i++)
             {
-                GcmfVertex gcmfVtx = !context.Gcmf.IsIndexed ? vertices[i] : context.Gcmf.VertexPool[vertexIdxs[i]];
+                GcmfVertex gcmfVtx = Items[i];
 
                 // Copy the data from the GCMF vertex to the ModelVertex
                 ModelVertex modelVtx = new ModelVertex()
@@ -56,42 +70,48 @@ namespace LibGxFormat.Gma
             renderer.WriteTriangleStrip(modelVertices);
         }
 
-        internal bool LoadNonIndexed(EndianBinaryReader input, uint vertexFlags)
+        internal bool LoadNonIndexed(EndianBinaryReader input, uint vertexFlags, bool is16Bit)
         {
             byte nonIndexedTypeValue = input.ReadByte();
             if (nonIndexedTypeValue == 0)
                 return false;
+            if (nonIndexedTypeValue != (uint)GcmfNonIndexedVertexDataType.Uint16 &&
+                nonIndexedTypeValue != (uint)GcmfNonIndexedVertexDataType.Float)
+            {
+                throw new InvalidGmaFileException("Invalid non-indexed triangle strip vertex type.");
+            }
 
-            if (!Enum.IsDefined(typeof(GcmfNonIndexedVertexDataType), nonIndexedTypeValue))
-                throw new InvalidGmaFileException("GcmfObjectPart: Invalid triangle strip type.");
-            nonIndexedType = (GcmfNonIndexedVertexDataType)nonIndexedTypeValue;
+            if (is16Bit && nonIndexedTypeValue != (uint)GcmfNonIndexedVertexDataType.Uint16)
+                throw new InvalidGmaFileException("GCMF defined as 16bit but vertex doesn't have 16 bit format.");
+            else if (!is16Bit && nonIndexedTypeValue == (uint)GcmfNonIndexedVertexDataType.Uint16)
+                throw new InvalidGmaFileException("GCMF not defined as 16bit but vertex has 16 bit format.");
 
             int numVertices = input.ReadUInt16();
 
             for (int i = 0; i < numVertices; i++)
             {
                 GcmfVertex vtx = new GcmfVertex();
-                vtx.LoadNonIndexed(input, nonIndexedType, vertexFlags);
-                vertices.Add(vtx);
+                vtx.LoadNonIndexed(input, vertexFlags, is16Bit);
+                Items.Add(vtx);
             }
 
             return true;
         }
 
-        internal int SizeOfNonIndexed()
+        internal int SizeOfNonIndexed(bool is16Bit)
         {
-            return 3 + vertices.Sum(vtx => vtx.SizeOfNonIndexed(nonIndexedType));
+            return 3 + Items.Sum(vtx => vtx.SizeOfNonIndexed(is16Bit));
         }
 
-        internal void SaveNonIndexed(EndianBinaryWriter output)
+        internal void SaveNonIndexed(EndianBinaryWriter output, bool is16Bit)
         {
-            output.Write((byte)nonIndexedType);
-            output.Write(Convert.ToUInt16(vertices.Count));
-            foreach (GcmfVertex vtx in vertices)
-                vtx.SaveNonIndexed(output, nonIndexedType);
+            output.Write(is16Bit ? (byte)GcmfNonIndexedVertexDataType.Uint16 : (byte)GcmfNonIndexedVertexDataType.Float);
+            output.Write(Convert.ToUInt16(Items.Count));
+            foreach (GcmfVertex vtx in Items)
+                vtx.SaveNonIndexed(output, is16Bit);
         }
 
-        internal int LoadIndexed(EndianBinaryReader input, IList<GcmfVertex> vertexPool, uint vertexFlags)
+        internal int LoadIndexed(EndianBinaryReader input, OrderedSet<GcmfVertex> vertexPool, uint vertexFlags)
         {
             int nIntsRead = 0;
 
@@ -115,7 +135,7 @@ namespace LibGxFormat.Gma
                 }
 
                 vertexPool[vertexIdx].AssignVertexFlagsIndexed(vertexFlags);
-                vertexIdxs.Add(vertexIdx);
+                Items.Add(vertexPool[vertexIdx]);
             }
 
             return nIntsRead;
@@ -123,14 +143,20 @@ namespace LibGxFormat.Gma
 
         internal int SizeOfIndexed()
         {
-            return 4+4*vertexIdxs.Count;
+            return 4 + 4 * Items.Count;
         }
 
-        internal void SaveIndexed(EndianBinaryWriter output)
+        internal void SaveIndexed(EndianBinaryWriter output, Dictionary<GcmfVertex, int> vertexPoolIndexes)
         {
-            output.Write(vertexIdxs.Count);
-            foreach (int index in vertexIdxs)
+            output.Write(Items.Count);
+            foreach (GcmfVertex vtx in Items)
+            {
+                int index;
+                if (!vertexPoolIndexes.TryGetValue(vtx, out index))
+                    throw new InvalidGmaFileException("Indexed triangle strip has a vertex not in the vertex pool.");
+
                 output.Write(index * 0x40);
+            }
         }
     }
 }

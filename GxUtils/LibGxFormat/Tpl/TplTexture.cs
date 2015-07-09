@@ -63,7 +63,7 @@ namespace LibGxFormat.Tpl
 	/// <summary>A texture inside a TPL texture container.</summary>
 	public class TplTexture : ITexture
 	{
-        static readonly IReadOnlyCollection<GxTextureFormat> SupportedTextureFormatsBackingField = new List<GxTextureFormat> {
+        static readonly IReadOnlyCollection<GxTextureFormat> supportedTextureFormatsBackingField = new List<GxTextureFormat> {
 			GxTextureFormat.I4,
 			GxTextureFormat.I8,
 			GxTextureFormat.IA4,
@@ -78,7 +78,7 @@ namespace LibGxFormat.Tpl
 		{
 			get
 			{
-                return SupportedTextureFormatsBackingField;
+                return supportedTextureFormatsBackingField;
 			}
 		}
 
@@ -189,6 +189,15 @@ namespace LibGxFormat.Tpl
 			DefineEmptyTexture(0);
 		}
 
+        /// <summary>
+        /// Create a new texture from the given bitmap.
+        /// </summary>
+        /// <param name="bmp">The bitmap to build the texture from.</param>
+        public TplTexture(GxTextureFormat format, Bitmap bmp)
+        {
+            DefineTextureFromBitmap(format, bmp);
+        }
+
 		/// <summary>
 		/// Get the width of the specified texture level.
 		/// </summary>
@@ -230,21 +239,23 @@ namespace LibGxFormat.Tpl
 		public void DefineMainLevel(GxTextureFormat newFormat, int newWidth, int newHeight,
 			int newImageStride, byte[] newImageData)
 		{
-			if (!Enum.IsDefined(typeof(GxTextureFormat), newFormat))
-				throw new ArgumentOutOfRangeException("newFormat");
+            if (SupportedTextureFormats.Contains(newFormat))
+				throw new ArgumentOutOfRangeException("newFormat", "Unsupported format.");
 			if (newWidth <= 0)
 				throw new ArgumentOutOfRangeException("newWidth");
 			if (newHeight <= 0)
                 throw new ArgumentOutOfRangeException("newHeight");
-            if (newImageStride < newWidth * 4)
+            if (newImageStride < 0)
                 throw new ArgumentOutOfRangeException("newImageStride");
+            if (newImageStride < newWidth * 4)
+                throw new ArgumentOutOfRangeException("newImageStride", "Stride is too small to contain a row of data.");
 			if (newImageData == null)
 				throw new ArgumentNullException("newImageData");
 
 			format = newFormat;
 			width = newWidth;
 			height = newHeight;
-			encodedLevelData.Clear();
+            encodedLevelData = new List<byte[]>();
 
 			DefineLevelData(0, newImageStride, newImageData);
 		}
@@ -252,15 +263,15 @@ namespace LibGxFormat.Tpl
         /// <summary>Define the main level of the texture from the given bitmap.</summary>
         public void DefineMainLevelFromBitmap(GxTextureFormat newFormat, Bitmap bmp)
         {
-            if (!Enum.IsDefined(typeof(GxTextureFormat), newFormat))
-                throw new ArgumentOutOfRangeException("newFormat");
+            if (!SupportedTextureFormats.Contains(newFormat))
+                throw new ArgumentOutOfRangeException("newFormat", "Unsupported format.");
             if (bmp == null)
                 throw new ArgumentNullException("bmp");
 
             format = newFormat;
             width = bmp.Width;
             height = bmp.Height;
-            encodedLevelData.Clear();
+            encodedLevelData = new List<byte[]>();
 
             DefineLevelDataFromBitmap(0, bmp);
         }
@@ -276,21 +287,24 @@ namespace LibGxFormat.Tpl
 		{
 			if (level > LevelCount) // We allow to either replace an existing level or to generate the next level
 				throw new ArgumentOutOfRangeException("level");
+            if (newImageDataStride < 0)
+                throw new ArgumentOutOfRangeException("newImageDataStride");
 			if (newImageData == null)
 				throw new ArgumentNullException("newImageData");
 
 			// Check that this texture level can be defined (size is not too small)
+            // This checks that width and height can be divided evenly by 2^level
 			if ((width & ((1 << level) - 1)) != 0 ||
 				(height & ((1 << level) - 1)) != 0)
 			{
-				throw new ArgumentOutOfRangeException("newImageData");
+                throw new ArgumentOutOfRangeException("level", "Level is too low for the image dimensions.");
 			}
 
 			int levelWidth = width >> level;
 			int levelHeight = height >> level;
 
             if (newImageDataStride < levelWidth * 4)
-                throw new ArgumentOutOfRangeException("newImageDataStride");
+                throw new ArgumentOutOfRangeException("newImageDataStride", "Stride is too small to contain a row of data.");
 
 			// Adding a new mipmap?
 			if (level == LevelCount)
@@ -301,6 +315,134 @@ namespace LibGxFormat.Tpl
                 newImageData, 0, levelWidth, levelHeight, newImageDataStride,
                 encodedLevelData[level], 0, null, 0);
 		}
+
+        /// <summary>
+        /// Create or replace the specified texture level from the specified bitmap.
+        /// New texture levels must be created in order.
+        /// </summary>
+        public void DefineLevelDataFromBitmap(int level, Bitmap bmp)
+        {
+            if (level > LevelCount) // We allow to either replace an existing level or to generate the next level
+                throw new ArgumentOutOfRangeException("level");
+            if (bmp == null)
+                throw new ArgumentNullException("bmp");
+
+            // Check that the bitmap is of the appropiate size to replace this texture
+            int levelWidth = width >> level;
+            int levelHeight = height >> level;
+
+            if (bmp.Width != levelWidth ||
+                bmp.Height != levelHeight)
+            {
+                throw new ArgumentOutOfRangeException("bmp", "Bitmap doesn't have the correct dimensions to replace this level.");
+            }
+
+            // Extract the BMP data as an array of ARGB8 pixels
+            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
+                    ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            byte[] levelData = new byte[bmpData.Height * bmpData.Stride];
+            Marshal.Copy(bmpData.Scan0, levelData, 0, bmpData.Height * bmpData.Stride);
+            bmp.UnlockBits(bmpData);
+
+            // LockBits gives us the data as ARGB when seen as uint,
+            // so we need to shuffle the bitmap data accordingly to go to RGBA
+            SwapRgbaFromToArgbAsUint(levelData, bmpData.Width, bmpData.Height, bmpData.Stride);
+            
+            // Encode the data to the given format
+            DefineLevelData(level, bmpData.Stride, levelData);
+        }
+
+        /// <summary>
+        /// Defines the texture from a bitmap.
+        /// All texture levels will be generated until the texture size is no longer divisible by two.
+        /// </summary>
+        /// <param name="format">The format to encode the new texture as.</param>
+        /// <param name="bmp">The bitmap that will define the texture.</param>
+        public void DefineTextureFromBitmap(GxTextureFormat format, Bitmap bmp)
+        {
+            if (!SupportedTextureFormats.Contains(format))
+                throw new ArgumentOutOfRangeException("format", "Unsupported format.");
+            if (bmp == null)
+                throw new ArgumentNullException("bmp");
+
+            // Define all possible texture levels until the size
+            // of the texture can no longer be divided by two
+            int currentWidth = bmp.Width, currentHeight = bmp.Height;
+            for (int mipmapLevel = 0; true; mipmapLevel++)
+            {
+                if (mipmapLevel == 0)
+                {
+                    DefineMainLevelFromBitmap(format, bmp);
+                }
+                else
+                {
+                    DefineLevelDataFromBitmap(mipmapLevel, new Bitmap(bmp, currentWidth, currentHeight));
+                }
+
+                if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
+                    break;
+
+                currentWidth /= 2;
+                currentHeight /= 2;
+            }
+        }
+
+		/// <summary>
+		/// Decodes the specified level of the encoded texture to an array of RGBA8 pixels.
+		/// </summary>
+        /// <param name="level">The level of the texture to decode.</param>
+        /// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
+        /// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
+        public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
+		{
+            if (level < 0 || level >= LevelCount)
+				throw new ArgumentOutOfRangeException("level");
+            if (desiredStride < 0)
+                throw new ArgumentOutOfRangeException("desiredStride");
+
+			int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
+
+            if (desiredStride < levelWidth * 4)
+                throw new ArgumentOutOfRangeException("desiredStride", "Stride is too small to contain a row of data.");
+
+			// Decode texture as RGBA8 (GxTextureDecode format)
+            byte[] decodedData = new byte[levelHeight * desiredStride];
+            GxTextureFormatCodec.GetCodec(format).DecodeTexture(decodedData, 0,
+				levelWidth, levelHeight, desiredStride,
+                encodedLevelData[level], 0, null, 0);
+            return decodedData;
+		}
+
+        /// <summary>
+        /// Decodes the specified level of the encoded texture to a bitmap.
+        /// </summary>
+        /// <param name="level">The level of the texture to decode.</param>
+        /// <returns>A bitmap corresponding to the texture data of the level.</returns>
+        public Bitmap DecodeLevelToBitmap(int level)
+        {
+            if (level < 0 || level >= LevelCount)
+                throw new ArgumentOutOfRangeException("level");
+
+            int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
+
+            // Create the new bitmap where the texture will be decoded
+            Bitmap bmp = new Bitmap(levelWidth, levelHeight);
+            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, levelWidth, levelHeight),
+                    ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            // Decode the data of the texture level
+            byte[] levelData = DecodeLevelToRGBA8(level, bmpData.Stride);
+
+            // LockBits expects to see data as ARGB when seen as uint,
+            // so we need to shuffle the bitmap data accordingly since we have RGBA
+            SwapRgbaFromToArgbAsUint(levelData, bmpData.Width, bmpData.Height, bmpData.Stride);
+
+            // Copy the decode data over the bitmap data
+            Marshal.Copy(levelData, 0, bmpData.Scan0, bmpData.Stride * levelHeight);
+            bmp.UnlockBits(bmpData);
+
+            return bmp;
+        }
 
         /// <summary>
         /// Swaps the given pixel array from/to RGBA pixels (when observed as a byte array)
@@ -350,87 +492,6 @@ namespace LibGxFormat.Tpl
             }
         }
 
-        /// <summary>
-        /// Create or replace the specified texture level from the specified bitmap.
-        /// New texture levels must be created in order.
-        /// </summary>
-        public void DefineLevelDataFromBitmap(int level, Bitmap bmp)
-        {
-            if (bmp == null)
-                throw new ArgumentNullException("bmp");
-
-            // Extract the BMP data as an array of ARGB8 pixels
-            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height),
-                    ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            byte[] levelData = new byte[bmpData.Height * bmpData.Stride];
-            Marshal.Copy(bmpData.Scan0, levelData, 0, bmpData.Height * bmpData.Stride);
-            bmp.UnlockBits(bmpData);
-
-            // LockBits gives us the data as ARGB when seen as uint,
-            // so we need to shuffle the bitmap data accordingly to go to RGBA
-            SwapRgbaFromToArgbAsUint(levelData, bmpData.Width, bmpData.Height, bmpData.Stride);
-            
-            // Encode the data to the given format
-            DefineLevelData(level, bmpData.Stride, levelData);
-        }
-
-		/// <summary>
-		/// Decodes the specified level of the encoded texture to an array of RGBA8 pixels.
-		/// </summary>
-        /// <param name="level">The level of the texture to decode.</param>
-        /// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
-        /// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
-        public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
-		{
-			if (level < 0 || level > LevelCount)
-				throw new ArgumentOutOfRangeException("level");
-
-			int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
-
-            if (desiredStride < levelWidth * 4)
-                throw new ArgumentOutOfRangeException("desiredStride");
-
-			// Decode texture as RGBA8 (GxTextureDecode format)
-            byte[] decodedData = new byte[levelHeight * desiredStride];
-            GxTextureFormatCodec.GetCodec(format).DecodeTexture(decodedData, 0,
-				levelWidth, levelHeight, desiredStride,
-                encodedLevelData[level], 0, null, 0);
-            return decodedData;
-		}
-
-        /// <summary>
-        /// Decodes the specified level of the encoded texture to a bitmap.
-        /// </summary>
-        /// <param name="level">The level of the texture to decode.</param>
-        /// <returns>A bitmap corresponding to the texture data of the level.</returns>
-        public Bitmap DecodeLevelToBitmap(int level)
-        {
-            if (level < 0 || level > LevelCount)
-                throw new ArgumentOutOfRangeException("level");
-
-            int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
-
-            // Create the new bitmap where the texture will be decoded
-            Bitmap bmp = new Bitmap(levelWidth, levelHeight);
-            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, levelWidth, levelHeight),
-                    ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-            // Decode the data of the texture level
-            byte[] levelData = DecodeLevelToRGBA8(level, bmpData.Stride);
-
-            // LockBits expects to see data as ARGB when seen as uint,
-            // so we need to shuffle the bitmap data accordingly since we have RGBA
-            SwapRgbaFromToArgbAsUint(levelData, bmpData.Width, bmpData.Height, bmpData.Stride);
-
-            // Copy the decode data over the bitmap data
-            Marshal.Copy(levelData, 0, bmpData.Scan0, bmpData.Stride * levelHeight);
-            bmp.UnlockBits(bmpData);
-
-            return bmp;
-        }
-
-
-
 		/// <summary>
 		/// Calculates the size of a level of the texture.
 		/// </summary>
@@ -439,6 +500,8 @@ namespace LibGxFormat.Tpl
 		/// <returns>The size of the encoded data in the specified level.</returns>
 		private int CalculateSizeOfLevel(int level, bool replicateCmprBug = false)
 		{
+            // Here we allow also to specify the "next" level for easier implementation
+            // of the methods that encode the new texture
 			if (level < 0 || level > LevelCount)
 				throw new ArgumentOutOfRangeException("level");
 

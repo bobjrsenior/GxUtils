@@ -79,7 +79,7 @@ namespace LibGxFormat
             if (item.Parent != null)
                 throw new ArgumentException("item must not be already associated with another tree.");
            
-            Tree<T> oldItem = (index < Count) ? this[index] : null; // Let base.SetItem handle bad indexes
+            Tree<T> oldItem = (index >= 0 && index < Count) ? this[index] : null; // Let base.SetItem handle bad indexes
 
             base.SetItem(index, item);
 

@@ -51,6 +51,7 @@
     <Compile Include="Arc\ArcFileSystemEntry.cs" />
     <Compile Include="Arc\ArcFileSystemFile.cs" />
     <Compile Include="Arc\InvalidArcFileException.cs" />
+    <Compile Include="Gma\BoundingSphere.cs" />
     <Compile Include="EndianBinaryReaderExtensions.cs" />
     <Compile Include="EndianBinaryWriterExtensions.cs" />
     <Compile Include="EnumUtils.cs" />
@@ -59,8 +60,7 @@
     <Compile Include="Gma\GcmfNonIndexedVertexDataType.cs" />
     <Compile Include="Gma\GcmfRenderContext.cs" />
     <Compile Include="Gma\GcmfTransformMatrix.cs" />
-    <Compile Include="Gma\GcmfTriangleMesh.cs" />
-    <Compile Include="Gma\GcmfTriangleMeshLayer.cs" />
+    <Compile Include="Gma\GcmfMesh.cs" />
     <Compile Include="Gma\GcmfTriangleStrip.cs" />
     <Compile Include="Gma\GcmfTriangleStripGroup.cs" />
     <Compile Include="Gma\GcmfType8Unknown1.cs" />
@@ -71,7 +71,16 @@
     <Compile Include="GxGame.cs" />
     <Compile Include="Lz\InvalidLzFileException.cs" />
     <Compile Include="Lz\Lz.cs" />
-    <Compile Include="ModelRenderer\IModel.cs" />
+    <Compile Include="ModelLoader\InvalidObjMtlFileException.cs" />
+    <Compile Include="ModelLoader\ObjMtlFace.cs" />
+    <Compile Include="ModelLoader\ObjMtlLoader.cs" />
+    <Compile Include="ModelLoader\ObjMtlMaterial.cs" />
+    <Compile Include="ModelLoader\ObjMtlMesh.cs" />
+    <Compile Include="ModelLoader\ObjMtlParser.cs" />
+    <Compile Include="ModelLoader\ObjMtlVertex.cs" />
+    <Compile Include="ModelLoader\ObjMtlModel.cs" />
+    <Compile Include="ModelLoader\ObjMtlObject.cs" />
+    <Compile Include="ModelRenderer\IRenderable.cs" />
     <Compile Include="ModelRenderer\IRenderer.cs" />
     <Compile Include="ModelRenderer\ITexture.cs" />
     <Compile Include="ModelRenderer\ModelVertex.cs" />
@@ -81,6 +90,7 @@
     <Compile Include="ModelRenderer\OpenGlModelObjectInformation.cs" />
     <Compile Include="ModelRenderer\OpenGlRenderer.cs" />
     <Compile Include="NonNullableCollection.cs" />
+    <Compile Include="OrderedSet.cs" />
     <Compile Include="PaddingUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tpl\InvalidTplFileException.cs" />

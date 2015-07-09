@@ -25,7 +25,7 @@ namespace LibGxFormat
         public static int Align(int number, int padding)
         {
             if (!IsPowerOfTwo(padding))
-                throw new ArgumentOutOfRangeException("padding must be a power of two.");
+                throw new ArgumentOutOfRangeException("padding", "padding must be a power of two.");
 
             return (number + padding - 1) & ~(padding - 1);
         }
@@ -40,7 +40,7 @@ namespace LibGxFormat
         public static long Align(long number, int padding)
         {
             if (!IsPowerOfTwo(padding))
-                throw new ArgumentOutOfRangeException("padding must be a power of two.");
+                throw new ArgumentOutOfRangeException("padding", "padding must be a power of two.");
 
             return (number + padding - 1) & ~(padding - 1);
         }

@@ -34,7 +34,7 @@ namespace GxModelViewer
             if (availableFormats == null)
                 throw new ArgumentNullException("availableFormats");
             if (!availableFormats.Contains(defaultFormat))
-                throw new ArgumentOutOfRangeException("defaultFormat");
+                throw new ArgumentOutOfRangeException("defaultFormat", "Default format not in list of available formats.");
 
             InitializeComponent();
 

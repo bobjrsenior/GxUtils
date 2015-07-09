@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace LibGxFormat.Gma
 {
     /// <summary>
-    /// Thrown when an invalid .GMA file is read/written.
+    /// Thrown when an invalid .GMA stream is read/written.
     /// </summary>
     public class InvalidGmaFileException : Exception
     {

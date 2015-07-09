@@ -93,7 +93,7 @@ namespace GxModelViewer_WinFormsExt
             if (node == null)
                 throw new ArgumentNullException("node");
             if (newState != CheckState.Checked && newState != CheckState.Unchecked)
-                throw new ArgumentOutOfRangeException("newState");
+                throw new ArgumentOutOfRangeException("newState", "Only checked and unchecked states can be set.");
 
             // Set the check state and update the children and parent
             PropagateNodeCheckStateDown(node, newState);

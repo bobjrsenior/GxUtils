@@ -90,7 +90,7 @@ namespace LibGxFormat.ModelRenderer
         /// <summary>
         /// Start a display list at position "index".
         /// </summary>
-        public Tree<OpenGlModelObjectInformation> CreateDisplayList(IModel model)
+        public Tree<OpenGlModelObjectInformation> CreateDisplayList(IRenderable model)
         {
             OpenGlRenderer renderer = new OpenGlRenderer(this);
             renderer.BeginObject("root");

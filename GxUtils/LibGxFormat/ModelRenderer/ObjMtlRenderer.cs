@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -8,6 +9,11 @@ namespace LibGxFormat.ModelRenderer
 {
     class ObjMtlRenderer : IRenderer, IDisposable
     {
+        /// <summary>Default filename of the exported .OBJ file.</summary>
+        static readonly string ObjFileName = "model.obj";
+        /// <summary>Default filename of the exported .MTL file.</summary>
+        static readonly string MtlFileName = "model.mtl";
+
         /// <summary>Output stream for the .OBJ file.</summary>
         StreamWriter objStream;
         /// <summary>Output stream for the .MTL file.</summary>
@@ -37,15 +43,15 @@ namespace LibGxFormat.ModelRenderer
         /// </summary>
         /// <param name="objFileName">The path of the .OBJ file to write.</param>
         /// <param name="mtlFileName">The path of the .MTL file to write.</param>
-        public ObjMtlRenderer(string objFileName, string mtlFileName)
+        public ObjMtlRenderer(string objOutputPath)
         {
             try
             {
-                objStream = new StreamWriter(objFileName);
-                mtlStream = new StreamWriter(mtlFileName);
+                objStream = new StreamWriter(Path.Combine(objOutputPath, ObjFileName));
+                mtlStream = new StreamWriter(Path.Combine(objOutputPath, MtlFileName));
 
                 // Write .mtl file reference in the .obj file
-                objStream.WriteLine("mtllib {0}", mtlFileName);
+                objStream.WriteLine("mtllib {0}", MtlFileName);
 
                 // Create empty material for when we want to unbind the current material
                 mtlStream.WriteLine("newmtl MAT_NULL");
@@ -105,8 +111,8 @@ namespace LibGxFormat.ModelRenderer
         public void DefineMaterial(int materialId, int textureId, TextureWrapMode wrapModeS, TextureWrapMode wrapModeT)
         {
             // TODO implement wrap mode - think it's not supported in MTL :(
-            mtlStream.WriteLine("newmtl gxmat{0}", currentMaterialIdx);
-            mtlStream.WriteLine("map_Kd {0}.png", textureId);
+            mtlStream.WriteLine(string.Format(CultureInfo.InvariantCulture, "newmtl gxmat{0}", currentMaterialIdx));
+            mtlStream.WriteLine(string.Format(CultureInfo.InvariantCulture, "map_Kd {0}.png", textureId));
             mtlStream.WriteLine();
 
             materialIdToMtlMaterialIdx[materialId] = currentMaterialIdx;
@@ -119,7 +125,7 @@ namespace LibGxFormat.ModelRenderer
             if (!materialIdToMtlMaterialIdx.ContainsKey(materialId))
                 throw new InvalidOperationException("Attempting to bind a material not previously defined.");
 
-            objStream.WriteLine("usemtl gxmat{0}", materialIdToMtlMaterialIdx[materialId]);
+            objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, "usemtl gxmat{0}", materialIdToMtlMaterialIdx[materialId]));
         }
 
         public void UnbindMaterial()
@@ -207,7 +213,8 @@ namespace LibGxFormat.ModelRenderer
 
         private int WriteVertexCoordinate(ModelVertex vertex)
         {
-            objStream.WriteLine("v {0} {1} {2}", vertex.Position.X, vertex.Position.Y, vertex.Position.Z);
+            objStream.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                "v {0} {1} {2}", vertex.Position.X, vertex.Position.Y, vertex.Position.Z));
             return currentVertexCoordinateIdx++;
         }
 
@@ -216,7 +223,8 @@ namespace LibGxFormat.ModelRenderer
             if (!vertex.Normal.HasValue)
                 return 0;
 
-            objStream.WriteLine("vn {0} {1} {2}", vertex.Normal.Value.X, vertex.Normal.Value.Y, vertex.Normal.Value.Z);
+            objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, "vn {0} {1} {2}",
+                vertex.Normal.Value.X, vertex.Normal.Value.Y, vertex.Normal.Value.Z));
             return currentVertexNormalIdx++;
         }
 
@@ -225,10 +233,10 @@ namespace LibGxFormat.ModelRenderer
             if (!vertex.PrimaryTexCoord.HasValue)
                 return 0;
 
-            /* OBJ considers (0,0) to be the top left,
-                * GMA and OpenGL consider it to be the bottom left.
-                * (Thanks to Tommy @ StackOverflow). */
-            objStream.WriteLine("vt {0} {1}", vertex.PrimaryTexCoord.Value.X, (1 - vertex.PrimaryTexCoord.Value.Y));
+            /* OBJ considers (0,0) to be the top left, GMA and OpenGL consider it to be the bottom left.
+             * See http://stackoverflow.com/a/5605027 (Thanks to Tommy @ StackOverflow). */
+            objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                "vt {0} {1}", vertex.PrimaryTexCoord.Value.X, (1 - vertex.PrimaryTexCoord.Value.Y)));
             return currentVertexTexCoordIdx++;
         }
 
@@ -239,18 +247,20 @@ namespace LibGxFormat.ModelRenderer
                 if (v1.TexCoordIdx != 0 && v2.TexCoordIdx != 0 && v3.TexCoordIdx != 0)
                 {
                     // Vertex+TexCoord+Normal
-                    objStream.WriteLine("f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8}",
-                           v1.CoordIdx ,v1.TexCoordIdx, v1.NormalIdx,
-                           v2.CoordIdx ,v2.TexCoordIdx, v2.NormalIdx,
-                           v3.CoordIdx ,v3.TexCoordIdx, v3.NormalIdx);
+                    objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                        "f {0}/{1}/{2} {3}/{4}/{5} {6}/{7}/{8}",
+                        v1.CoordIdx ,v1.TexCoordIdx, v1.NormalIdx,
+                        v2.CoordIdx ,v2.TexCoordIdx, v2.NormalIdx,
+                        v3.CoordIdx ,v3.TexCoordIdx, v3.NormalIdx));
                 }
                 else
                 {
                     // Vertex+Normal
-                    objStream.WriteLine("f {0}//{1} {2}//{3} {4}//{5}",
-                           v1.CoordIdx, v1.NormalIdx,
-                           v2.CoordIdx, v2.NormalIdx,
-                           v3.CoordIdx, v3.NormalIdx);
+                    objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                        "f {0}//{1} {2}//{3} {4}//{5}",
+                        v1.CoordIdx, v1.NormalIdx,
+                        v2.CoordIdx, v2.NormalIdx,
+                        v3.CoordIdx, v3.NormalIdx));
                 }
             }
             else
@@ -258,15 +268,17 @@ namespace LibGxFormat.ModelRenderer
                 if (v1.TexCoordIdx != 0 && v2.TexCoordIdx != 0 && v3.TexCoordIdx != 0)
                 {
                     // Vertex+TexCoord
-                    objStream.WriteLine("f {0}/{1} {2}/{3} {4}/{5}",
-                           v1.CoordIdx, v1.TexCoordIdx,
-                           v2.CoordIdx, v2.TexCoordIdx,
-                           v3.CoordIdx, v3.TexCoordIdx);
+                    objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, 
+                        "f {0}/{1} {2}/{3} {4}/{5}",
+                        v1.CoordIdx, v1.TexCoordIdx,
+                        v2.CoordIdx, v2.TexCoordIdx,
+                        v3.CoordIdx, v3.TexCoordIdx));
                 }
                 else
                 {
                     // Vertex
-                    objStream.WriteLine("f {0} {1} {2}", v1.CoordIdx, v2.CoordIdx, v3.CoordIdx);
+                    objStream.WriteLine(string.Format(CultureInfo.InvariantCulture,
+                        "f {0} {1} {2}", v1.CoordIdx, v2.CoordIdx, v3.CoordIdx));
                 }
             }
         }

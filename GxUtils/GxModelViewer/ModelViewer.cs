@@ -11,6 +11,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using LibGxFormat.ModelLoader;
+using System.Collections.Generic;
 
 namespace GxModelViewer
 {
@@ -58,23 +60,24 @@ namespace GxModelViewer
             }
         };
 
-        /// <summary>Path to the currently loaded .TPL file, or null if there isn't any.</summary>
-        string tplPath;
-        /// <summary>Instance of the currently loaded .TPL file, or null if there isn't any.</summary>
-        Tpl tpl;
-
         /// <summary>Path to the currently loaded .GMA file, or null if there isn't any.</summary>
         string gmaPath;
         /// <summary>Instance of the currently loaded .GMA file, or null if there isn't any.</summary>
         Gma gma;
+        /// <summary>true if the .GMA file has been modified and the changes have not yet been saved.</summary>
+        bool haveUnsavedGmaChanges;
+
+        /// <summary>Path to the currently loaded .TPL file, or null if there isn't any.</summary>
+        string tplPath;
+        /// <summary>Instance of the currently loaded .TPL file, or null if there isn't any.</summary>
+        Tpl tpl;
+        /// <summary>true if the .TPL file has been modified and the changes have not yet been saved.</summary>
+        bool haveUnsavedTplChanges;
 
         /// <summary>true if a .TPL/.GMA has been loaded and the OpenGL references need to be updated.</summary>
         bool reloadOnNextRedraw;
         /// <summary>Manager for the textures and display lists associated with the .GMA/.TPL files.</summary>
         OpenGlModelContext ctx = new OpenGlModelContext();
-
-        /// <summary>true if the .TPL file has been modified and the changes have not yet been saved.</summary>
-        bool haveUnsavedTplChanges;
         
         /// <summary>
         /// A tree containing the objects defined in the currently loaded GMA file.
@@ -108,6 +111,11 @@ namespace GxModelViewer
             LoadTplFile(null);
         }
 
+        private GxGame GetSelectedGame()
+        {
+            return (GxGame)tsCmbGame.ComboBox.SelectedValue;
+        }
+
         private void UnloadModel()
         {
             ctx.ClearTextures();
@@ -115,7 +123,7 @@ namespace GxModelViewer
             modelObjects = null;
         }
 
-        private void loadModel()
+        private void LoadModel()
         {
             // Make sure that the old model is unloaded correctly
             UnloadModel();
@@ -143,7 +151,7 @@ namespace GxModelViewer
             SetupViewport();
 
             GL.ShadeModel(ShadingModel.Smooth);
-            GL.ClearColor(Color.LightGray);
+            GL.ClearColor(Color.DarkGray);
             GL.ClearDepth(1.0);
 
             GL.Enable(EnableCap.DepthTest);
@@ -153,6 +161,8 @@ namespace GxModelViewer
 
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
+
+            GL.Enable(EnableCap.AlphaTest);
 
             if (toolStripMenuItemShowTextures.Checked)
                 GL.Enable(EnableCap.Texture2D);
@@ -176,7 +186,7 @@ namespace GxModelViewer
             // Reload the model if necessary
             if (reloadOnNextRedraw)
             {
-                loadModel();
+                LoadModel();
                 reloadOnNextRedraw = false;
             }
 
@@ -269,15 +279,18 @@ namespace GxModelViewer
 
         private void tsBtnLoadGma_Click(object sender, EventArgs e)
         {
+            if (!CheckSaveUnsavedChanges())
+                return;
+
             // Suggest the name associated with the loaded .TPL file if one is loaded
             if (tplPath != null && tplPath.EndsWith(".tpl"))
                 ofdLoadGma.FileName = tplPath.Substring(0, tplPath.Length - 3) + "gma";
 
             // Ask the user for a GMA file
-            if (ofdLoadGma.ShowDialog() == DialogResult.OK)
-            {
-                LoadGmaFile(ofdLoadGma.FileName);
-            }
+            if (ofdLoadGma.ShowDialog() != DialogResult.OK)
+                return;
+
+            LoadGmaFile(ofdLoadGma.FileName);
         }
 
         private void LoadGmaFile(string newGmaPath)
@@ -305,6 +318,7 @@ namespace GxModelViewer
                 gma = null;
                 gmaPath = null;
             }
+            haveUnsavedGmaChanges = false;
 
             // Update model list
             UpdateModelTree();
@@ -318,6 +332,42 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+        }
+
+        private void tsBtnSaveGma_Click(object sender, EventArgs e)
+        {
+            SaveGmaFile();
+        }
+
+        private void tsBtnSaveGmaAs_Click(object sender, EventArgs e)
+        {
+            if (sfdSaveGma.ShowDialog() == DialogResult.OK)
+            {
+                gmaPath = sfdSaveGma.FileName;
+                SaveGmaFile();
+            }
+        }
+
+        private bool SaveGmaFile()
+        {
+            // If there isn't currently any path set (e.g. we've just imported a model),
+            // we have to request one to the user
+            if (gmaPath == null)
+            {
+                if (sfdSaveGma.ShowDialog() != DialogResult.OK)
+                    return false;
+
+                gmaPath = sfdSaveGma.FileName;
+            }
+
+            using (Stream gmaStream = File.OpenWrite(gmaPath))
+            {
+                gma.Save(gmaStream, GetSelectedGame());
+            }
+
+            haveUnsavedGmaChanges = false;
+            UpdateModelButtons();
+            return true;
         }
 
         private void UpdateModelTree()
@@ -336,10 +386,10 @@ namespace GxModelViewer
                     // Add display list entries for the meshes within the model
                     if (gma[i] != null)
                     {
-                        Gcmf model = gma[i].Model;
+                        Gcmf model = gma[i].ModelObject;
                         for (int j = 0; j < model.Meshes.Count; j++)
                         {
-                            int layerNo = (model.Meshes[j].Layer == GcmfTriangleMeshLayer.Layer1) ? 1 : 2;
+                            int layerNo = (model.Meshes[j].Layer == GcmfMesh.MeshLayer.Layer1) ? 1 : 2;
                             TreeNode meshItem = new TreeNode(string.Format("[Layer {0}] Mesh {1}", layerNo, j));
                             meshItem.Tag = new ModelMeshReference(i, j);
                             modelItem.Nodes.Add(meshItem);
@@ -353,7 +403,10 @@ namespace GxModelViewer
 
         private void UpdateModelButtons()
         {
-            tsBtnExportMdlObj.Enabled = (gma != null);
+            tsBtnSaveGma.Enabled = (gma != null && haveUnsavedGmaChanges);
+            tsBtnSaveGmaAs.Enabled = (gma != null);
+
+            tsBtnExportObjMtl.Enabled = (gma != null);
 
             btnModelShowAll.Enabled = (gma != null);
             btnModelShowLayer1.Enabled = (gma != null);
@@ -379,7 +432,7 @@ namespace GxModelViewer
                 tlpMeshDisplay.Visible = false;
                 return;
             }
-            Gcmf model = gma[modelMeshReference.ModelIdx].Model;
+            Gcmf model = gma[modelMeshReference.ModelIdx].ModelObject;
 
             // Show information about the selected model/mesh
             if (modelMeshReference.MeshIdx == -1)
@@ -388,15 +441,15 @@ namespace GxModelViewer
                 tlpMeshDisplay.Visible = false;
 
                 lblModelSectionFlags.Text = string.Format("0x{0:X8}", model.SectionFlags);
-                lblModelCenter.Text = model.Center.ToString();
-                lblModelRadius.Text = model.Radius.ToString();
+                lblModelCenter.Text = model.BoundingSphereCenter.ToString();
+                lblModelRadius.Text = model.BoundingSphereRadius.ToString();
                 lblModelTransformMatrixDefaultReferences.Text = string.Join(",",
                     Array.ConvertAll(model.TransformMatrixDefaultIdxs, b => string.Format("0x{0:X2}", b)));
                 lblModelNumTransformMatrices.Text = model.TransformMatrices.Count.ToString();
             }
             else
             {
-                GcmfTriangleMesh mesh = model.Meshes[modelMeshReference.MeshIdx];
+                GcmfMesh mesh = model.Meshes[modelMeshReference.MeshIdx];
 
                 tlpModelDisplay.Visible = false;
                 tlpMeshDisplay.Visible = true;
@@ -412,7 +465,7 @@ namespace GxModelViewer
                 lblMeshTertiaryMaterialIdx.Text = mesh.TertiaryMaterialIdx.ToString();
                 lblMeshTransformMatrixSpecificReferences.Text = string.Join(",",
                     Array.ConvertAll(mesh.TransformMatrixSpecificIdxsObj1, b => string.Format("0x{0:X2}", b)));
-                lblMeshCenter.Text = mesh.Center.ToString();
+                lblMeshCenter.Text = mesh.BoundingSphereCenter.ToString();
                 lblMeshUnk3C.Text = mesh.Unk3C.ToString();
                 lblMeshUnk40.Text = string.Format("0x{0:X8}", mesh.Unk40);
             }
@@ -437,7 +490,7 @@ namespace GxModelViewer
 
             // Otherwise, extract the ModelMaterialReference structure to get the selected model/mesh
             ModelMaterialReference itemData = (ModelMaterialReference)treeMaterials.SelectedNode.Tag;
-            return gma[itemData.ModelIdx].Model.Materials[itemData.MaterialIdx];
+            return gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx];
         }
 
         private void UpdateMaterialList()
@@ -452,7 +505,7 @@ namespace GxModelViewer
             }
 
             // Populate the material list from the model
-            Gcmf model = gma[modelIdx].Model;
+            Gcmf model = gma[modelIdx].ModelObject;
             for (int i = 0; i < model.Materials.Count; i++)
             {
                 TreeNode materialItem = new TreeNode(string.Format("Material {0}", i));
@@ -476,8 +529,8 @@ namespace GxModelViewer
             lblMaterialFlags.Text = string.Format("0x{0:X8}", material.Flags);
             lblMaterialTextureIndex.Text = string.Format("{0}", material.TextureIdx);
             lblMaterialUnk6.Text = string.Format("0x{0:X2}", material.Unk6);
+            lblMaterialAnisotropyLevel.Text = string.Format("0x{0:X2}", material.AnisotropyLevel);
             lblMaterialUnkC.Text = string.Format("0x{0:X4}", material.UnkC);
-            lblMaterialIndex.Text = string.Format("0x{0:X4}", material.Index);
             lblMaterialUnk10.Text = string.Format("0x{0:X8}", material.Unk10);
 
             if (tpl != null && material.TextureIdx < tpl.Count && !tpl[material.TextureIdx].IsEmpty)
@@ -491,19 +544,42 @@ namespace GxModelViewer
             }
         }
 
-        private bool CheckSaveUnsavedTplChanges()
+        /// <summary>
+        /// Requests to the user to save unsaved changes in order to advance to the next option.
+        /// </summary>
+        /// <returns>true if the user has decided to advance (may have saved or not), false if the user wants to cancel the action.</returns>
+        private bool CheckSaveUnsavedChanges()
         {
-            if (haveUnsavedTplChanges)
+            if (haveUnsavedGmaChanges)
             {
-                switch (MessageBox.Show("There are unsaved texture changes. Save them now?",
+                switch (MessageBox.Show("There are unsaved .GMA file changes. Save them now?",
                     "Save changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                 {
                     case DialogResult.Yes:
-                        SaveTplFile(tplPath);
-                        return true;
+                        return SaveGmaFile();
 
                     case DialogResult.No:
-                        return true;
+                        break;
+
+                    case DialogResult.Cancel:
+                        return false;
+
+                    default:
+                        throw new InvalidOperationException("Internal error.");
+
+                }
+            }
+
+            if (haveUnsavedTplChanges)
+            {
+                switch (MessageBox.Show("There are unsaved .TPL file changes. Save them now?",
+                    "Save changes", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                {
+                    case DialogResult.Yes:
+                        return SaveTplFile();
+
+                    case DialogResult.No:
+                        break;
 
                     case DialogResult.Cancel:
                         return false;
@@ -512,15 +588,13 @@ namespace GxModelViewer
                         throw new InvalidOperationException("Internal error.");
                 }
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         private void tsBtnLoadTpl_Click(object sender, EventArgs e)
         {
-            if (!CheckSaveUnsavedTplChanges())
+            if (!CheckSaveUnsavedChanges())
                 return;
 
             // Suggest the name associated with the loaded .GMA file if one is loaded
@@ -528,15 +602,10 @@ namespace GxModelViewer
                 ofdLoadTpl.FileName = gmaPath.Substring(0, gmaPath.Length - 3) + "tpl";
 
             // Ask the user for a TPL file
-            if (ofdLoadTpl.ShowDialog() == DialogResult.OK)
-            {
-                LoadTplFile(ofdLoadTpl.FileName);
-            }
-        }
+            if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
+                return;
 
-        private GxGame GetSelectedGame()
-        {
-            return (GxGame)tsCmbGame.ComboBox.SelectedValue;
+            LoadTplFile(ofdLoadTpl.FileName);
         }
 
         private void LoadTplFile(string newTplPath)
@@ -578,26 +647,38 @@ namespace GxModelViewer
 
         private void tsBtnSaveTpl_Click(object sender, EventArgs e)
         {
-            SaveTplFile(tplPath);
+            SaveTplFile();
         }
 
         private void tsBtnSaveTplAs_Click(object sender, EventArgs e)
         {
-            if (sfdSaveTpl.ShowDialog() == DialogResult.OK)
-            {
-                SaveTplFile(sfdSaveTpl.FileName);
-            }
+            if (sfdSaveTpl.ShowDialog() != DialogResult.OK)
+                return;
+
+            tplPath = sfdSaveTpl.FileName;
+            SaveTplFile();
         }
 
-        private void SaveTplFile(string outTplPath)
+        private bool SaveTplFile()
         {
-            using (Stream tplStream = File.OpenWrite(outTplPath))
+            // If there isn't currently any path set (e.g. we've just imported a model),
+            // we have to request one to the user
+            if (tplPath == null)
+            {
+                if (sfdSaveTpl.ShowDialog() != DialogResult.OK)
+                    return false;
+
+                tplPath = sfdSaveTpl.FileName;
+            }
+
+            using (Stream tplStream = File.OpenWrite(tplPath))
             {
                 tpl.Save(tplStream, GetSelectedGame());
             }
 
             haveUnsavedTplChanges = false;
             UpdateTextureButtons();
+            return true;
         }
 
         private void UpdateTextureDisplay()
@@ -674,7 +755,61 @@ namespace GxModelViewer
             tsBtnSaveTplAs.Enabled = (tpl != null);
         }
 
-        private void tsBtnExportMdlObj_Click(object sender, EventArgs e)
+        private void tsBtnImportObjMtl_Click(object sender, EventArgs e)
+        {
+            if (!CheckSaveUnsavedChanges())
+                return;
+
+            if (ofdLoadObj.ShowDialog() != DialogResult.OK)
+                return;
+
+            List<string> modelWarningLog;
+            ObjMtlModel model;
+            try
+            {
+                model = new ObjMtlModel(ofdLoadObj.FileName, out modelWarningLog);
+                if (modelWarningLog.Count != 0)
+                {
+                    ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
+                    if (warningDlg.ShowDialog() != DialogResult.Yes)
+                        return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Dictionary<Bitmap, int> textureIndexMapping;
+            tpl = new Tpl(model, out textureIndexMapping);
+            gma = new Gma(model, textureIndexMapping);
+
+            // Set TPL / GMA as changed
+            haveUnsavedGmaChanges = true;
+            haveUnsavedTplChanges = true;
+
+            // Update model list
+            UpdateModelTree();
+            UpdateModelButtons();
+            UpdateModelDisplay();
+
+            // Update material tab
+            UpdateMaterialList();
+            UpdateMaterialDisplay();
+
+            // Update texture list
+            UpdateTextureTree();
+            UpdateTextureButtons();
+            UpdateTextureDisplay();
+
+            // Update model viewer
+            reloadOnNextRedraw = true;
+            glControlModel.Invalidate();
+        }
+
+        private void tsBtnExportObjMtl_Click(object sender, EventArgs e)
         {
             if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
             {
@@ -725,23 +860,32 @@ namespace GxModelViewer
         {
             foreach (TreeNode modelItem in treeModel.Nodes)
             {
-                // Set model meshes check state
-                foreach (TreeNode meshItem in modelItem.Nodes)
+                if (modelItem.Nodes.Count > 0)
                 {
-                    ModelMeshReference meshData = (ModelMeshReference)meshItem.Tag;
-                    GcmfTriangleMesh mesh = gma[meshData.ModelIdx].Model.Meshes[meshData.MeshIdx];
-                    if (mesh.Layer == GcmfTriangleMeshLayer.Layer1)
+                    // Set model meshes check state
+                    foreach (TreeNode meshItem in modelItem.Nodes)
                     {
-                        treeModel.SetCheckState(meshItem, showLayer1 ? CheckState.Checked : CheckState.Unchecked);
+                        ModelMeshReference meshData = (ModelMeshReference)meshItem.Tag;
+                        GcmfMesh mesh = gma[meshData.ModelIdx].ModelObject.Meshes[meshData.MeshIdx];
+                        if (mesh.Layer == GcmfMesh.MeshLayer.Layer1)
+                        {
+                            treeModel.SetCheckState(meshItem, showLayer1 ? CheckState.Checked : CheckState.Unchecked);
+                        }
+                        else if (mesh.Layer == GcmfMesh.MeshLayer.Layer2)
+                        {
+                            treeModel.SetCheckState(meshItem, showLayer2 ? CheckState.Checked : CheckState.Unchecked);
+                        }
                     }
-                    else if (mesh.Layer == GcmfTriangleMeshLayer.Layer2)
-                    {
-                        treeModel.SetCheckState(meshItem, showLayer2 ? CheckState.Checked : CheckState.Unchecked);
-                    }
+                }
+                else
+                {
+                    // For the orphan nodes (models with no meshes, mostly GMA null entries),
+                    // unselect them unless we're choosing to show both types of layers
+                    treeModel.SetCheckState(modelItem, (showLayer1 && showLayer2) ? CheckState.Checked : CheckState.Unchecked);
                 }
             }
 
-            // The model will be updated due to the AfterCheck event on treeModel
+            // The model will be updated due to the AfterCheckState event on treeModel
         }
 
         private void btnModelShowAll_Click(object sender, EventArgs e)
@@ -796,7 +940,7 @@ namespace GxModelViewer
 
         private void ModelViewer_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!CheckSaveUnsavedTplChanges())
+            if (!CheckSaveUnsavedChanges())
             {
                 e.Cancel = true;
                 return;
@@ -863,26 +1007,8 @@ namespace GxModelViewer
 
                 GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
 
-                // Define all levels until the texture cannot be halved any more
-                int currentWidth = bmp.Width, currentHeight = bmp.Height;
-
-                for (int mipmapLevel = 0; true; mipmapLevel++)
-                {
-                    if (mipmapLevel == 0)
-                    {
-                        tex.DefineMainLevelFromBitmap(newFmt, bmp);
-                    }
-                    else
-                    {
-                        tex.DefineLevelDataFromBitmap(mipmapLevel, new Bitmap(bmp, currentWidth, currentHeight));
-                    }
-
-                    if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
-                        break;
-
-                    currentWidth /= 2;
-                    currentHeight /= 2;
-                }
+                // Redefine the entire texture from the bitmap
+                tex.DefineTextureFromBitmap(newFmt, bmp);
 
                 TextureHasChanged(textureData.TextureIdx);
                 UpdateTextureTree();
@@ -900,7 +1026,7 @@ namespace GxModelViewer
                     return;
                 }
 
-                // Convert the image to RGBA8 and replace the selected level
+                // Replace just the selected level from the bitmap
                 tex.DefineLevelDataFromBitmap(textureData.TextureLevel, bmp);
 
                 TextureHasChanged(textureData.TextureIdx);

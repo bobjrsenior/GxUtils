@@ -5,13 +5,15 @@ using System.Linq;
 using OpenTK;
 using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
+using LibGxFormat.ModelLoader;
+using System.Drawing;
 
 namespace LibGxFormat.Gma
 {
     /// <summary>
-    /// A Gcmf model contains the definition for a single model.
+    /// A Gcmf object contains the definition for a single object in a model.
     /// </summary>
-    public class Gcmf : IModel
+    public class Gcmf : IRenderable
     {
         [Flags]
         enum GcmfSectionFlags : uint
@@ -44,17 +46,17 @@ namespace LibGxFormat.Gma
         /// <summary>
         /// Position of the center of the object (used along with the radius below)
         /// </summary>
-        public Vector3 Center { get; private set; }
+        public Vector3 BoundingSphereCenter { get; private set; }
 
         /// <summary>
         /// Radius of the object (maximum distance to a vertex relative to the center)
         /// </summary>
-        public float Radius { get; private set; }
+        public float BoundingSphereRadius { get; private set; }
 
         public byte[] TransformMatrixDefaultIdxs { get; private set; }
 
         /// <summary>
-        /// List of materials defined for this model.
+        /// List of materials defined for this object.
         /// </summary>
         public NonNullableCollection<GcmfMaterial> Materials { get; private set; }
 
@@ -62,12 +64,11 @@ namespace LibGxFormat.Gma
         public NonNullableCollection<GcmfTransformMatrix> TransformMatrices { get; private set; }
 
         /// <summary>
-        /// Vertex pool for indexed models.
+        /// Vertex pool for indexed objects.
         /// </summary>
-        // TODO limit access when not indexed
-        public NonNullableCollection<GcmfVertex> VertexPool { get; private set; }
+        public OrderedSet<GcmfVertex> VertexPool { get; private set; }
 
-        public NonNullableCollection<GcmfTriangleMesh> Meshes { get; private set; }
+        public NonNullableCollection<GcmfMesh> Meshes { get; private set; }
 
         // TODO limit access when not type=8
         public NonNullableCollection<GcmfType8Unknown1> Type8Unknown1 { get; private set; }
@@ -91,15 +92,41 @@ namespace LibGxFormat.Gma
         public Gcmf()
         {
             SectionFlags = 0;
-            Center = new Vector3(0.0f, 0.0f, 0.0f);
-            Radius = 0.0f;
+            BoundingSphereCenter = new Vector3(0.0f, 0.0f, 0.0f);
+            BoundingSphereRadius = 0.0f;
             TransformMatrixDefaultIdxs = new byte[8];
+            for (int i = 0; i < TransformMatrixDefaultIdxs.Length; i++)
+                TransformMatrixDefaultIdxs[i] = byte.MaxValue;
             Materials = new NonNullableCollection<GcmfMaterial>();
             TransformMatrices = new NonNullableCollection<GcmfTransformMatrix>();
-            VertexPool = new NonNullableCollection<GcmfVertex>();
-            Meshes = new NonNullableCollection<GcmfTriangleMesh>();
+            VertexPool = new OrderedSet<GcmfVertex>();
+            Meshes = new NonNullableCollection<GcmfMesh>();
             Type8Unknown1 = new NonNullableCollection<GcmfType8Unknown1>();
             Type8Unknown2 = new Collection<ushort>();
+        }
+
+        /// <summary>
+        /// Create a new Gcmf object from the given .OBJ / .MTL object.
+        /// </summary>
+        /// <param name="modelObject">The object from which to create the Gcmf object.</param>
+        /// <param name="textureIndexMapping">Correspondence between the textures defined in the model materials and .TPL texture indices.</param>
+        public Gcmf(ObjMtlObject modelObject, Dictionary<Bitmap, int> modelTextureMapping)
+            : this()
+        {
+            Dictionary<ObjMtlMaterial, int> modelMaterialMapping = new Dictionary<ObjMtlMaterial, int>();
+
+            foreach (ObjMtlMaterial mat in modelObject.Meshes.Select(m => m.Material))
+            {
+                modelMaterialMapping.Add(mat, Materials.Count);
+                Materials.Add(new GcmfMaterial(mat, modelTextureMapping));
+            }
+
+            foreach (ObjMtlMesh mesh in modelObject.Meshes)
+            {
+                Meshes.Add(new GcmfMesh(mesh, modelMaterialMapping));
+            }
+
+            UpdateBoundingSphere();
         }
 
         internal void Load(EndianBinaryReader input, GxGame game)
@@ -110,8 +137,8 @@ namespace LibGxFormat.Gma
             if (input.ReadUInt32() != GcmfMagic)
                 throw new InvalidGmaFileException("Expected Gcmf[0x00] == GcmfMagic.");
             SectionFlags = input.ReadUInt32();
-            Center = new Vector3(input.ReadSingle(), input.ReadSingle(), input.ReadSingle());
-            Radius = input.ReadSingle();
+            BoundingSphereCenter = new Vector3(input.ReadSingle(), input.ReadSingle(), input.ReadSingle());
+            BoundingSphereRadius = input.ReadSingle();
             int numMaterials = (int)input.ReadUInt16();
             int numLayer1Meshes = (int)input.ReadUInt16();
             int numLayer2Meshes = (int)input.ReadUInt16();
@@ -136,7 +163,7 @@ namespace LibGxFormat.Gma
             for (int i = 0; i < numMaterials; i++)
             {
                 GcmfMaterial mat = new GcmfMaterial();
-                mat.Load(input);
+                mat.Load(input, i);
                 Materials.Add(mat);
             }
 
@@ -187,12 +214,12 @@ namespace LibGxFormat.Gma
                     throw new InvalidGmaFileException("Gcmf[PreSectionHdr-0x1C]");
 
                 // Load the mesh headers
-                List<GcmfTriangleMesh.HeaderSectionInfo> meshHeaderSectionInfos = new List<GcmfTriangleMesh.HeaderSectionInfo>();
+                List<GcmfMesh.HeaderSectionInfo> meshHeaderSectionInfos = new List<GcmfMesh.HeaderSectionInfo>();
                 for (int i = 0; i < numLayer1Meshes + numLayer2Meshes; i++)
                 {
-                    GcmfTriangleMesh mesh = new GcmfTriangleMesh();
+                    GcmfMesh mesh = new GcmfMesh();
                     meshHeaderSectionInfos.Add(mesh.LoadHeader(input,
-                        (i < numLayer1Meshes) ? GcmfTriangleMeshLayer.Layer1 : GcmfTriangleMeshLayer.Layer2));
+                        (i < numLayer1Meshes) ? GcmfMesh.MeshLayer.Layer1 : GcmfMesh.MeshLayer.Layer2));
                     Meshes.Add(mesh);
                 }
 
@@ -276,10 +303,10 @@ namespace LibGxFormat.Gma
             {
                 for (int i = 0; i < numLayer1Meshes + numLayer2Meshes; i++)
                 {
-                    GcmfTriangleMesh mesh = new GcmfTriangleMesh();
-                    GcmfTriangleMesh.HeaderSectionInfo headerSectionInfo = mesh.LoadHeader(input,
-                        (i < numLayer1Meshes) ? GcmfTriangleMeshLayer.Layer1 : GcmfTriangleMeshLayer.Layer2);
-                    mesh.LoadNonIndexedData(input, headerSectionInfo);
+                    GcmfMesh mesh = new GcmfMesh();
+                    GcmfMesh.HeaderSectionInfo headerSectionInfo = mesh.LoadHeader(input,
+                        (i < numLayer1Meshes) ? GcmfMesh.MeshLayer.Layer1 : GcmfMesh.MeshLayer.Layer2);
+                    mesh.LoadNonIndexedData(input, headerSectionInfo, (SectionFlags & (uint)GcmfSectionFlags._16Bit) != 0);
                     Meshes.Add(mesh);
                 }
             }
@@ -317,10 +344,11 @@ namespace LibGxFormat.Gma
             }
             else
             {
-                foreach (GcmfTriangleMesh mesh in Meshes)
+                bool is16Bit = ((SectionFlags & (uint)GcmfSectionFlags._16Bit) != 0);
+                foreach (GcmfMesh mesh in Meshes)
                 {
                     size += mesh.SizeOfHeader();
-                    size += mesh.SizeOfNonIndexedData();
+                    size += mesh.SizeOfNonIndexedData(is16Bit);
                 }
             }
 
@@ -367,17 +395,17 @@ namespace LibGxFormat.Gma
             // (setting the layer property on the triangle mesh itself), which the user
             // may order freely, but now that we're writting the GCMF again, we need to
             // reclassify the meshes in both layers.
-            GcmfTriangleMesh[] layer1Meshes = Meshes.Where(mesh => mesh.Layer == GcmfTriangleMeshLayer.Layer1).ToArray();
-            GcmfTriangleMesh[] layer2Meshes = Meshes.Where(mesh => mesh.Layer == GcmfTriangleMeshLayer.Layer2).ToArray();
-            GcmfTriangleMesh[] meshesSortedByLayer = layer1Meshes.Union(layer2Meshes).ToArray();
+            GcmfMesh[] layer1Meshes = Meshes.Where(mesh => mesh.Layer == GcmfMesh.MeshLayer.Layer1).ToArray();
+            GcmfMesh[] layer2Meshes = Meshes.Where(mesh => mesh.Layer == GcmfMesh.MeshLayer.Layer2).ToArray();
+            GcmfMesh[] meshesSortedByLayer = layer1Meshes.Union(layer2Meshes).ToArray();
 
             // Write GCMF header
             output.Write(GcmfMagic);
             output.Write(SectionFlags);
-            output.Write(Center.X);
-            output.Write(Center.Y);
-            output.Write(Center.Z);
-            output.Write(Radius);
+            output.Write(BoundingSphereCenter.X);
+            output.Write(BoundingSphereCenter.Y);
+            output.Write(BoundingSphereCenter.Z);
+            output.Write(BoundingSphereRadius);
             output.Write(Convert.ToUInt16(Materials.Count));
             output.Write(Convert.ToUInt16(layer1Meshes.Length));
             output.Write(Convert.ToUInt16(layer2Meshes.Length));
@@ -391,8 +419,8 @@ namespace LibGxFormat.Gma
             output.Write((uint)0);
             output.Write((uint)0);
 
-            foreach (GcmfMaterial mat in Materials)
-                mat.Save(output);
+            for (int i = 0; i < Materials.Count; i++)
+                Materials[i].Save(output, i);
 
             foreach (GcmfTransformMatrix tmtx in TransformMatrices)
                 tmtx.Save(output);
@@ -422,8 +450,8 @@ namespace LibGxFormat.Gma
                 output.Write((uint)0);
 
                 // Write the mesh headers
-                foreach (GcmfTriangleMesh mesh in meshesSortedByLayer)
-                    mesh.SaveHeader(output, true);
+                foreach (GcmfMesh mesh in meshesSortedByLayer)
+                    mesh.SaveHeader(output, true, false);
 
                 // Write the vertex pool
                 foreach (GcmfVertex vtx in VertexPool)
@@ -441,23 +469,28 @@ namespace LibGxFormat.Gma
                 }
 
                 // Write the section data itself (the indexed triangle strips)
-                foreach (GcmfTriangleMesh mesh in meshesSortedByLayer)
-                    mesh.SaveIndexedData(output);
+                Dictionary<GcmfVertex, int> vertexPoolIndexes = new Dictionary<GcmfVertex, int>();
+                for (int i = 0; i < VertexPool.Count; i++)
+                    vertexPoolIndexes.Add(VertexPool[i], i);
+
+                foreach (GcmfMesh mesh in meshesSortedByLayer)
+                    mesh.SaveIndexedData(output, vertexPoolIndexes);
 
                 output.Align(0x20);
             }
             else
             {
-                foreach (GcmfTriangleMesh mesh in meshesSortedByLayer)
+                bool is16Bit = ((SectionFlags & (uint)GcmfSectionFlags._16Bit) != 0);
+                foreach (GcmfMesh mesh in meshesSortedByLayer)
                 {
-                    mesh.SaveHeader(output, false);
-                    mesh.SaveNonIndexedData(output);
+                    mesh.SaveHeader(output, false, is16Bit);
+                    mesh.SaveNonIndexedData(output, is16Bit);
                 }
             }
         }
 
         /// <summary>
-        /// Render this Gcmf model using the given model renderer.
+        /// Render this Gcmf object using the given renderer.
         /// </summary>
         public void Render(IRenderer renderer)
         {
@@ -470,8 +503,8 @@ namespace LibGxFormat.Gma
             Array.Copy(TransformMatrixDefaultIdxs, context.TransformMatrixIdxs, 8);
 
             // Set up the materials required to render each mesh
-            foreach (GcmfMaterial mat in Materials)
-                mat.Render(renderer);
+            for (int i = 0; i < Materials.Count; i++)
+                Materials[i].Render(renderer, i);
 
             // Render each mesh
             for (int i = 0; i < Meshes.Count; i++)
@@ -481,8 +514,20 @@ namespace LibGxFormat.Gma
                 renderer.EndObject();
             }
 
-            // Clean up the materials in order to have a clean ground for the next model
+            // Clean up the materials in order to have a clean ground for the next object
             renderer.ClearMaterialList();
+        }
+
+        private void UpdateBoundingSphere()
+        {
+            IEnumerable<GcmfTriangleStrip> allTriangleStrip = Meshes.SelectMany(
+                m => m.Obj1StripsCcw.Union(m.Obj1StripsCw).Union(m.Obj2StripsCcw).Union(m.Obj2StripsCw));
+            IEnumerable<GcmfVertex> allVertices = allTriangleStrip.SelectMany(ts => ts);
+            IEnumerable<Vector3> allVertexPositions = allVertices.Select(v => v.Position);
+
+            BoundingSphere boundingSphere = BoundingSphere.FromPoints(allVertexPositions);
+            BoundingSphereCenter = boundingSphere.Center;
+            BoundingSphereRadius = boundingSphere.Radius;
         }
     }
 }

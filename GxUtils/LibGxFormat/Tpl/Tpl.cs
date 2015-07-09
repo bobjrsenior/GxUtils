@@ -4,6 +4,9 @@ using System.IO;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 using LibGxTexture;
+using LibGxFormat.ModelLoader;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace LibGxFormat.Tpl
 {
@@ -20,6 +23,39 @@ namespace LibGxFormat.Tpl
 		public Tpl()
 		{
 		}
+
+        /// <summary>
+        /// Create a TPL texture file from the specified model.
+        /// </summary>
+        /// <param name="model">The model to create the TPL file from.</param>
+        /// <param name="textureIndexMapping">The correspondence between textures images in the model and the generated TPL texture indices.</param>
+        public Tpl(ObjMtlModel model, out Dictionary<Bitmap, int> textureIndexMapping)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            // Gather all material definitions in the model
+            IEnumerable<ObjMtlMaterial> allMaterials = model.Objects
+                .SelectMany(o => o.Value.Meshes).Select(m => m.Material);
+
+            Dictionary<Bitmap, int> textureIndexMappingInt = new Dictionary<Bitmap, int>();
+
+            foreach (ObjMtlMaterial mat in allMaterials)
+            {
+                // Create and add texture for diffuse map
+                if (mat.DiffuseTextureMap != null && !textureIndexMappingInt.ContainsKey(mat.DiffuseTextureMap))
+                {
+                    int textureIndex = Count;
+                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, mat.DiffuseTextureMap);
+                    Add(texture);
+                    textureIndexMappingInt.Add(mat.DiffuseTextureMap, textureIndex);
+                }
+            }
+
+            // Replace the 'out' variable at the end so it does not get
+            // modified if an exception 
+            textureIndexMapping = textureIndexMappingInt;
+        }
 
 		/// <summary>
 		/// Create a Tpl texture container from a .TPL file.
@@ -48,7 +84,7 @@ namespace LibGxFormat.Tpl
             public int LevelCount;
         }
 
-        internal void Load(EndianBinaryReader input, GxGame game)
+        private void Load(EndianBinaryReader input, GxGame game)
         {
             int numTextures = input.ReadInt32();
 
@@ -104,12 +140,12 @@ namespace LibGxFormat.Tpl
             return SizeOfHeaderEntries() + SizeOfTextureData(game);
         }
 
-        internal int SizeOfHeaderEntries()
+        private int SizeOfHeaderEntries()
         {
             return PaddingUtils.Align(4 + (4 + 4 + 2 + 2 + 2 + 2) * Count, 0x20);
         }
 
-        internal int SizeOfTextureData(GxGame game)
+        private int SizeOfTextureData(GxGame game)
         {
             // No need to worry about textures with no levels, they have size zero
             return Items.Sum(t => t.SizeOfTextureData(game));
@@ -130,7 +166,7 @@ namespace LibGxFormat.Tpl
 			Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
 		}
 
-        internal void Save(EndianBinaryWriter output, GxGame game)
+        private void Save(EndianBinaryWriter output, GxGame game)
         {
             output.Write(Count);
 

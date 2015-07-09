@@ -31,8 +31,8 @@
             this.lblPickFormatInfoText = new System.Windows.Forms.Label();
             this.cmbFormat = new System.Windows.Forms.ComboBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnSubmit = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.lblFormat = new System.Windows.Forms.Label();
             this.tableLayoutPanelLayout = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1.SuspendLayout();
@@ -58,7 +58,7 @@
             this.cmbFormat.Location = new System.Drawing.Point(86, 21);
             this.cmbFormat.Name = "cmbFormat";
             this.cmbFormat.Size = new System.Drawing.Size(327, 21);
-            this.cmbFormat.TabIndex = 1;
+            this.cmbFormat.TabIndex = 2;
             // 
             // flowLayoutPanel1
             // 
@@ -71,17 +71,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(86, 53);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(327, 25);
-            this.flowLayoutPanel1.TabIndex = 2;
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSubmit.Location = new System.Drawing.Point(168, 3);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(75, 23);
-            this.btnSubmit.TabIndex = 0;
-            this.btnSubmit.Text = "Select";
-            this.btnSubmit.UseVisualStyleBackColor = true;
+            this.flowLayoutPanel1.TabIndex = 3;
             // 
             // btnCancel
             // 
@@ -93,6 +83,16 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // btnSubmit
+            // 
+            this.btnSubmit.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnSubmit.Location = new System.Drawing.Point(168, 3);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(75, 23);
+            this.btnSubmit.TabIndex = 0;
+            this.btnSubmit.Text = "Select";
+            this.btnSubmit.UseVisualStyleBackColor = true;
+            // 
             // lblFormat
             // 
             this.lblFormat.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -100,7 +100,7 @@
             this.lblFormat.Location = new System.Drawing.Point(38, 25);
             this.lblFormat.Name = "lblFormat";
             this.lblFormat.Size = new System.Drawing.Size(42, 13);
-            this.lblFormat.TabIndex = 3;
+            this.lblFormat.TabIndex = 1;
             this.lblFormat.Text = "Format:";
             // 
             // tableLayoutPanelLayout

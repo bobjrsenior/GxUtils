@@ -3,55 +3,49 @@
 namespace LibGxFormat.Gma
 {
     /// <summary>
-    /// An entry in a Gma container.
+    /// An object entry in a Gma model.
     /// </summary>
     public class GmaEntry
     {
-        string name;
+        string nameBackingStorage;
 
-        /// <summary>
-        /// Name of this Gma model entry
-        /// </summary>
+        /// <summary>Name of the object.</summary>
         public string Name
         {
             get
             {
-                return name;
+                return nameBackingStorage;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException("value");
-                name = value;
+                nameBackingStorage = value;
             }
         }
 
-        Gcmf model;
+        Gcmf modelObjectBackingStorage;
 
-        /// <summary>
-        /// Gcmf model associated with this Gma model entry, or null if this is a null entry.
-        /// </summary>
-        public Gcmf Model
+        /// <summary>Gcmf model associated with this Gma object entry, or null if this is a null entry.</summary>
+        public Gcmf ModelObject
         {
             get
             {
-                return model;
+                return modelObjectBackingStorage;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException("value");
-                model = value;
+                modelObjectBackingStorage = value;
             }
         }
         
-        /// <summary>
-        /// Create a new GmaEntry with the given name and associated model.
-        /// </summary>
-        public GmaEntry(string name, Gcmf model)
+        /// <summary>Create a new GmaEntry with the given name and associated model object.</summary>
+        public GmaEntry(string name, Gcmf modelObject)
         {
             Name = name;
-            Model = model;
+            ModelObject = modelObject;
         }
     };
 }

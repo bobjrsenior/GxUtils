@@ -25,7 +25,9 @@ namespace LibGxFormat.Gma
         public GcmfRenderContext(Gcmf gcmf)
         {
             this.Gcmf = gcmf;
-            this.TransformMatrixIdxs = new byte[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+            this.TransformMatrixIdxs = new byte[8];
+            for (int i = 0; i < TransformMatrixIdxs.Length; i++)
+                TransformMatrixIdxs[i] = byte.MaxValue;
         }
     }
 }
