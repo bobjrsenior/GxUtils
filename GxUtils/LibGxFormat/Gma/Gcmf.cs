@@ -234,7 +234,7 @@ namespace LibGxFormat.Gma
                     VertexPool.Add(vtx);
                 }
 
-                if (game == GxGame.SuperMonkeyBall && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
+                if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
                 {
                     // SMB doesn't have have any 0x08 section flags, so it's unknown how this field may work in that case
                     if (offsetPartType8Unknown1 != 0)
@@ -256,7 +256,7 @@ namespace LibGxFormat.Gma
                     }
                 }
 
-                if (game == GxGame.SuperMonkeyBall && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
+                if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
                 {
                     // SMB doesn't have have any 0x08 section flags, so it's unknown how this field may work in that case
                     if (offsetPartType8Unknown2 != 0)
@@ -433,7 +433,7 @@ namespace LibGxFormat.Gma
                 int offsetPartType8Unknown1 = offsetPartVertexPool + SizeOf2VertexPool();
                 int offsetPartType8Unknown2 = offsetPartType8Unknown1 + (((SectionFlags & (uint)GcmfSectionFlags.SkinModel) != 0) ? SizeOf2Type8Unknown1() : 0);
                 int offsetPartMeshData = offsetPartType8Unknown2 + (((SectionFlags & (uint)GcmfSectionFlags.SkinModel) != 0) ? SizeOf2Type8Unknown2() : 0);
-                if (game == GxGame.SuperMonkeyBall && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
+                if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
                 {
                     // Those are zero on SMB
                     offsetPartType8Unknown1 = 0;

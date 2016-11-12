@@ -69,7 +69,15 @@ namespace LibGxFormat.Tpl
 			if (!Enum.IsDefined(typeof(GxGame), game))
 				throw new ArgumentOutOfRangeException("game");
 
-			Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game);
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                Load(new EndianBinaryReader(EndianBitConverter.Little, inputStream), game);
+            }
+            else
+            {
+                Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game);
+            }
+			
 		}
 
         /// <summary>
@@ -86,6 +94,10 @@ namespace LibGxFormat.Tpl
 
         private void Load(EndianBinaryReader input, GxGame game)
         {
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                input.ReadInt32();
+            }
             int numTextures = input.ReadInt32();
 
             // Load texture definition headers
@@ -97,7 +109,8 @@ namespace LibGxFormat.Tpl
                 texHdr[i].Width = Convert.ToInt32(input.ReadUInt16());
                 texHdr[i].Height = Convert.ToInt32(input.ReadUInt16());
                 texHdr[i].LevelCount = Convert.ToInt32(input.ReadUInt16());
-                if (input.ReadUInt16() != 0x1234)
+                UInt16 check = input.ReadUInt16();
+                if ((game != GxGame.SuperMonkeyBallDX && check != 0x1234) || (game == GxGame.SuperMonkeyBallDX && check != 0x3412))
                     throw new InvalidTplFileException("Invalid texture header (Field @0x0E).");
             }
 
@@ -111,8 +124,14 @@ namespace LibGxFormat.Tpl
                 {
                     if (!Enum.IsDefined(typeof(GxTextureFormat), texHdr[i].FormatRaw))
                         throw new InvalidTplFileException("Invalid texture header (invalid format.");
-
-                    input.BaseStream.Position = texHdr[i].Offset;
+                    if (game == GxGame.SuperMonkeyBallDX)
+                    {
+                        input.BaseStream.Position = texHdr[i].Offset + 0x20;
+                    }
+                    else
+                    {
+                        input.BaseStream.Position = texHdr[i].Offset;
+                    }
                     tex.LoadTextureData(input, game, (GxTextureFormat)texHdr[i].FormatRaw,
                             texHdr[i].Width, texHdr[i].Height, texHdr[i].LevelCount);
                 }
@@ -137,12 +156,20 @@ namespace LibGxFormat.Tpl
         /// <returns>The size of the TPL when written to a file.</returns>
         public int SizeOf(GxGame game)
         {
-            return SizeOfHeaderEntries() + SizeOfTextureData(game);
+            return SizeOfHeaderEntries(game) + SizeOfTextureData(game);
         }
 
-        private int SizeOfHeaderEntries()
+        private int SizeOfHeaderEntries(GxGame game)
         {
-            return PaddingUtils.Align(4 + (4 + 4 + 2 + 2 + 2 + 2) * Count, 0x20);
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                return PaddingUtils.Align((8 + (4 + 4 + 2 + 2 + 2 + 2) * Count), 0x20);
+            }
+            else
+            {
+                return PaddingUtils.Align(4 + (4 + 4 + 2 + 2 + 2 + 2) * Count, 0x20);
+            }
+            
         }
 
         private int SizeOfTextureData(GxGame game)
@@ -162,16 +189,32 @@ namespace LibGxFormat.Tpl
 				throw new ArgumentNullException("outputStream");
 			if (!Enum.IsDefined(typeof(GxGame), game))
 				throw new ArgumentOutOfRangeException("game");
-
-			Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
+            
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                Save(new EndianBinaryWriter(EndianBitConverter.Little, outputStream), game);
+            }
+            else
+            {
+                Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
+            }
+			
 		}
 
         private void Save(EndianBinaryWriter output, GxGame game)
         {
+            if (game == GxGame.SuperMonkeyBallDX)
+            {
+                output.Write('X');
+                output.Write('T');
+                output.Write('P');
+                output.Write('L');
+            }
+
             output.Write(Count);
 
             // Write texture definition headers
-            int beginDataOffset = SizeOfHeaderEntries();
+            int beginDataOffset = SizeOfHeaderEntries(game);
             int currentDataOffset = beginDataOffset;
             foreach (TplTexture tex in Items)
             {
@@ -191,9 +234,24 @@ namespace LibGxFormat.Tpl
                     output.Write((ushort)0);
                     output.Write((ushort)0);
                 }
-                output.Write((ushort)0x1234);
+                if(game == GxGame.SuperMonkeyBallDX)
+                {
+                    output.Write((ushort)0x3412);
+                }
+                else
+                {
+                    output.Write((ushort)0x1234);
+                }
 
-                currentDataOffset += tex.SizeOfTextureData(game);
+                if(game == GxGame.SuperMonkeyBallDX)
+                {
+                    currentDataOffset += tex.SizeOfTextureData(game) + 0x20;
+                }
+                else
+                {
+                    currentDataOffset += tex.SizeOfTextureData(game);
+                }
+                
             }
 
             int paddingAmount = beginDataOffset - Convert.ToInt32(output.BaseStream.Position);

@@ -545,7 +545,86 @@ namespace LibGxFormat.Tpl
 		/// </summary>
 		internal void SaveTextureData(EndianBinaryWriter output, GxGame game)
 		{
-			for (int level = 0; level < LevelCount; level++)
+
+            if (LevelCount != 0 && game == GxGame.SuperMonkeyBallDX)
+            {
+                List<byte> texHeader = new List<byte>();
+                switch (format)
+                {
+                    case GxTextureFormat.CMPR:
+                        texHeader.Add(0x0C);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        break;
+
+                    case GxTextureFormat.I8:
+                        texHeader.Add(0x1A);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        break;
+
+                    default:
+                        texHeader.Add(0x0C);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        break;
+                }
+                // Width
+                texHeader.Add((byte)WidthOfLevel(0));
+                texHeader.Add((byte)(WidthOfLevel(0) >> 8));
+                // Padding
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                // Height
+                texHeader.Add((byte)HeightOfLevel(0));
+                texHeader.Add((byte)(HeightOfLevel(0) >> 8));
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                // Five
+                texHeader.Add(5);
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                // 0 for uncompressed
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                // Data Length
+                int levelSize = 0;
+                for (int level = 0; level < LevelCount; level++)
+                {
+                    levelSize += CalculateSizeOfLevel(level, (game == GxGame.FZeroGX));
+                }
+                texHeader.Add((byte)levelSize);
+                texHeader.Add((byte)(levelSize >> 8));
+                texHeader.Add((byte)(levelSize >> 16));
+                texHeader.Add((byte)(levelSize >> 24));
+
+                // Data length + a little (0 if uncompressed)
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                // Zero/Padding?
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+                texHeader.Add(0);
+
+                output.Write(texHeader.ToArray(), 0, texHeader.Count);
+
+            }
+
+            for (int level = 0; level < LevelCount; level++)
 			{
 				output.Write(encodedLevelData[level], 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
 			}

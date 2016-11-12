@@ -72,7 +72,7 @@ namespace GxExpander
         public void Run()
         {
             // Verify that the class parameters are valid
-            if (Game != GxGame.FZeroGX && Game != GxGame.SuperMonkeyBall)
+            if (Game != GxGame.FZeroGX && Game != GxGame.SuperMonkeyBall && Game != GxGame.SuperMonkeyBallDX)
                 throw new GxExpanderException("Please specify a valid game.");
             if (Mode != GxExpanderMode.Unpack && Mode != GxExpanderMode.Pack)
                 throw new GxExpanderException("Please specify a valid operation mode.");

@@ -53,8 +53,15 @@ namespace LibGxFormat.Gma
 				throw new ArgumentNullException("inputStream");
 			if (!Enum.IsDefined(typeof(GxGame), game))
 				throw new ArgumentOutOfRangeException("game");
-
-			Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game);
+            
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                Load(new EndianBinaryReader(EndianBitConverter.Little, inputStream), game);
+            }
+            else
+            {
+                Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game);
+            }
         }
 
         struct GmaEntryOffsets
@@ -146,7 +153,15 @@ namespace LibGxFormat.Gma
 			if (!Enum.IsDefined(typeof(GxGame), game))
 				throw new ArgumentOutOfRangeException("game");
 
-			Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
+            if (game == GxGame.SuperMonkeyBallDX)
+            {
+                Save(new EndianBinaryWriter(EndianBitConverter.Little, outputStream), game);
+            }
+            else
+            {
+                Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
+            }
+
         }
 
         /// <summary>
