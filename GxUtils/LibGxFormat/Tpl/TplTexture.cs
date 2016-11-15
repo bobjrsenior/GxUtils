@@ -634,6 +634,10 @@ namespace LibGxFormat.Tpl
 		internal int SizeOfTextureData(GxGame game)
 		{
 			int size = 0;
+            if(game == GxGame.SuperMonkeyBallDX)
+            {
+                size += 0x20;
+            }
 			for (int level = 0; level < LevelCount; level++)
 			{
 				size += CalculateSizeOfLevel(level, (game == GxGame.FZeroGX));

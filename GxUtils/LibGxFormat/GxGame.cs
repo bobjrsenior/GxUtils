@@ -10,10 +10,10 @@ namespace LibGxFormat
 	public enum GxGame
 	{
         /// <summary>Super Monkey Ball 1 or 2</summary>
-        [Description("Super Monkey Ball")]
+        [Description("SMB 1/2")]
 		SuperMonkeyBall,
         /// <summary>Super Monkey Ball Deluxe </summary>
-        [Description("Super Monkey Ball Deluxe")]
+        [Description("SMB Deluxe")]
         SuperMonkeyBallDX,
         /// <summary>F-Zero GX</summary>
         [Description("F-Zero GX")]
