@@ -536,6 +536,24 @@ namespace LibGxFormat.Tpl
 			{
 				byte[] levelData = new byte[CalculateSizeOfLevel(level)];
 				input.Read(levelData, 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                if(game == GxGame.SuperMonkeyBallDX)
+                {
+                    if (format == GxTextureFormat.CMPR)
+                    {
+                        // Swap pallete byte order
+                        for (int i = 0; i < levelData.Length; i += 8)
+                        {
+                            byte temp = levelData[i];
+                            levelData[i] = levelData[i + 1];
+                            levelData[i + 1] = temp;
+
+                            temp = levelData[i + 2];
+                            levelData[i + 2] = levelData[i + 3];
+                            levelData[i + 3] = temp;
+                        }
+                    }
+                }
+                
 				encodedLevelData.Add(levelData);
 			}
 		}
