@@ -644,7 +644,39 @@ namespace LibGxFormat.Tpl
 
             for (int level = 0; level < LevelCount; level++)
 			{
-				output.Write(encodedLevelData[level], 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                if(game == GxGame.SuperMonkeyBallDX)
+                {
+                    if(Format == GxTextureFormat.CMPR)
+                    {
+                        // Swap pallete byte order
+                        byte[] swappedOrder = new byte[encodedLevelData[level].Length];
+                        for(int i = 0; i < CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)); i += 8)
+                        {
+                            swappedOrder[i] = encodedLevelData[level][i + 1];
+                            swappedOrder[i + 1] = encodedLevelData[level][i];
+
+                            swappedOrder[i + 2] = encodedLevelData[level][i + 3];
+                            swappedOrder[i + 3] = encodedLevelData[level][i + 2];
+
+                            // Pallete index values
+                            swappedOrder[i + 4] = encodedLevelData[level][i + 4];
+                            swappedOrder[i + 5] = encodedLevelData[level][i + 5];
+                            swappedOrder[i + 6] = encodedLevelData[level][i + 6];
+                            swappedOrder[i + 7] = encodedLevelData[level][i + 7];
+                        }
+                        output.Write(swappedOrder, 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                    }
+                    else
+                    {
+                        output.Write(encodedLevelData[level], 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                    }
+                }
+                else
+                {
+                    output.Write(encodedLevelData[level], 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                }
+
+               
 			}
 		}
 

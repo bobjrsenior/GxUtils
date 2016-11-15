@@ -216,6 +216,7 @@ namespace LibGxFormat.Tpl
             // Write texture definition headers
             int beginDataOffset = SizeOfHeaderEntries(game);
             int currentDataOffset = beginDataOffset;
+
             foreach (TplTexture tex in Items)
             {
                 if (tex.LevelCount != 0)
