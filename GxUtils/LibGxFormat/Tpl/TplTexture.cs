@@ -192,10 +192,11 @@ namespace LibGxFormat.Tpl
         /// <summary>
         /// Create a new texture from the given bitmap.
         /// </summary>
+        /// <param name="intFormat">The type of interpolation to use</param>
         /// <param name="bmp">The bitmap to build the texture from.</param>
-        public TplTexture(GxTextureFormat format, Bitmap bmp)
+        public TplTexture(GxTextureFormat format, GxInterpolationFormat intFormat, Bitmap bmp)
         {
-            DefineTextureFromBitmap(format, bmp);
+            DefineTextureFromBitmap(format, intFormat, bmp);
         }
 
 		/// <summary>
@@ -261,7 +262,7 @@ namespace LibGxFormat.Tpl
 		}
 
         /// <summary>Define the main level of the texture from the given bitmap.</summary>
-        public void DefineMainLevelFromBitmap(GxTextureFormat newFormat, Bitmap bmp)
+        public void DefineMainLevelFromBitmap(GxTextureFormat newFormat, GxInterpolationFormat intFormat, Bitmap bmp)
         {
             if (!SupportedTextureFormats.Contains(newFormat))
                 throw new ArgumentOutOfRangeException("newFormat", "Unsupported format.");
@@ -273,7 +274,7 @@ namespace LibGxFormat.Tpl
             height = bmp.Height;
             encodedLevelData = new List<byte[]>();
 
-            DefineLevelDataFromBitmap(0, bmp);
+            DefineLevelDataFromBitmap(0, intFormat, bmp);
         }
 
 		/// <summary>
@@ -320,7 +321,7 @@ namespace LibGxFormat.Tpl
         /// Create or replace the specified texture level from the specified bitmap.
         /// New texture levels must be created in order.
         /// </summary>
-        public void DefineLevelDataFromBitmap(int level, Bitmap bmp)
+        public void DefineLevelDataFromBitmap(int level, GxInterpolationFormat intFormat, Bitmap bmp)
         {
             if (level > LevelCount) // We allow to either replace an existing level or to generate the next level
                 throw new ArgumentOutOfRangeException("level");
@@ -357,8 +358,9 @@ namespace LibGxFormat.Tpl
         /// All texture levels will be generated until the texture size is no longer divisible by two.
         /// </summary>
         /// <param name="format">The format to encode the new texture as.</param>
+        /// <param name="intFormat">The type of interpolation to use</param>
         /// <param name="bmp">The bitmap that will define the texture.</param>
-        public void DefineTextureFromBitmap(GxTextureFormat format, Bitmap bmp)
+        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, Bitmap bmp)
         {
             if (!SupportedTextureFormats.Contains(format))
                 throw new ArgumentOutOfRangeException("format", "Unsupported format.");
@@ -372,11 +374,11 @@ namespace LibGxFormat.Tpl
             {
                 if (mipmapLevel == 0)
                 {
-                    DefineMainLevelFromBitmap(format, bmp);
+                    DefineMainLevelFromBitmap(format, intFormat, bmp);
                 }
                 else
                 {
-                    DefineLevelDataFromBitmap(mipmapLevel, DownscaleBitmap(mipmapLevel, bmp, GxInterpolationFormat.NearestNeighbor));//new Bitmap(bmp, currentWidth, currentHeight));
+                    DefineLevelDataFromBitmap(mipmapLevel, intFormat, DownscaleBitmap(mipmapLevel, intFormat, bmp));
                 }
 
                 if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
@@ -699,10 +701,10 @@ namespace LibGxFormat.Tpl
         /// Downscales a bitmap image with a specified interpolation algorithm
         /// </summary>
         /// <param name="level">The bitmap level fr downscaling</param>
-        /// <param name="bmp">The bitmap to downscale</param>
         /// <param name="intFormat">The type of interpolation to use</param>
+        /// <param name="bmp">The bitmap to downscale</param>
         /// <returns>The downscaled bitmap</returns>
-        internal Bitmap DownscaleBitmap(int level, Bitmap bmp, GxInterpolationFormat intFormat)
+        internal Bitmap DownscaleBitmap(int level, GxInterpolationFormat intFormat, Bitmap bmp)
         {
             if(intFormat == GxInterpolationFormat.NearestNeighbor)
             {

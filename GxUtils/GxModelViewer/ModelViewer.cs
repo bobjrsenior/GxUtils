@@ -107,6 +107,12 @@ namespace GxModelViewer
             tsCmbGame.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxGame)).Cast<GxGame>()
                 .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
 
+            // Populate ComboBox values from GxInterpolationFormat enum dynamically.
+            tsCmbMipmap.ComboBox.ValueMember = "Key";
+            tsCmbMipmap.ComboBox.DisplayMember = "Value";
+            tsCmbMipmap.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxInterpolationFormat)).Cast<GxInterpolationFormat>()
+                .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
+
             LoadGmaFile(null);
             LoadTplFile(null);
         }
@@ -114,6 +120,11 @@ namespace GxModelViewer
         private GxGame GetSelectedGame()
         {
             return (GxGame)tsCmbGame.ComboBox.SelectedValue;
+        }
+
+        private GxInterpolationFormat GetSelectedMipmap()
+        {
+            return (GxInterpolationFormat)tsCmbMipmap.ComboBox.SelectedValue;
         }
 
         private void UnloadModel()
@@ -783,7 +794,7 @@ namespace GxModelViewer
             }
 
             Dictionary<Bitmap, int> textureIndexMapping;
-            tpl = new Tpl(model, out textureIndexMapping);
+            tpl = new Tpl(model, GetSelectedMipmap(), out textureIndexMapping);
             gma = new Gma(model, textureIndexMapping);
 
             // Set TPL / GMA as changed
@@ -1008,7 +1019,7 @@ namespace GxModelViewer
                 GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
 
                 // Redefine the entire texture from the bitmap
-                tex.DefineTextureFromBitmap(newFmt, bmp);
+                tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), bmp);
 
                 TextureHasChanged(textureData.TextureIdx);
                 UpdateTextureTree();
@@ -1027,7 +1038,7 @@ namespace GxModelViewer
                 }
 
                 // Replace just the selected level from the bitmap
-                tex.DefineLevelDataFromBitmap(textureData.TextureLevel, bmp);
+                tex.DefineLevelDataFromBitmap(textureData.TextureLevel, GetSelectedMipmap(), bmp);
 
                 TextureHasChanged(textureData.TextureIdx);
             }

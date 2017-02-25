@@ -69,6 +69,7 @@
     <Compile Include="Gma\GmaEntry.cs" />
     <Compile Include="Gma\InvalidGmaFileException.cs" />
     <Compile Include="GxGame.cs" />
+    <Compile Include="GxTextureInterpolationFormat.cs" />
     <Compile Include="Lz\InvalidLzFileException.cs" />
     <Compile Include="Lz\Lz.cs" />
     <Compile Include="ModelLoader\InvalidObjMtlFileException.cs" />

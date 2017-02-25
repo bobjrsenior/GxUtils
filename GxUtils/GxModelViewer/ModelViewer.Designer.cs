@@ -39,6 +39,9 @@ namespace GxModelViewer
             this.toolStripActions = new System.Windows.Forms.ToolStrip();
             this.lsLblGame = new System.Windows.Forms.ToolStripLabel();
             this.tsCmbGame = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tsCmbMipmap = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsBtnLoadTpl = new System.Windows.Forms.ToolStripButton();
             this.tsBtnSaveTpl = new System.Windows.Forms.ToolStripButton();
@@ -203,6 +206,9 @@ namespace GxModelViewer
             this.toolStripActions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lsLblGame,
             this.tsCmbGame,
+            this.toolStripSeparator5,
+            this.toolStripLabel1,
+            this.tsCmbMipmap,
             this.toolStripSeparator1,
             this.tsBtnLoadTpl,
             this.tsBtnSaveTpl,
@@ -229,8 +235,27 @@ namespace GxModelViewer
             // tsCmbGame
             // 
             this.tsCmbGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tsCmbGame.DropDownWidth = 121;
             this.tsCmbGame.Name = "tsCmbGame";
-            this.tsCmbGame.Size = new System.Drawing.Size(121, 25);
+            this.tsCmbGame.Size = new System.Drawing.Size(90, 25);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(44, 22);
+            this.toolStripLabel1.Text = "Game: ";
+            // 
+            // tsCmbMipmap
+            // 
+            this.tsCmbMipmap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tsCmbMipmap.DropDownWidth = 121;
+            this.tsCmbMipmap.Name = "tsCmbMipmap";
+            this.tsCmbMipmap.Size = new System.Drawing.Size(90, 25);
             // 
             // toolStripSeparator1
             // 
@@ -324,7 +349,7 @@ namespace GxModelViewer
             this.tsBtnExportObjMtl.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnExportObjMtl.Image")));
             this.tsBtnExportObjMtl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnExportObjMtl.Name = "tsBtnExportObjMtl";
-            this.tsBtnExportObjMtl.Size = new System.Drawing.Size(105, 22);
+            this.tsBtnExportObjMtl.Size = new System.Drawing.Size(105, 19);
             this.tsBtnExportObjMtl.Text = "Export OBJ/MTL...";
             this.tsBtnExportObjMtl.Click += new System.EventHandler(this.tsBtnExportObjMtl_Click);
             // 
@@ -1486,5 +1511,8 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripButton tsBtnImportObjMtl;
         private System.Windows.Forms.SaveFileDialog sfdSaveGma;
         private System.Windows.Forms.OpenFileDialog ofdLoadObj;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripComboBox tsCmbMipmap;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
