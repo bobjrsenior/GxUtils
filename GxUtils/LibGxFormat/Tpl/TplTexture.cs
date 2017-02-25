@@ -694,6 +694,12 @@ namespace LibGxFormat.Tpl
 			}
 			return size;
 		}
+
+        internal Bitmap ScaleBitmap(int level, Bitmap bmp, GxInterpolationFormat intFormat)
+        {
+
+            return bmp;
+        }
 	}
 }
 
