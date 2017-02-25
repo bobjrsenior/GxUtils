@@ -376,7 +376,7 @@ namespace LibGxFormat.Tpl
                 }
                 else
                 {
-                    DefineLevelDataFromBitmap(mipmapLevel, new Bitmap(bmp, currentWidth, currentHeight));
+                    DefineLevelDataFromBitmap(mipmapLevel, DownscaleBitmap(mipmapLevel, bmp, GxInterpolationFormat.TopLeft));//new Bitmap(bmp, currentWidth, currentHeight));
                 }
 
                 if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
@@ -695,11 +695,56 @@ namespace LibGxFormat.Tpl
 			return size;
 		}
 
-        internal Bitmap ScaleBitmap(int level, Bitmap bmp, GxInterpolationFormat intFormat)
+        /// <summary>
+        /// Downscales a bitmap image with a specified interpolation algorithm
+        /// </summary>
+        /// <param name="level">The bitmap level fr downscaling</param>
+        /// <param name="bmp">The bitmap to downscale</param>
+        /// <param name="intFormat">The type of interpolation to use</param>
+        /// <returns>The downscaled bitmap</returns>
+        internal Bitmap DownscaleBitmap(int level, Bitmap bmp, GxInterpolationFormat intFormat)
         {
-
-            return bmp;
+            if(intFormat == GxInterpolationFormat.TopLeft)
+            {
+                return DownscaleBitmapTopLeft(level, bmp);
+            }
+            else
+            {
+                return new Bitmap(bmp, width >> level, height >> level);
+            }
         }
-	}
+
+        /// <summary>
+        /// Downscales a bitmap image with the top-left interpolation algorithm
+        /// </summary>
+        /// <param name="level">The bitmap level fr downscaling</param>
+        /// <param name="bmp">The bitmap to downscale</param>
+        /// <returns>The downscaled bitmap</returns>
+        internal Bitmap DownscaleBitmapTopLeft(int level, Bitmap bmp)
+        {
+            int newWidth = width >> level;
+            int newHeight = height >> level;
+            int stride = 1 << level;
+
+            // Create downscaled bitmap
+            Bitmap newBmp = new Bitmap(newWidth, newHeight);
+            
+
+            // Use the top-left algorithm to set pixel data on new bitmap
+            int ysrc = 0;
+            int ydst = 0;
+            for (; ydst < newHeight; ysrc += stride, ++ydst)
+            {
+                int xsrc = 0;
+                int xdst = 0;
+                for (; xdst < newWidth; xsrc += stride, ++xdst)
+                {
+                    newBmp.SetPixel(xdst, ydst, bmp.GetPixel(xsrc, ysrc));
+                }
+            }
+
+            return newBmp;
+        }
+    }
 }
 
