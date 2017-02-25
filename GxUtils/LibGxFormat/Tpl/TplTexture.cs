@@ -376,7 +376,7 @@ namespace LibGxFormat.Tpl
                 }
                 else
                 {
-                    DefineLevelDataFromBitmap(mipmapLevel, DownscaleBitmap(mipmapLevel, bmp, GxInterpolationFormat.TopLeft));//new Bitmap(bmp, currentWidth, currentHeight));
+                    DefineLevelDataFromBitmap(mipmapLevel, DownscaleBitmap(mipmapLevel, bmp, GxInterpolationFormat.NearestNeighbor));//new Bitmap(bmp, currentWidth, currentHeight));
                 }
 
                 if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
@@ -704,9 +704,9 @@ namespace LibGxFormat.Tpl
         /// <returns>The downscaled bitmap</returns>
         internal Bitmap DownscaleBitmap(int level, Bitmap bmp, GxInterpolationFormat intFormat)
         {
-            if(intFormat == GxInterpolationFormat.TopLeft)
+            if(intFormat == GxInterpolationFormat.NearestNeighbor)
             {
-                return DownscaleBitmapTopLeft(level, bmp);
+                return DownscaleBitmapNearestNeighbor(level, bmp);
             }
             else
             {
@@ -720,29 +720,43 @@ namespace LibGxFormat.Tpl
         /// <param name="level">The bitmap level fr downscaling</param>
         /// <param name="bmp">The bitmap to downscale</param>
         /// <returns>The downscaled bitmap</returns>
-        internal Bitmap DownscaleBitmapTopLeft(int level, Bitmap bmp)
+        internal Bitmap DownscaleBitmapNearestNeighbor(int level, Bitmap bmp)
         {
             int newWidth = width >> level;
             int newHeight = height >> level;
-            int stride = 1 << level;
+            int pixelDistance = 1 << level;
 
             // Create downscaled bitmap
-            Bitmap newBmp = new Bitmap(newWidth, newHeight);
-            
+            Bitmap newBmp = new Bitmap(newWidth, newHeight, bmp.PixelFormat);
 
-            // Use the top-left algorithm to set pixel data on new bitmap
+            // Get old/new pixel data in the 32-bit argb pixel format
+            BitmapData oldData = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData newData = newBmp.LockBits(new Rectangle(0, 0, newBmp.Width, newBmp.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            // Copy the old pixel data into an int array
+            int[] oldLevelData = new int[oldData.Height * oldData.Width];
+            Marshal.Copy(oldData.Scan0, oldLevelData, 0, oldData.Height * oldData.Width);
+            bmp.UnlockBits(oldData);
+
+            // Make room for the new pixel data
+            int[] newLevelData = new int[newData.Height * newData.Width];
+
+            // Use the nearest neighbor algorithm to set pixel data on new bitmap
             int ysrc = 0;
             int ydst = 0;
-            for (; ydst < newHeight; ysrc += stride, ++ydst)
+            for (; ydst < newHeight; ysrc += pixelDistance, ++ydst)
             {
                 int xsrc = 0;
                 int xdst = 0;
-                for (; xdst < newWidth; xsrc += stride, ++xdst)
+                for (; xdst < newWidth; xsrc += pixelDistance, ++xdst)
                 {
-                    newBmp.SetPixel(xdst, ydst, bmp.GetPixel(xsrc, ysrc));
+                    newLevelData[(ydst * newWidth) + xdst] = oldLevelData[(ysrc * oldData.Height) + xsrc];
                 }
             }
 
+            // Copy in the new pixel data
+            Marshal.Copy(newLevelData, 0, newData.Scan0, newData.Height * newData.Width);
+            newBmp.UnlockBits(newData);
             return newBmp;
         }
     }

@@ -8,6 +8,6 @@ namespace LibGxTexture
     public enum GxInterpolationFormat
     {
         /// <summary>Uses the top left pixel when interpolating</summary>
-        TopLeft
+        NearestNeighbor
     }
 }
