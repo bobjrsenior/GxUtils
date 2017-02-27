@@ -146,15 +146,30 @@ namespace LibGxTexture
         /// <param name="dstPos">The initial position in the destination buffer.</param>
         void EncodeDxtBlock(byte[] src, int srcPos, int stride, byte[] dst, int dstPos)
         {
+            bool alphaBlock = false;
             // Extract a 4x4 tile from the texture
             byte[] tile = new byte[4 * 4 * 4];
             for (int y = 0, pos = srcPos; y < 4; y++, pos += stride)
                 Array.Copy(src, pos, tile, y * 4 * 4, 4 * 4);
 
-            // Compress the DXT block
-            StbDxt.CompressDxtBlock(dst, dstPos, tile, 0, false,
-                StbDxt.CompressionMode.Dither | StbDxt.CompressionMode.HighQual);
+            int alphaCount = 0;
+            for(int i = 3; i < 64; i+=4)
+            {
+                if(tile[i] <= 128)
+                {
+                    ++alphaCount;
+                }
+            }
 
+            if(alphaCount >= 8)
+            {
+                alphaBlock = true;
+            }
+
+            // Compress the DXT block
+            StbDxt.CompressDxtBlock(dst, dstPos, tile, 0, alphaBlock,
+                StbDxt.CompressionMode.Dither | StbDxt.CompressionMode.HighQual);
+            
             // Convert from the standard DXT format to the Gx format
             Utils.Swap16(dst, dstPos + 0);
             Utils.Swap16(dst, dstPos + 2);

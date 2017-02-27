@@ -92,12 +92,33 @@ namespace LibGxTexture
         #endif
         }
 
+        /// <summary>linear interpolation at 1/2 point between a and b, using desired rounding type</summary>
+        static int Lerp12(int a, int b)
+        {
+        #if STB_DXT_USE_ROUNDING_BIAS
+           // with rounding bias
+           return a + Mul8Bit(b-a, 0x55);
+        #else   
+            // without rounding bias
+            // replace "/ 3" by "* 0xaaab) >> 17" if your compiler sucks or you really need every ounce of speed.
+            return (a + b) / 2;
+        #endif
+        }
+
         /// <summary>lerp RGB color</summary>
         static void Lerp13RGB(byte[] outp, int outpIdx, byte[] p1, int p1Idx, byte[] p2, int p2Idx)
         {
             outp[outpIdx+0] = (byte)Lerp13(p1[p1Idx+0], p2[p2Idx+0]);
             outp[outpIdx+1] = (byte)Lerp13(p1[p1Idx+1], p2[p2Idx+1]);
             outp[outpIdx+2] = (byte)Lerp13(p1[p1Idx+2], p2[p2Idx+2]);
+        }
+
+        /// <summary>lerp RGB color</summary>
+        static void Lerp12RGB(byte[] outp, int outpIdx, byte[] p1, int p1Idx, byte[] p2, int p2Idx)
+        {
+            outp[outpIdx + 0] = (byte)Lerp12(p1[p1Idx + 0], p2[p2Idx + 0]);
+            outp[outpIdx + 1] = (byte)Lerp12(p1[p1Idx + 1], p2[p2Idx + 1]);
+            outp[outpIdx + 2] = (byte)Lerp12(p1[p1Idx + 2], p2[p2Idx + 2]);
         }
 
         /****************************************************************************/
@@ -137,6 +158,14 @@ namespace LibGxTexture
             From16Bit(color, colorIdx + 4, c1);
             Lerp13RGB(color, colorIdx + 8, color, colorIdx+0, color, colorIdx+4);
             Lerp13RGB(color, colorIdx +12, color, colorIdx+4, color, colorIdx+0);
+        }
+
+        static void EvalAlphaColors(byte[] color, int colorIdx, ushort c0, ushort c1)
+        {
+            From16Bit(color, colorIdx + 0, c0);
+            From16Bit(color, colorIdx + 4, c1);
+            Lerp12RGB(color, colorIdx + 8, color, colorIdx + 0, color, colorIdx + 4);
+            From16Bit(color, colorIdx + 12, c0);
         }
 
         /// <summary>
@@ -546,56 +575,50 @@ namespace LibGxTexture
         /// <summary>
         /// Alpha block compression (this is easy for a change)
         /// </summary>
-        static void CompressAlphaBlock(byte[] dest, int destIdx, byte[] src, int srcIdx, CompressionMode mode)
+        static void CompressAlphaBlock(byte[] dest, int destIdx, byte[] block, int blockIdx, CompressionMode mode)
         {    
-            int i,dist,bias,dist4,dist2,bits,mask;
+            byte[] dblock = new byte[16 * 4];
 
-            // find min/max color
-            int mn,mx;
-            mn = mx = src[srcIdx+3];
+            bool dither;
+            int refinecount;
+            ushort max16;
+            ushort min16;
+            uint mask;
+            byte[] color = new byte[4 * 4];
+            dither = (mode & CompressionMode.Dither) != 0;
+            refinecount = ((mode & CompressionMode.HighQual) != 0) ? 2 : 1;
 
-            for (i=1;i<16;i++)
+            // first step: compute dithered version for PCA if desired
+            if (dither)
+                DitherBlock(dblock, 0, block, blockIdx);
+
+            // second step: pca+map along principal axis
+            OptimizeColorsBlock(dither ? dblock : block, dither ? 0 : blockIdx, out max16, out min16);
+
+            // Evaluate the color pallete (last entry becomes the first for alpha pallete)
+            EvalAlphaColors(color, 0, max16, min16);
+
+            // Figure out the mask (doesn't deal with alpha)
+            mask = MatchColorsBlock(block, blockIdx, color, 0, dither);
+
+
+            // Go through and check for which pixels should be transparent
+            for (int i = 0; i < 16; ++i)
             {
-                if (src[srcIdx+i*4+3] < mn) mn = src[srcIdx+i*4+3];
-                else if (src[srcIdx+i*4+3] > mx) mx = src[srcIdx+i*4+3];
-            }
-
-            // encode them
-            dest[destIdx+0] = (byte)mx;
-            dest[destIdx+1] = (byte)mn;
-            destIdx += 2;
-
-            // determine bias and emit color indices
-            // given the choice of mx/mn, these indices are optimal:
-            // http://fgiesen.wordpress.com/2009/12/15/dxt5-alpha-block-index-determination/
-            dist = mx-mn;
-            dist4 = dist*4;
-            dist2 = dist*2;
-            bias = (dist < 8) ? (dist - 1) : (dist/2 + 2);
-            bias -= mn * 7;
-            bits = 0; mask=0;
-
-            for (i=0;i<16;i++) {
-                int a = src[srcIdx+i*4+3]*7 + bias;
-                int ind,t;
-
-                // select index. this is a "linear scale" lerp factor between 0 (val=min) and 7 (val=max).
-                t = (a >= dist4) ? -1 : 0; ind =  t & 4; a -= dist4 & t;
-                t = (a >= dist2) ? -1 : 0; ind += t & 2; a -= dist2 & t;
-                ind += (a >= dist) ? 1 : 0;
-
-                // turn linear scale into DXT index (0/1 are extremal pts)
-                ind = -ind & 7;
-                ind ^= (2 > ind) ? 1 : 0;
-
-                // write index
-                mask |= ind << bits;
-                if((bits += 3) >= 8) {
-                    dest[destIdx++] = (byte)mask;
-                    mask >>= 8;
-                    bits -= 8;
+                if (block[(i * 4) + 3] <= 128)
+                {
+                    mask = mask ^ (((uint)0xC0000000) >> (2 * i));
                 }
             }
+
+            dest[destIdx + 2] = (byte)(min16);
+            dest[destIdx + 3] = (byte)(min16 >> 8);
+            dest[destIdx + 0] = (byte)(max16);
+            dest[destIdx + 1] = (byte)(max16 >> 8);
+            dest[destIdx + 4] = (byte)(mask);
+            dest[destIdx + 5] = (byte)(mask >> 8);
+            dest[destIdx + 6] = (byte)(mask >> 16);
+            dest[destIdx + 7] = (byte)(mask >> 24);
         }
 
         static void InitDXT()
@@ -625,12 +648,14 @@ namespace LibGxTexture
 
         public static void CompressDxtBlock(byte[] dest, int destIdx, byte[] src, int srcIdx, bool alpha, CompressionMode mode)
         {
-            if (alpha) {
+            if (alpha)
+            {
                 CompressAlphaBlock(dest, destIdx, src, srcIdx, mode);
-                destIdx += 8;
             }
-
-            CompressColorBlock(dest,destIdx, src, srcIdx, mode);
+            else
+            {
+                CompressColorBlock(dest, destIdx, src, srcIdx, mode);
+            }
         }
     }
 }
