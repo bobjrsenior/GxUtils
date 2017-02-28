@@ -40,8 +40,6 @@ namespace GxModelViewer
             this.lsLblGame = new System.Windows.Forms.ToolStripLabel();
             this.tsCmbGame = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tsCmbMipmap = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsBtnLoadTpl = new System.Windows.Forms.ToolStripButton();
             this.tsBtnSaveTpl = new System.Windows.Forms.ToolStripButton();
@@ -140,6 +138,10 @@ namespace GxModelViewer
             this.sfdTextureExportPath = new System.Windows.Forms.SaveFileDialog();
             this.sfdSaveGma = new System.Windows.Forms.SaveFileDialog();
             this.ofdLoadObj = new System.Windows.Forms.OpenFileDialog();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.numMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -168,6 +170,7 @@ namespace GxModelViewer
             this.tlpTextureDisplay.SuspendLayout();
             this.tlpTextureProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -207,8 +210,6 @@ namespace GxModelViewer
             this.lsLblGame,
             this.tsCmbGame,
             this.toolStripSeparator5,
-            this.toolStripLabel1,
-            this.tsCmbMipmap,
             this.toolStripSeparator1,
             this.tsBtnLoadTpl,
             this.tsBtnSaveTpl,
@@ -220,7 +221,7 @@ namespace GxModelViewer
             this.toolStripSeparator3,
             this.tsBtnImportObjMtl,
             this.tsBtnExportObjMtl});
-            this.toolStripActions.Location = new System.Drawing.Point(0, 0);
+            this.toolStripActions.Location = new System.Drawing.Point(0, 24);
             this.toolStripActions.Name = "toolStripActions";
             this.toolStripActions.Size = new System.Drawing.Size(961, 25);
             this.toolStripActions.TabIndex = 1;
@@ -237,25 +238,12 @@ namespace GxModelViewer
             this.tsCmbGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tsCmbGame.DropDownWidth = 121;
             this.tsCmbGame.Name = "tsCmbGame";
-            this.tsCmbGame.Size = new System.Drawing.Size(90, 25);
+            this.tsCmbGame.Size = new System.Drawing.Size(121, 25);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(44, 22);
-            this.toolStripLabel1.Text = "Game: ";
-            // 
-            // tsCmbMipmap
-            // 
-            this.tsCmbMipmap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.tsCmbMipmap.DropDownWidth = 121;
-            this.tsCmbMipmap.Name = "tsCmbMipmap";
-            this.tsCmbMipmap.Size = new System.Drawing.Size(90, 25);
             // 
             // toolStripSeparator1
             // 
@@ -349,7 +337,7 @@ namespace GxModelViewer
             this.tsBtnExportObjMtl.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnExportObjMtl.Image")));
             this.tsBtnExportObjMtl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnExportObjMtl.Name = "tsBtnExportObjMtl";
-            this.tsBtnExportObjMtl.Size = new System.Drawing.Size(105, 19);
+            this.tsBtnExportObjMtl.Size = new System.Drawing.Size(105, 22);
             this.tsBtnExportObjMtl.Text = "Export OBJ/MTL...";
             this.tsBtnExportObjMtl.Click += new System.EventHandler(this.tsBtnExportObjMtl_Click);
             // 
@@ -361,10 +349,10 @@ namespace GxModelViewer
             this.tabControlModelsTextures.Controls.Add(this.tabPageModels);
             this.tabControlModelsTextures.Controls.Add(this.tabPageMaterials);
             this.tabControlModelsTextures.Controls.Add(this.tabPageTextures);
-            this.tabControlModelsTextures.Location = new System.Drawing.Point(12, 28);
+            this.tabControlModelsTextures.Location = new System.Drawing.Point(12, 52);
             this.tabControlModelsTextures.Name = "tabControlModelsTextures";
             this.tabControlModelsTextures.SelectedIndex = 0;
-            this.tabControlModelsTextures.Size = new System.Drawing.Size(937, 518);
+            this.tabControlModelsTextures.Size = new System.Drawing.Size(937, 522);
             this.tabControlModelsTextures.TabIndex = 2;
             // 
             // tabPageModels
@@ -373,7 +361,7 @@ namespace GxModelViewer
             this.tabPageModels.Location = new System.Drawing.Point(4, 22);
             this.tabPageModels.Name = "tabPageModels";
             this.tabPageModels.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageModels.Size = new System.Drawing.Size(929, 492);
+            this.tabPageModels.Size = new System.Drawing.Size(929, 496);
             this.tabPageModels.TabIndex = 0;
             this.tabPageModels.Text = "Models";
             this.tabPageModels.UseVisualStyleBackColor = true;
@@ -393,7 +381,7 @@ namespace GxModelViewer
             // splitContainerModels.Panel2
             // 
             this.splitContainerModels.Panel2.Controls.Add(this.tlpMaterialMeshDisplay);
-            this.splitContainerModels.Size = new System.Drawing.Size(929, 492);
+            this.splitContainerModels.Size = new System.Drawing.Size(929, 496);
             this.splitContainerModels.SplitterDistance = 307;
             this.splitContainerModels.TabIndex = 1;
             // 
@@ -415,13 +403,13 @@ namespace GxModelViewer
             this.tableLayoutPanelModelSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanelModelSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanelModelSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanelModelSelect.Size = new System.Drawing.Size(307, 492);
+            this.tableLayoutPanelModelSelect.Size = new System.Drawing.Size(307, 496);
             this.tableLayoutPanelModelSelect.TabIndex = 6;
             // 
             // btnModelHideAll
             // 
             this.btnModelHideAll.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnModelHideAll.Location = new System.Drawing.Point(3, 465);
+            this.btnModelHideAll.Location = new System.Drawing.Point(3, 469);
             this.btnModelHideAll.Name = "btnModelHideAll";
             this.btnModelHideAll.Size = new System.Drawing.Size(301, 24);
             this.btnModelHideAll.TabIndex = 4;
@@ -432,7 +420,7 @@ namespace GxModelViewer
             // btnModelShowLayer1
             // 
             this.btnModelShowLayer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnModelShowLayer1.Location = new System.Drawing.Point(3, 405);
+            this.btnModelShowLayer1.Location = new System.Drawing.Point(3, 409);
             this.btnModelShowLayer1.Name = "btnModelShowLayer1";
             this.btnModelShowLayer1.Size = new System.Drawing.Size(301, 24);
             this.btnModelShowLayer1.TabIndex = 2;
@@ -443,7 +431,7 @@ namespace GxModelViewer
             // btnModelShowLayer2
             // 
             this.btnModelShowLayer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnModelShowLayer2.Location = new System.Drawing.Point(3, 435);
+            this.btnModelShowLayer2.Location = new System.Drawing.Point(3, 439);
             this.btnModelShowLayer2.Name = "btnModelShowLayer2";
             this.btnModelShowLayer2.Size = new System.Drawing.Size(301, 24);
             this.btnModelShowLayer2.TabIndex = 3;
@@ -454,7 +442,7 @@ namespace GxModelViewer
             // btnModelShowAll
             // 
             this.btnModelShowAll.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnModelShowAll.Location = new System.Drawing.Point(3, 375);
+            this.btnModelShowAll.Location = new System.Drawing.Point(3, 379);
             this.btnModelShowAll.Name = "btnModelShowAll";
             this.btnModelShowAll.Size = new System.Drawing.Size(301, 24);
             this.btnModelShowAll.TabIndex = 1;
@@ -467,7 +455,7 @@ namespace GxModelViewer
             this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeModel.Location = new System.Drawing.Point(3, 3);
             this.treeModel.Name = "treeModel";
-            this.treeModel.Size = new System.Drawing.Size(301, 366);
+            this.treeModel.Size = new System.Drawing.Size(301, 370);
             this.treeModel.TabIndex = 0;
             this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
             this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
@@ -488,7 +476,7 @@ namespace GxModelViewer
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 489);
+            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 452);
             this.tlpMaterialMeshDisplay.TabIndex = 1;
             // 
             // tlpModelDisplay
@@ -509,7 +497,7 @@ namespace GxModelViewer
             this.tlpModelDisplay.Controls.Add(this.lblModelRadius, 1, 2);
             this.tlpModelDisplay.Controls.Add(this.lblModelTransformMatrixDefaultReferences, 1, 3);
             this.tlpModelDisplay.Controls.Add(this.lblModelNumTransformMatrices, 1, 4);
-            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 114);
+            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 77);
             this.tlpModelDisplay.Name = "tlpModelDisplay";
             this.tlpModelDisplay.RowCount = 5;
             this.tlpModelDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -629,7 +617,7 @@ namespace GxModelViewer
             this.glControlModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControlModel.Location = new System.Drawing.Point(3, 3);
             this.glControlModel.Name = "glControlModel";
-            this.glControlModel.Size = new System.Drawing.Size(610, 105);
+            this.glControlModel.Size = new System.Drawing.Size(610, 68);
             this.glControlModel.TabIndex = 0;
             this.glControlModel.VSync = false;
             this.glControlModel.Load += new System.EventHandler(this.glControlModel_Load);
@@ -673,7 +661,7 @@ namespace GxModelViewer
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk8, 1, 2);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk4, 1, 1);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshRenderFlags, 1, 0);
-            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 220);
+            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 183);
             this.tlpMeshDisplay.Name = "tlpMeshDisplay";
             this.tlpMeshDisplay.RowCount = 13;
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -958,7 +946,7 @@ namespace GxModelViewer
             this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
             this.tabPageMaterials.Name = "tabPageMaterials";
             this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMaterials.Size = new System.Drawing.Size(929, 492);
+            this.tabPageMaterials.Size = new System.Drawing.Size(929, 496);
             this.tabPageMaterials.TabIndex = 2;
             this.tabPageMaterials.Text = "Materials";
             this.tabPageMaterials.UseVisualStyleBackColor = true;
@@ -976,7 +964,7 @@ namespace GxModelViewer
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tlpMaterialDisplay);
-            this.splitContainer1.Size = new System.Drawing.Size(923, 486);
+            this.splitContainer1.Size = new System.Drawing.Size(923, 490);
             this.splitContainer1.SplitterDistance = 306;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -985,7 +973,7 @@ namespace GxModelViewer
             this.treeMaterials.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMaterials.Location = new System.Drawing.Point(0, 0);
             this.treeMaterials.Name = "treeMaterials";
-            this.treeMaterials.Size = new System.Drawing.Size(306, 486);
+            this.treeMaterials.Size = new System.Drawing.Size(306, 490);
             this.treeMaterials.TabIndex = 0;
             this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
             // 
@@ -1003,7 +991,7 @@ namespace GxModelViewer
             this.tlpMaterialDisplay.RowCount = 2;
             this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialDisplay.Size = new System.Drawing.Size(607, 480);
+            this.tlpMaterialDisplay.Size = new System.Drawing.Size(607, 484);
             this.tlpMaterialDisplay.TabIndex = 1;
             // 
             // tlpMaterialProperties
@@ -1026,7 +1014,7 @@ namespace GxModelViewer
             this.tlpMaterialProperties.Controls.Add(this.lblMaterialAnisotropyLevel, 1, 3);
             this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnkC, 1, 4);
             this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk10, 1, 5);
-            this.tlpMaterialProperties.Location = new System.Drawing.Point(3, 355);
+            this.tlpMaterialProperties.Location = new System.Drawing.Point(3, 359);
             this.tlpMaterialProperties.Name = "tlpMaterialProperties";
             this.tlpMaterialProperties.RowCount = 6;
             this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -1163,7 +1151,7 @@ namespace GxModelViewer
             this.pbMaterialTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbMaterialTextureImage.Location = new System.Drawing.Point(3, 3);
             this.pbMaterialTextureImage.Name = "pbMaterialTextureImage";
-            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 346);
+            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 350);
             this.pbMaterialTextureImage.TabIndex = 2;
             this.pbMaterialTextureImage.TabStop = false;
             // 
@@ -1173,7 +1161,7 @@ namespace GxModelViewer
             this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextures.Name = "tabPageTextures";
             this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTextures.Size = new System.Drawing.Size(929, 492);
+            this.tabPageTextures.Size = new System.Drawing.Size(929, 496);
             this.tabPageTextures.TabIndex = 1;
             this.tabPageTextures.Text = "Textures";
             this.tabPageTextures.UseVisualStyleBackColor = true;
@@ -1191,7 +1179,7 @@ namespace GxModelViewer
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tlpTextureDisplay);
-            this.splitContainer2.Size = new System.Drawing.Size(923, 486);
+            this.splitContainer2.Size = new System.Drawing.Size(923, 490);
             this.splitContainer2.SplitterDistance = 306;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -1200,7 +1188,7 @@ namespace GxModelViewer
             this.treeTextures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeTextures.Location = new System.Drawing.Point(0, 0);
             this.treeTextures.Name = "treeTextures";
-            this.treeTextures.Size = new System.Drawing.Size(306, 486);
+            this.treeTextures.Size = new System.Drawing.Size(306, 490);
             this.treeTextures.TabIndex = 0;
             this.treeTextures.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeTextures_AfterSelect);
             // 
@@ -1218,7 +1206,7 @@ namespace GxModelViewer
             this.tlpTextureDisplay.RowCount = 2;
             this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTextureDisplay.Size = new System.Drawing.Size(608, 480);
+            this.tlpTextureDisplay.Size = new System.Drawing.Size(608, 484);
             this.tlpTextureDisplay.TabIndex = 4;
             // 
             // tlpTextureProperties
@@ -1235,7 +1223,7 @@ namespace GxModelViewer
             this.tlpTextureProperties.Controls.Add(this.lblTextureDimensions, 1, 0);
             this.tlpTextureProperties.Controls.Add(this.lblTextureFormatText, 0, 1);
             this.tlpTextureProperties.Controls.Add(this.lblTextureFormat, 1, 1);
-            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 397);
+            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 401);
             this.tlpTextureProperties.Name = "tlpTextureProperties";
             this.tlpTextureProperties.RowCount = 3;
             this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -1311,7 +1299,7 @@ namespace GxModelViewer
             this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
             this.pbTextureImage.Name = "pbTextureImage";
-            this.pbTextureImage.Size = new System.Drawing.Size(602, 388);
+            this.pbTextureImage.Size = new System.Drawing.Size(602, 392);
             this.pbTextureImage.TabIndex = 4;
             this.pbTextureImage.TabStop = false;
             // 
@@ -1360,13 +1348,46 @@ namespace GxModelViewer
             this.ofdLoadObj.Filter = "OBJ Files|*.obj|All Files|*.*";
             this.ofdLoadObj.Title = "Load OBJ File...";
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(961, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.numMipmapsToolStripMenuItem,
+            this.mipmapInterpolationToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // numMipmapsToolStripMenuItem
+            // 
+            this.numMipmapsToolStripMenuItem.Name = "numMipmapsToolStripMenuItem";
+            this.numMipmapsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.numMipmapsToolStripMenuItem.Text = "Max Num Mipmaps";
+            // 
+            // mipmapInterpolationToolStripMenuItem
+            // 
+            this.mipmapInterpolationToolStripMenuItem.Name = "mipmapInterpolationToolStripMenuItem";
+            this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(961, 558);
+            this.ClientSize = new System.Drawing.Size(961, 586);
             this.Controls.Add(this.tabControlModelsTextures);
             this.Controls.Add(this.toolStripActions);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "ModelViewer";
             this.Text = "GxModelViewer Model Viewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ModelViewer_FormClosing);
@@ -1399,6 +1420,8 @@ namespace GxModelViewer
             this.tlpTextureDisplay.ResumeLayout(false);
             this.tlpTextureProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1511,8 +1534,10 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripButton tsBtnImportObjMtl;
         private System.Windows.Forms.SaveFileDialog sfdSaveGma;
         private System.Windows.Forms.OpenFileDialog ofdLoadObj;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripComboBox tsCmbMipmap;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem numMipmapsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mipmapInterpolationToolStripMenuItem;
     }
 }

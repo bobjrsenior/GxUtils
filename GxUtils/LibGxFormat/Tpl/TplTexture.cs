@@ -194,9 +194,9 @@ namespace LibGxFormat.Tpl
         /// </summary>
         /// <param name="intFormat">The type of interpolation to use</param>
         /// <param name="bmp">The bitmap to build the texture from.</param>
-        public TplTexture(GxTextureFormat format, GxInterpolationFormat intFormat, Bitmap bmp)
+        public TplTexture(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp)
         {
-            DefineTextureFromBitmap(format, intFormat, bmp);
+            DefineTextureFromBitmap(format, intFormat, numMipmaps, bmp);
         }
 
 		/// <summary>
@@ -360,7 +360,7 @@ namespace LibGxFormat.Tpl
         /// <param name="format">The format to encode the new texture as.</param>
         /// <param name="intFormat">The type of interpolation to use</param>
         /// <param name="bmp">The bitmap that will define the texture.</param>
-        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, Bitmap bmp)
+        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp)
         {
             if (!SupportedTextureFormats.Contains(format))
                 throw new ArgumentOutOfRangeException("format", "Unsupported format.");
@@ -370,7 +370,7 @@ namespace LibGxFormat.Tpl
             // Define all possible texture levels until the size
             // of the texture can no longer be divided by two
             int currentWidth = bmp.Width, currentHeight = bmp.Height;
-            for (int mipmapLevel = 0; true; mipmapLevel++)
+            for (int mipmapLevel = 0; mipmapLevel < numMipmaps; mipmapLevel++)
             {
                 if (mipmapLevel == 0)
                 {

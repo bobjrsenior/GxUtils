@@ -29,7 +29,7 @@ namespace LibGxFormat.Tpl
         /// </summary>
         /// <param name="model">The model to create the TPL file from.</param>
         /// <param name="textureIndexMapping">The correspondence between textures images in the model and the generated TPL texture indices.</param>
-        public Tpl(ObjMtlModel model, GxInterpolationFormat intFormat, out Dictionary<Bitmap, int> textureIndexMapping)
+        public Tpl(ObjMtlModel model, GxInterpolationFormat intFormat, int numMipmaps, out Dictionary<Bitmap, int> textureIndexMapping)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -46,7 +46,7 @@ namespace LibGxFormat.Tpl
                 if (mat.DiffuseTextureMap != null && !textureIndexMappingInt.ContainsKey(mat.DiffuseTextureMap))
                 {
                     int textureIndex = Count;
-                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, mat.DiffuseTextureMap);
+                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, numMipmaps, mat.DiffuseTextureMap);
                     Add(texture);
                     textureIndexMappingInt.Add(mat.DiffuseTextureMap, textureIndex);
                 }

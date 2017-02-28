@@ -96,6 +96,14 @@ namespace GxModelViewer
         /// <summary>Zoom factor for the model viewer.</summary>
         float zoomFactor = 1.0f;
 
+        /// <summary>The max number of mipmaps to create when importing textures.</summary>
+        int numMipmaps = 255;
+        /// <summary>Menu items specifying the possible number of mipmaps</summary>
+        ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem [10];
+
+        GxInterpolationFormat intFormat = GxInterpolationFormat.NearestNeighbor;
+        ToolStripMenuItem[] mipMapIntItems;
+
         public ModelViewer()
         {
             InitializeComponent();
@@ -107,11 +115,43 @@ namespace GxModelViewer
             tsCmbGame.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxGame)).Cast<GxGame>()
                 .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
 
-            // Populate ComboBox values from GxInterpolationFormat enum dynamically.
-            tsCmbMipmap.ComboBox.ValueMember = "Key";
-            tsCmbMipmap.ComboBox.DisplayMember = "Value";
-            tsCmbMipmap.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxInterpolationFormat)).Cast<GxInterpolationFormat>()
-                .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
+
+            // Populate the Menu Strip for the number of mipmaps
+            int i;
+            for (i = 0; i < mipmapItems.Length - 1; ++i)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem("" + i);
+                item.Click += new EventHandler(mipmapDropDownItemClicked);
+                mipmapItems[i] = item;
+            }
+
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem("255");
+                item.Click += new EventHandler(mipmapDropDownItemClicked);
+                mipmapItems[mipmapItems.Length - 1] = item;
+                item.Checked = true;
+            }
+            numMipmapsToolStripMenuItem.DropDownItems.AddRange(mipmapItems);
+
+
+            // Populate the Menu Strip for the different interpolation formats
+            var interpolationTypes = Enum.GetValues(typeof(GxInterpolationFormat)).Cast<GxInterpolationFormat>();
+            mipMapIntItems = new ToolStripMenuItem[interpolationTypes.Count<GxInterpolationFormat>()];
+
+            i = 0;
+            foreach(GxInterpolationFormat intFormatEnum in interpolationTypes)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem(EnumUtils.GetEnumDescription(intFormatEnum));
+                item.Click += new EventHandler(mipmapInterpolationDropDownItemClicked);
+                mipMapIntItems[i] = item;
+                if(intFormatEnum == intFormat)
+                {
+                    item.Checked = true;
+                }
+
+                ++i;
+            }
+            mipmapInterpolationToolStripMenuItem.DropDownItems.AddRange(mipMapIntItems);
 
             LoadGmaFile(null);
             LoadTplFile(null);
@@ -124,7 +164,12 @@ namespace GxModelViewer
 
         private GxInterpolationFormat GetSelectedMipmap()
         {
-            return (GxInterpolationFormat)tsCmbMipmap.ComboBox.SelectedValue;
+            return intFormat;
+        }
+
+        private int GetNumMipmaps()
+        {
+            return numMipmaps;
         }
 
         private void UnloadModel()
@@ -794,7 +839,7 @@ namespace GxModelViewer
             }
 
             Dictionary<Bitmap, int> textureIndexMapping;
-            tpl = new Tpl(model, GetSelectedMipmap(), out textureIndexMapping);
+            tpl = new Tpl(model, GetSelectedMipmap(), GetNumMipmaps(), out textureIndexMapping);
             gma = new Gma(model, textureIndexMapping);
 
             // Set TPL / GMA as changed
@@ -961,6 +1006,44 @@ namespace GxModelViewer
             UnloadModel();
         }
 
+        private void mipmapDropDownItemClicked(object sender, EventArgs e)
+        {
+            string text = ((ToolStripMenuItem)sender).Text;
+            int mipmapAmt = int.Parse(text);
+            numMipmaps = mipmapAmt;
+
+            foreach(ToolStripMenuItem item in mipmapItems)
+            {
+                if(item.Text == text)
+                {
+                    item.Checked = true;
+                }
+                else if (item.Checked)
+                {
+                    item.Checked = false;
+                }
+            }
+        }
+
+        private void mipmapInterpolationDropDownItemClicked(object sender, EventArgs e)
+        {
+            string text = ((ToolStripMenuItem)sender).Text;
+            GxInterpolationFormat intEnum = EnumUtils.GetValueFromDescription<GxInterpolationFormat>(text);
+            intFormat = intEnum;
+
+            foreach (ToolStripMenuItem item in mipMapIntItems)
+            {
+                if (item.Text == text)
+                {
+                    item.Checked = true;
+                }
+                else if (item.Checked)
+                {
+                    item.Checked = false;
+                }
+            }
+        }
+
         private void btnExportTextureLevel_Click(object sender, EventArgs e)
         {
             // Extract the TextureReference structure to get the selected texture
@@ -1019,7 +1102,7 @@ namespace GxModelViewer
                 GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
 
                 // Redefine the entire texture from the bitmap
-                tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), bmp);
+                tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp);
 
                 TextureHasChanged(textureData.TextureIdx);
                 UpdateTextureTree();

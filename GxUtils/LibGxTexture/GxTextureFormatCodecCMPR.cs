@@ -156,13 +156,14 @@ namespace LibGxTexture
             int alphaCount = 0;
             for(int i = 3; i < 64; i+=4)
             {
-                if(tile[i] <= 128)
+
+                if (tile[i] <= 128)
                 {
                     ++alphaCount;
                 }
             }
 
-            if(alphaCount >= 8)
+            if(alphaCount >= 4)
             {
                 alphaBlock = true;
             }
