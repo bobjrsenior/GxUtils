@@ -149,6 +149,7 @@ namespace LibGxTexture
             bool alphaBlock = false;
             // Extract a 4x4 tile from the texture
             byte[] tile = new byte[4 * 4 * 4];
+            byte[] templateTile = new byte[4];
             for (int y = 0, pos = srcPos; y < 4; y++, pos += stride)
                 Array.Copy(src, pos, tile, y * 4 * 4, 4 * 4);
 
@@ -164,6 +165,31 @@ namespace LibGxTexture
             if(alphaCount >= 8)
             {
                 alphaBlock = true;
+            }
+            else if(alphaCount > 0)
+            {
+                for (int i = 0; i < 64; i += 4)
+                {
+                    if (tile[i + 3] == 255)
+                    {
+                        templateTile[0] = tile[i];
+                        templateTile[1] = tile[i + 1];
+                        templateTile[2] = tile[i + 2];
+                        templateTile[3] = tile[i + 3];
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < 64; i += 4)
+                {
+                    if (tile[i + 3] <= 128)
+                    {
+                        tile[i] = templateTile[0];
+                        tile[i + 1] = templateTile[1];
+                        tile[i + 2] = templateTile[2];
+                        tile[i + 3] = templateTile[3];
+                    }
+                }
             }
 
             // Compress the DXT block

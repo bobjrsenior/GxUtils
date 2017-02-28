@@ -162,8 +162,8 @@ namespace LibGxTexture
 
         static void EvalAlphaColors(byte[] color, int colorIdx, ushort c0, ushort c1)
         {
-            From16Bit(color, colorIdx + 0, c0);
             From16Bit(color, colorIdx + 4, c1);
+            From16Bit(color, colorIdx + 0, c0);
             Lerp12RGB(color, colorIdx + 8, color, colorIdx + 0, color, colorIdx + 4);
             From16Bit(color, colorIdx + 12, c0);
         }
@@ -405,6 +405,127 @@ namespace LibGxTexture
             pmin16 = As16Bit(block[minp+0],block[minp+1],block[minp+2]);
         }
 
+        /// <summary>The color optimization function. (Clever code, part 1)</summary>
+        static void OptimizeColorsAlphaBlock(byte[] block, int blockIdx, out ushort pmax16, out ushort pmin16)
+        {
+            int mind = 0x7fffffff, maxd = -0x7fffffff;
+            int minp = 0, maxp = 0; // Give them a value to avoid "unassigned variable warning"
+            double magn;
+            int v_r, v_g, v_b;
+            float[] covf = new float[6];
+            float vfr, vfg, vfb;
+
+            // determine color distribution
+            int[] cov = new int[6];
+            int[] mu = new int[3], min = new int[3], max = new int[3];
+            int ch, i, iter;
+
+            for (ch = 0; ch < 3; ch++)
+            {
+                int bp = blockIdx + ch;
+                int muv, minv, maxv;
+
+                muv = 0;
+                minv = 255;
+                maxv = 0;
+                for (i = 0; i < 64; i += 4)
+                {
+                    if (block[blockIdx + i + 3] > 128)
+                    {
+                        muv += block[bp + i];
+                        if (block[bp + i] < minv) minv = block[bp + i];
+                        if (block[bp + i] > maxv) maxv = block[bp + i];
+                    }
+                }
+
+                mu[ch] = (muv + 8) >> 4;
+                min[ch] = minv;
+                max[ch] = maxv;
+            }
+
+            // determine covariance matrix
+            for (i = 0; i < 6; i++)
+                cov[i] = 0;
+
+            for (i = 0; i < 16; i++)
+            {
+                if (block[blockIdx + (i * 4) + 3] > 128)
+                {
+                    int r = block[blockIdx + i * 4 + 0] - mu[0];
+                    int g = block[blockIdx + i * 4 + 1] - mu[1];
+                    int b = block[blockIdx + i * 4 + 2] - mu[2];
+
+                    cov[0] += r * r;
+                    cov[1] += r * g;
+                    cov[2] += r * b;
+                    cov[3] += g * g;
+                    cov[4] += g * b;
+                    cov[5] += b * b;
+                }
+            }
+
+            // convert covariance matrix to float, find principal axis via power iter
+            for (i = 0; i < 6; i++)
+                covf[i] = cov[i] / 255.0f;
+
+            vfr = (float)(max[0] - min[0]);
+            vfg = (float)(max[1] - min[1]);
+            vfb = (float)(max[2] - min[2]);
+
+            for (iter = 0; iter < nIterPower; iter++)
+            {
+                float r = vfr * covf[0] + vfg * covf[1] + vfb * covf[2];
+                float g = vfr * covf[1] + vfg * covf[3] + vfb * covf[4];
+                float b = vfr * covf[2] + vfg * covf[4] + vfb * covf[5];
+
+                vfr = r;
+                vfg = g;
+                vfb = b;
+            }
+
+            magn = Math.Abs(vfr);
+            if (Math.Abs(vfg) > magn) magn = Math.Abs(vfg);
+            if (Math.Abs(vfb) > magn) magn = Math.Abs(vfb);
+
+            if (magn < 4.0f)
+            { // too small, default to luminance
+                v_r = 299; // JPEG YCbCr luma coefs, scaled by 1000.
+                v_g = 587;
+                v_b = 114;
+            }
+            else
+            {
+                magn = 512.0 / magn;
+                v_r = (int)(vfr * magn);
+                v_g = (int)(vfg * magn);
+                v_b = (int)(vfb * magn);
+            }
+
+            // Pick colors at extreme points
+            for (i = 0; i < 16; i++)
+            {
+                if (block[blockIdx + (i * 4) + 3] > 128)
+                {
+                    int dot = block[blockIdx + i * 4 + 0] * v_r + block[blockIdx + i * 4 + 1] * v_g + block[blockIdx + i * 4 + 2] * v_b;
+
+                    if (dot < mind)
+                    {
+                        mind = dot;
+                        minp = blockIdx + i * 4;
+                    }
+
+                    if (dot > maxd)
+                    {
+                        maxd = dot;
+                        maxp = blockIdx + i * 4;
+                    }
+                }
+            }
+
+            pmax16 = As16Bit(block[maxp + 0], block[maxp + 1], block[maxp + 2]);
+            pmin16 = As16Bit(block[minp + 0], block[minp + 1], block[minp + 2]);
+        }
+
         static int sclamp(float y, int p0, int p1)
         {
             int x = (int) y;
@@ -579,13 +700,13 @@ namespace LibGxTexture
         {    
             byte[] dblock = new byte[16 * 4];
 
-            bool dither;
+            bool dither = false;
             int refinecount;
             ushort max16;
             ushort min16;
             uint mask;
             byte[] color = new byte[4 * 4];
-            dither = (mode & CompressionMode.Dither) != 0;
+            //dither = (mode & CompressionMode.Dither) != 0;
             refinecount = ((mode & CompressionMode.HighQual) != 0) ? 2 : 1;
 
             // first step: compute dithered version for PCA if desired
@@ -593,7 +714,7 @@ namespace LibGxTexture
                 DitherBlock(dblock, 0, block, blockIdx);
 
             // second step: pca+map along principal axis
-            OptimizeColorsBlock(dither ? dblock : block, dither ? 0 : blockIdx, out max16, out min16);
+            OptimizeColorsAlphaBlock(dither ? dblock : block, dither ? 0 : blockIdx, out max16, out min16);
 
             // Evaluate the color pallete (last entry becomes the first for alpha pallete)
             EvalAlphaColors(color, 0, max16, min16);
@@ -607,7 +728,12 @@ namespace LibGxTexture
             {
                 if (block[(i * 4) + 3] <= 128)
                 {
-                    mask = mask ^ (((uint)0xC0000000) >> (2 * i));
+                    mask = mask ^ (((uint)0x3) << (2 * i));
+                }
+                else if((mask >> (30 - (2 * i)) & 0x3) == 3)
+                {
+                    mask &= (~((uint) 1 << ((2 * i))));
+                    mask &= (~((uint) 1 << ((2 * i) + 1)));
                 }
             }
 
