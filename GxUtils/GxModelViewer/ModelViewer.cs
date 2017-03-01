@@ -219,7 +219,8 @@ namespace GxModelViewer
             GL.Enable(EnableCap.Light0);
 
             GL.Enable(EnableCap.AlphaTest);
-
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.Blend);
             if (toolStripMenuItemShowTextures.Checked)
                 GL.Enable(EnableCap.Texture2D);
 
