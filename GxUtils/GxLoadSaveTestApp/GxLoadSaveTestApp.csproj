@@ -51,7 +51,7 @@
     <Compile Include="LoadSaveTest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoadSaveTest.designer.cs">
+    <Compile Include="LoadSaveTest.Designer.cs">
       <DependentUpon>LoadSaveTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
