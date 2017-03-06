@@ -122,11 +122,41 @@ namespace LibGxFormat.Tpl
                 if (texHdr[i].Offset != 0 && texHdr[i].Width != 0 &&
                     texHdr[i].Height != 0 && texHdr[i].LevelCount != 0) // Texture with defined levels
                 {
-                    if (!Enum.IsDefined(typeof(GxTextureFormat), texHdr[i].FormatRaw))
+                    if (game != GxGame.SuperMonkeyBallDX && !Enum.IsDefined(typeof(GxTextureFormat), texHdr[i].FormatRaw))
                         throw new InvalidTplFileException("Invalid texture header (invalid format.");
                     if (game == GxGame.SuperMonkeyBallDX)
                     {
-                        input.BaseStream.Position = texHdr[i].Offset + 0x20;
+                        input.BaseStream.Position = texHdr[i].Offset;
+                        int formatRaw = input.ReadInt32();
+                        switch (formatRaw)
+                        {
+                            case 0x0C:
+                                texHdr[i].FormatRaw = 0x0E;
+                            break;
+                            case 0x1A:
+                                texHdr[i].FormatRaw = 0x01;
+                            break;
+                            case 0x0E:
+                                texHdr[i].FormatRaw = 0x05;
+                            break;
+                            default:
+                                int x = 5;
+                            break;
+                        }
+                        texHdr[i].Width = input.ReadInt32();
+                        texHdr[i].Height = input.ReadInt32();
+                        texHdr[i].LevelCount = input.ReadInt32();
+                        // Compressed?
+                        input.ReadInt32();
+                        // If uncompressed, data length?
+                        input.ReadInt32();
+                        // Some other length (for compressed)?
+                        input.ReadInt32();
+                        // Zero?
+                        input.ReadInt32();
+
+                        if (!Enum.IsDefined(typeof(GxTextureFormat), texHdr[i].FormatRaw))
+                            throw new InvalidTplFileException("Invalid texture header (invalid format.");
                     }
                     else
                     {
