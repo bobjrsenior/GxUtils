@@ -142,6 +142,9 @@ namespace GxModelViewer
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -171,6 +174,7 @@ namespace GxModelViewer
             this.tlpTextureProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.gmaContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -180,19 +184,19 @@ namespace GxModelViewer
             this.toolStripSeparator4,
             this.toolStripMenuItemShowTextures});
             this.ctxMenuModelOptions.Name = "ctxMenuModelOptions";
-            this.ctxMenuModelOptions.Size = new System.Drawing.Size(151, 54);
+            this.ctxMenuModelOptions.Size = new System.Drawing.Size(150, 54);
             // 
             // toolStripMenuItemResetViewer
             // 
             this.toolStripMenuItemResetViewer.Name = "toolStripMenuItemResetViewer";
-            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(150, 22);
+            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemResetViewer.Text = "Reset Viewer";
             this.toolStripMenuItemResetViewer.Click += new System.EventHandler(this.toolStripMenuItemResetViewer_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(147, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(146, 6);
             // 
             // toolStripMenuItemShowTextures
             // 
@@ -200,7 +204,7 @@ namespace GxModelViewer
             this.toolStripMenuItemShowTextures.CheckOnClick = true;
             this.toolStripMenuItemShowTextures.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemShowTextures.Name = "toolStripMenuItemShowTextures";
-            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(150, 22);
+            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemShowTextures.Text = "Show Textures";
             this.toolStripMenuItemShowTextures.Click += new System.EventHandler(this.toolStripMenuItemShowTextures_Click);
             // 
@@ -1379,6 +1383,27 @@ namespace GxModelViewer
             this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
             // 
+            // gmaContextMenuStrip
+            // 
+            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gmaImporttoolStripMenuItem,
+            this.gmaExportTolStripMenuItem});
+            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            // 
+            // gmaImporttoolStripMenuItem
+            // 
+            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gmaImporttoolStripMenuItem.Text = "Import";
+            // 
+            // gmaExportTolStripMenuItem
+            // 
+            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gmaExportTolStripMenuItem.Text = "Export";
+            this.gmaExportTolStripMenuItem.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmaExportTolStripMenuItem_MouseDown);
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1422,6 +1447,7 @@ namespace GxModelViewer
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.gmaContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1539,5 +1565,8 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem numMipmapsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mipmapInterpolationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gmaImporttoolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gmaExportTolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip gmaContextMenuStrip;
     }
 }

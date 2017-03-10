@@ -518,6 +518,14 @@ namespace LibGxFormat.Gma
             renderer.ClearMaterialList();
         }
 
+        /// <summary>
+        /// Render this Gcmf object using the given renderer.
+        /// </summary>
+        public List<int> Render(IRenderer renderer, string name)
+        {
+            return new List<int>();
+        }
+
         private void UpdateBoundingSphere()
         {
             IEnumerable<GcmfTriangleStrip> allTriangleStrip = Meshes.SelectMany(

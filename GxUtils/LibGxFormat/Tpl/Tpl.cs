@@ -274,14 +274,7 @@ namespace LibGxFormat.Tpl
                     output.Write((ushort)0x1234);
                 }
 
-                if(game == GxGame.SuperMonkeyBallDX)
-                {
-                    currentDataOffset += tex.SizeOfTextureData(game) + 0x20;
-                }
-                else
-                {
-                    currentDataOffset += tex.SizeOfTextureData(game);
-                }
+                currentDataOffset += tex.SizeOfTextureData(game);
                 
             }
 

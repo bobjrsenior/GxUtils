@@ -115,7 +115,7 @@ namespace GxModelViewer
             tsCmbGame.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxGame)).Cast<GxGame>()
                 .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
 
-
+            
             // Populate the Menu Strip for the number of mipmaps
             int i;
             for (i = 0; i < mipmapItems.Length - 1; ++i)
@@ -438,6 +438,7 @@ namespace GxModelViewer
                     TreeNode modelItem = new TreeNode((gma[i] != null) ? gma[i].Name : "Unnamed");
                     modelItem.Tag = new ModelMeshReference(i, -1);
                     modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
+                    modelItem.ContextMenuStrip = gmaContextMenuStrip;
                     treeModel.Nodes.Add(modelItem);
 
                     // Add display list entries for the meshes within the model
@@ -1041,6 +1042,40 @@ namespace GxModelViewer
                 else if (item.Checked)
                 {
                     item.Checked = false;
+                }
+            }
+        }
+
+        private void gmaExportTolStripMenuItem_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Select the clicked node
+            TreeNode selected = treeModel.GetNodeAt(e.X, e.Y);
+
+            if (selected != null)
+            {
+                string nodeName = selected.Text;
+
+                if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
+                {
+                    // Export OBJ and MTL files
+                    ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
+                    
+
+                    // Export model
+                    if (gma != null)
+                    {
+                        List<int> textureIds = exporter.ExportModel(gma, nodeName);
+
+                        if(tpl != null){
+                            for (int i = 0; i < tpl.Count; i++)
+                            {
+                                if (textureIds.Contains(i))
+                                {
+                                    exporter.ExportTexture(i, tpl[i]);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

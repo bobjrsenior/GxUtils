@@ -57,5 +57,20 @@ namespace LibGxFormat.ModelRenderer
                 model.Render(renderer);
             }
         }
+
+        /// <summary>
+        /// Exports the specified model to a .OBJ / .MTL file pair.
+        /// </summary>
+        /// <param name="model">The model to export.</param>
+        public System.Collections.Generic.List<int> ExportModel(IRenderable model, string modelName)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            using (ObjMtlRenderer renderer = new ObjMtlRenderer(outputPath))
+            {
+                return model.Render(renderer, modelName);
+            }
+        }
     }
 }

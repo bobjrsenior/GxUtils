@@ -239,5 +239,46 @@ namespace LibGxFormat.Gma
                 }
             }
         }
+
+        /// <summary>
+        /// Render all models in this Gma model using the given model renderer.
+        /// </summary>
+        /// <param name="renderer">The model renderer to use to render the objects.</param>
+        public List<int> Render(IRenderer renderer, string modelName)
+        {
+            if (renderer == null)
+                throw new ArgumentNullException("renderer");
+
+            List<int> textureIds = new List<int>();
+
+            foreach (GmaEntry entry in Items)
+            {
+                if (entry != null)
+                {
+                    if (entry.Name.Equals(modelName))
+                    {
+                        // Define a new object for the model
+                        renderer.BeginObject(entry.Name);
+                        entry.ModelObject.Render(renderer);
+                        renderer.EndObject();
+                        foreach(GcmfMaterial mat in entry.ModelObject.Materials)
+                        {
+                            if (!textureIds.Contains(mat.TextureIdx))
+                            {
+                                textureIds.Add(mat.TextureIdx);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Define an empty model in order to make the entries in the GMA
+                    // correspond correctly to the entries in the model tree
+                    renderer.BeginObject("EmptyObject");
+                    renderer.EndObject();
+                }
+            }
+            return textureIds;
+        }
     };
 }

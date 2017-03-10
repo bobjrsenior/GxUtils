@@ -585,6 +585,13 @@ namespace LibGxFormat.Tpl
                         texHeader.Add(0x00);
                         break;
 
+                    case GxTextureFormat.RGB5A3:
+                        texHeader.Add(0x0E);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        texHeader.Add(0x00);
+                        break;
+
                     default:
                         texHeader.Add(0x0C);
                         texHeader.Add(0x00);
@@ -595,7 +602,6 @@ namespace LibGxFormat.Tpl
                 // Width
                 texHeader.Add((byte)WidthOfLevel(0));
                 texHeader.Add((byte)(WidthOfLevel(0) >> 8));
-                // Padding
                 texHeader.Add(0);
                 texHeader.Add(0);
 
@@ -605,9 +611,9 @@ namespace LibGxFormat.Tpl
                 texHeader.Add(0);
                 texHeader.Add(0);
 
-                // Five
-                texHeader.Add(5);
-                texHeader.Add(0);
+                // Num mipmaps
+                texHeader.Add((byte)LevelCount);
+                texHeader.Add((byte)(LevelCount >> 8));
                 texHeader.Add(0);
                 texHeader.Add(0);
 
@@ -617,7 +623,7 @@ namespace LibGxFormat.Tpl
                 texHeader.Add(0);
                 texHeader.Add(0);
 
-                // Data Length
+                // Data Length (if uncompressed)
                 int levelSize = 0;
                 for (int level = 0; level < LevelCount; level++)
                 {
