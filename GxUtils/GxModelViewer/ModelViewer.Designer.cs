@@ -1402,7 +1402,7 @@ namespace GxModelViewer
             this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
             this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gmaExportTolStripMenuItem.Text = "Export";
-            this.gmaExportTolStripMenuItem.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gmaExportTolStripMenuItem_MouseDown);
+            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
             // 
             // ModelViewer
             // 

@@ -109,6 +109,9 @@ namespace GxModelViewer
             InitializeComponent();
             glControlModel.MouseWheel += glControlModel_MouseWheel;
 
+            // Make sure right clicking selects a node
+            treeModel.NodeMouseClick += (sender, args) => treeModel.SelectedNode = args.Node;
+
             // Populate ComboBox values from GxGame enum dynamically.
             tsCmbGame.ComboBox.ValueMember = "Key";
             tsCmbGame.ComboBox.DisplayMember = "Value";
@@ -440,7 +443,7 @@ namespace GxModelViewer
                     modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
                     modelItem.ContextMenuStrip = gmaContextMenuStrip;
                     treeModel.Nodes.Add(modelItem);
-
+                    
                     // Add display list entries for the meshes within the model
                     if (gma[i] != null)
                     {
@@ -453,7 +456,7 @@ namespace GxModelViewer
                             modelItem.Nodes.Add(meshItem);
                         }
                     }
-
+                    
                     treeModel.SetCheckState(modelItem, CheckState.Checked);
                 }
             }
@@ -896,7 +899,7 @@ namespace GxModelViewer
             haveUnsavedTplChanges = true;
             UpdateTextureButtons();
             UpdateTextureDisplay();
-
+            
             glControlModel.MakeCurrent();
             ctx.SetTexture(idx, tpl[idx]);
             glControlModel.Invalidate();
@@ -1046,10 +1049,11 @@ namespace GxModelViewer
             }
         }
 
-        private void gmaExportTolStripMenuItem_MouseDown(object sender, MouseEventArgs e)
+        private void gmaExportTolStripMenuItem_Click(object sender, EventArgs e)
         {
+           
             // Select the clicked node
-            TreeNode selected = treeModel.GetNodeAt(e.X, e.Y);
+            TreeNode selected = treeModel.SelectedNode;
 
             if (selected != null)
             {
@@ -1059,14 +1063,15 @@ namespace GxModelViewer
                 {
                     // Export OBJ and MTL files
                     ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
-                    
+
 
                     // Export model
                     if (gma != null)
                     {
                         List<int> textureIds = exporter.ExportModel(gma, nodeName);
 
-                        if(tpl != null){
+                        if (tpl != null)
+                        {
                             for (int i = 0; i < tpl.Count; i++)
                             {
                                 if (textureIds.Contains(i))
