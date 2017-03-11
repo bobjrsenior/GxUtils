@@ -112,6 +112,23 @@ namespace LibGxFormat.Gma
             }
         }
 
+        public void Load(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping, string name)
+        {
+            if (model.Objects.ContainsKey("") && model.Objects[""].Meshes.SelectMany(m => m.Faces).Any())
+                throw new InvalidOperationException("Geometry is not allowed outside of named objects.");
+
+            if (model.Objects.Count != 1)
+                throw new InvalidObjMtlFileException("Importing ");
+
+            int entryIndex = GetEntryIndex(name);
+
+            foreach (KeyValuePair<string, ObjMtlObject> objectEntry in model.Objects)
+            {
+                Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping);
+                this[entryIndex] = new GmaEntry(name, modelObject);
+            }
+        }
+
         /// <summary>
         /// Get the size in bytes of this Gma model when written to a .GMA stream.
         /// </summary>
@@ -212,6 +229,40 @@ namespace LibGxFormat.Gma
                 entry.ModelObject.Save(output, game);
         }
 
+        public List<int> GetTextureIds(string name)
+        {
+            List<int> textureIds = new List<int>();
+            foreach(GmaEntry entry in Items)
+            {
+                if(entry != null && entry.Name.Equals(name))
+                {
+                    foreach (GcmfMaterial mat in entry.ModelObject.Materials)
+                    {
+                        if (!textureIds.Contains(mat.TextureIdx))
+                        {
+                            textureIds.Add(mat.TextureIdx);
+                        }
+                    }
+                    break;
+                }
+            }
+            return textureIds;
+        }
+
+        private int GetEntryIndex(string name)
+        {
+            for(int i = 0; i < Items.Count; ++i)
+            {
+                GmaEntry entry = Items[i];
+                if (entry.Name.Equals(name))
+                {
+                    return i;
+                }
+            }
+
+            throw new InvalidGmaFileException("Gma Entry not found");
+        }
+
         /// <summary>
         /// Render all models in this Gma model using the given model renderer.
         /// </summary>
@@ -269,13 +320,6 @@ namespace LibGxFormat.Gma
                             }
                         }
                     }
-                }
-                else
-                {
-                    // Define an empty model in order to make the entries in the GMA
-                    // correspond correctly to the entries in the model tree
-                    renderer.BeginObject("EmptyObject");
-                    renderer.EndObject();
                 }
             }
             return textureIds;

@@ -48,9 +48,9 @@ namespace LibGxFormat.Gma
             Flags = 0x7D4; // TODOXXX
             if (mtl.DiffuseTextureMap != null)
             {
-                if (!modelTextureMapping.ContainsKey(mtl.DiffuseTextureMap))
+                if (!BitmapComparision.ContainsBitmap(modelTextureMapping, mtl.DiffuseTextureMap))
                     throw new InvalidOperationException("Diffuse texture map not found in modelTextureMapping.");
-                TextureIdx = Convert.ToUInt16(modelTextureMapping[mtl.DiffuseTextureMap]);
+                TextureIdx = Convert.ToUInt16(BitmapComparision.GetKeyFromBitmap(modelTextureMapping, mtl.DiffuseTextureMap));
             }
         }
 

@@ -179,6 +179,38 @@ namespace LibGxFormat.Tpl
             }
         }
 
+        public void Load(ObjMtlModel model, GxInterpolationFormat intFormat, int numMipmaps, List<int> textureIds, out Dictionary<Bitmap, int> textureIndexMapping)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            // Gather all material definitions in the model
+            IEnumerable<ObjMtlMaterial> allMaterials = model.Objects
+                .SelectMany(o => o.Value.Meshes).Select(m => m.Material);
+
+            Dictionary<Bitmap, int> textureIndexMappingInt = new Dictionary<Bitmap, int>();
+
+            int textureCount = 0;
+            foreach (ObjMtlMaterial mat in allMaterials)
+            {
+
+                // Create and add texture for diffuse map
+                if (mat.DiffuseTextureMap != null && !BitmapComparision.ContainsBitmap(textureIndexMappingInt, mat.DiffuseTextureMap))
+                {
+                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, numMipmaps, mat.DiffuseTextureMap);
+                    this[textureIds[textureCount]] = texture;
+                    
+                    textureIndexMappingInt.Add(mat.DiffuseTextureMap, textureIds[textureCount]);
+                    ++textureCount;
+                }
+            }
+
+            // Replace the 'out' variable at the end so it does not get
+            // modified if an exception 
+            textureIndexMapping = textureIndexMappingInt;
+
+        }
+
         /// <summary>
         /// Calculate the size of the TPL when written to a file.
         /// </summary>
@@ -289,6 +321,7 @@ namespace LibGxFormat.Tpl
                 tex.SaveTextureData(output, game);
             }
         }
+
 	}
 }
 

@@ -1085,6 +1085,66 @@ namespace GxModelViewer
             }
         }
 
+        private void gmaImporttoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             // Select the clicked node
+            TreeNode selected = treeModel.SelectedNode;
+
+            if (selected != null)
+            {
+                string nodeName = selected.Text;
+
+                if (ofdLoadObj.ShowDialog() != DialogResult.OK)
+                    return;
+
+                List<string> modelWarningLog;
+                ObjMtlModel model;
+                try
+                {
+                    model = new ObjMtlModel(ofdLoadObj.FileName, out modelWarningLog);
+                    if (modelWarningLog.Count != 0)
+                    {
+                        ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
+                        if (warningDlg.ShowDialog() != DialogResult.Yes)
+                            return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Dictionary<Bitmap, int> textureIndexMapping;
+                List<int> textureIds = gma.GetTextureIds(nodeName);
+                tpl.Load(model, GetSelectedMipmap(), GetNumMipmaps(), textureIds, out textureIndexMapping);
+                gma.Load(model, textureIndexMapping, nodeName);
+
+                // Set TPL / GMA as changed
+                haveUnsavedGmaChanges = true;
+                haveUnsavedTplChanges = true;
+
+                // Update model list
+                UpdateModelTree();
+                UpdateModelButtons();
+                UpdateModelDisplay();
+
+                // Update material tab
+                UpdateMaterialList();
+                UpdateMaterialDisplay();
+
+                // Update texture list
+                UpdateTextureTree();
+                UpdateTextureButtons();
+                UpdateTextureDisplay();
+
+                // Update model viewer
+                reloadOnNextRedraw = true;
+                glControlModel.Invalidate();
+            }
+        }
+
         private void btnExportTextureLevel_Click(object sender, EventArgs e)
         {
             // Extract the TextureReference structure to get the selected texture

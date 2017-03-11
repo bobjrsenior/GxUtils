@@ -1396,6 +1396,7 @@ namespace GxModelViewer
             this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
             this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.gmaImporttoolStripMenuItem.Text = "Import";
+            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
             // 
             // gmaExportTolStripMenuItem
             // 

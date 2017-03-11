@@ -1,4 +1,6 @@
-﻿namespace LibGxTexture
+﻿using System;
+
+namespace LibGxTexture
 {
     /// <summary>
     /// Miscelaneous utilities used by GxTexture.

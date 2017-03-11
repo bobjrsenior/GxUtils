@@ -51,6 +51,7 @@
     <Compile Include="Arc\ArcFileSystemEntry.cs" />
     <Compile Include="Arc\ArcFileSystemFile.cs" />
     <Compile Include="Arc\InvalidArcFileException.cs" />
+    <Compile Include="BitmapComparision.cs" />
     <Compile Include="Gma\BoundingSphere.cs" />
     <Compile Include="EndianBinaryReaderExtensions.cs" />
     <Compile Include="EndianBinaryWriterExtensions.cs" />
