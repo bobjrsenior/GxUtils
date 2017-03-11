@@ -1389,19 +1389,19 @@ namespace GxModelViewer
             this.gmaImporttoolStripMenuItem,
             this.gmaExportTolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(111, 48);
             // 
             // gmaImporttoolStripMenuItem
             // 
             this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
-            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.gmaImporttoolStripMenuItem.Text = "Import";
             this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
             // 
             // gmaExportTolStripMenuItem
             // 
             this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
-            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.gmaExportTolStripMenuItem.Text = "Export";
             this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
             // 
@@ -1415,7 +1415,7 @@ namespace GxModelViewer
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ModelViewer";
-            this.Text = "GxModelViewer Model Viewer";
+            this.Text = "GxModelViewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ModelViewer_FormClosing);
             this.ctxMenuModelOptions.ResumeLayout(false);
             this.toolStripActions.ResumeLayout(false);
