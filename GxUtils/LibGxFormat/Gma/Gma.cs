@@ -118,7 +118,7 @@ namespace LibGxFormat.Gma
                 throw new InvalidOperationException("Geometry is not allowed outside of named objects.");
 
             if (model.Objects.Count != 1)
-                throw new InvalidObjMtlFileException("Importing ");
+                throw new InvalidObjMtlFileException("Only replace 1 model with 1 model");
 
             int entryIndex = GetEntryIndex(name);
 

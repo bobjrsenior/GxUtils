@@ -197,6 +197,10 @@ namespace LibGxFormat.Tpl
                 // Create and add texture for diffuse map
                 if (mat.DiffuseTextureMap != null && !BitmapComparision.ContainsBitmap(textureIndexMappingInt, mat.DiffuseTextureMap))
                 {
+                    if(textureCount >= textureIds.Count)
+                    {
+                        throw new InvalidObjMtlFileException("Too many textures to import");
+                    }
                     TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, numMipmaps, mat.DiffuseTextureMap);
                     this[textureIds[textureCount]] = texture;
                     
