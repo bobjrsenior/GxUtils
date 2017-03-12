@@ -125,6 +125,7 @@ namespace LibGxFormat.Gma
             foreach (KeyValuePair<string, ObjMtlObject> objectEntry in model.Objects)
             {
                 Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping);
+                modelObject.CopyFlags(this[entryIndex].ModelObject);
                 this[entryIndex] = new GmaEntry(name, modelObject);
             }
         }

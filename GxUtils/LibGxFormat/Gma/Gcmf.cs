@@ -537,5 +537,11 @@ namespace LibGxFormat.Gma
             BoundingSphereCenter = boundingSphere.Center;
             BoundingSphereRadius = boundingSphere.Radius;
         }
+
+        public void CopyFlags(Gcmf other)
+        {
+            Type8Unknown1 = other.Type8Unknown1;
+            Type8Unknown2 = other.Type8Unknown2;
+        }
     }
 }
