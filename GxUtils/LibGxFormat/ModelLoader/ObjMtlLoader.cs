@@ -481,7 +481,7 @@ namespace LibGxFormat.ModelLoader
             // Create the new material instance
             string materialName = mtlParser.ReadRestOfLine().Trim();
             currentLoadMaterial = new ObjMtlMaterial();
-
+            
             if (materials.ContainsKey(materialName))
             {
                 throw new InvalidObjMtlFileException(string.Format(
@@ -513,7 +513,14 @@ namespace LibGxFormat.ModelLoader
             // Load the associated texture
             string textureFileName = mtlParser.ReadRestOfLine().Trim();
             string textureFilePath = Path.Combine(Path.GetDirectoryName(mtlPath), textureFileName);
-            currentLoadMaterial.DiffuseTextureMap = new Bitmap(textureFilePath);
+
+            // https://stackoverflow.com/a/8701748
+            Bitmap tempImage;
+            using(var bmpOnDisk = new Bitmap(textureFilePath))
+            {
+                tempImage = new Bitmap(bmpOnDisk);
+            }
+            currentLoadMaterial.DiffuseTextureMap = new Bitmap(tempImage);
         }
     }
 }

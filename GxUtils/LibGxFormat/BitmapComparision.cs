@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,26 +57,41 @@ namespace LibGxFormat
         /// <returns>Returns true if both bitmaps are the same</returns>
         private static bool EqualBitmap(Bitmap bitmap1, Bitmap bitmap2)
         {
-            // http://codereview.stackexchange.com/a/39989
-            byte[] bitmap1Bytes;
-            byte[] bitmap2Bytes;
+            if (bitmap1.Width != bitmap2.Width || bitmap1.Height != bitmap2.Height)
+                return false;
+            if (bitmap1.Equals(bitmap2))
+                return true;
 
-            using (var mstream = new MemoryStream())
+            // https://codereview.stackexchange.com/a/39987
+
+            bool equal = true;
+            Rectangle rect = new Rectangle(0, 0, bitmap1.Width, bitmap1.Height);
+            BitmapData bmp1Data = bitmap1.LockBits(rect, ImageLockMode.ReadOnly, bitmap1.PixelFormat);
+            BitmapData bmp2Data = bitmap2.LockBits(rect, ImageLockMode.ReadOnly, bitmap2.PixelFormat);
+
+            unsafe
             {
-                bitmap1.Save(mstream, bitmap1.RawFormat);
-                bitmap1Bytes = mstream.ToArray();
+                // All images will be 32 bit ARGB, int is always 32 bits in C#
+                int* img1Ptr = (int*)bmp1Data.Scan0.ToPointer();
+                int* img2Ptr = (int*)bmp2Data.Scan0.ToPointer();
+                
+                for(int y = 0; y < rect.Height; y++)
+                {
+                    for(int x = 0; x < rect.Width; x++)
+                    {
+                        if(*img1Ptr != *img2Ptr)
+                        {
+                            equal = false;
+                            break;
+                        }
+                        img1Ptr++;
+                        img2Ptr++;
+                    }
+                }
             }
-
-            using (var mstream = new MemoryStream())
-            {
-                bitmap2.Save(mstream, bitmap2.RawFormat);
-                bitmap2Bytes = mstream.ToArray();
-            }
-
-            var bitmap164 = Convert.ToBase64String(bitmap1Bytes);
-            var bitmap264 = Convert.ToBase64String(bitmap2Bytes);
-
-            return string.Equals(bitmap164, bitmap264);
+            bitmap1.UnlockBits(bmp1Data);
+            bitmap2.UnlockBits(bmp2Data);
+            return equal;
         }
     }
 }
