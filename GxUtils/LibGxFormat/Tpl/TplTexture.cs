@@ -116,9 +116,10 @@ namespace LibGxFormat.Tpl
 			get
 			{
                 if (LevelCount == 0)
-                    throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
+                    return GxTextureFormat.CMPR;
+					//throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
 
-                return format;
+				return format;
 			}
 		}
 

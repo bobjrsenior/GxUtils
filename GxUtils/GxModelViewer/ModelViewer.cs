@@ -766,7 +766,7 @@ namespace GxModelViewer
                 lblTextureDimensions.Text = "-";
                 lblTextureFormat.Text = "-";
                 btnExportTextureLevel.Enabled = false;
-                btnImportTextureLevel.Enabled = false;
+                //btnImportTextureLevel.Enabled = false;
 
                 return;
             }
