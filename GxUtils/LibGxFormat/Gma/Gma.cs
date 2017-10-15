@@ -112,7 +112,7 @@ namespace LibGxFormat.Gma
             }
         }
 
-        public void Load(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping, string name)
+        public void Load(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping, string name, bool preserveFlags)
         {
             if (model.Objects.ContainsKey("") && model.Objects[""].Meshes.SelectMany(m => m.Faces).Any())
                 throw new InvalidOperationException("Geometry is not allowed outside of named objects.");
@@ -125,7 +125,8 @@ namespace LibGxFormat.Gma
             foreach (KeyValuePair<string, ObjMtlObject> objectEntry in model.Objects)
             {
                 Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping);
-                modelObject.CopyFlags(this[entryIndex].ModelObject);
+                if(preserveFlags)
+                    modelObject.CopyFlags(this[entryIndex].ModelObject);
                 this[entryIndex] = new GmaEntry(name, modelObject);
             }
         }

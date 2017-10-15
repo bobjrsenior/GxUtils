@@ -1087,9 +1087,20 @@ namespace GxModelViewer
 
         private void gmaImporttoolStripMenuItem_Click(object sender, EventArgs e)
         {
-             // Select the clicked node
+            // Select the clicked node
             TreeNode selected = treeModel.SelectedNode;
+            gmaImport(selected, false);
+        }
 
+        private void gmaImportPreserveFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Select the clicked node
+            TreeNode selected = treeModel.SelectedNode;
+            gmaImport(selected, true);
+        }
+
+        private void gmaImport(TreeNode selected, bool preserveFlags)
+        {
             if (selected != null)
             {
                 string nodeName = selected.Text;
@@ -1119,7 +1130,7 @@ namespace GxModelViewer
                 Dictionary<Bitmap, int> textureIndexMapping;
                 List<int> textureIds = gma.GetTextureIds(nodeName);
                 tpl.Load(model, GetSelectedMipmap(), GetNumMipmaps(), textureIds, out textureIndexMapping);
-                gma.Load(model, textureIndexMapping, nodeName);
+                gma.Load(model, textureIndexMapping, nodeName, preserveFlags);
 
                 // Set TPL / GMA as changed
                 haveUnsavedGmaChanges = true;

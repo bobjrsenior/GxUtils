@@ -545,8 +545,36 @@ namespace LibGxFormat.Gma
 
         public void CopyFlags(Gcmf other)
         {
+            if(Meshes.Count != other.Meshes.Count)
+            {
+                throw new InvalidOperationException("Replacing model must have the same number of meshes.");
+            }
+            SectionFlags = other.SectionFlags;
+            BoundingSphereCenter = other.BoundingSphereCenter;
+            TransformMatrices = other.TransformMatrices;
+            TransformMatrixDefaultIdxs = other.TransformMatrixDefaultIdxs;
             Type8Unknown1 = other.Type8Unknown1;
             Type8Unknown2 = other.Type8Unknown2;
+
+            for (int i = 0; i < Meshes.Count; i++)
+            {
+                GcmfMesh thisMesh = Meshes[i];
+                GcmfMesh otherMesh = other.Meshes[i];
+
+                thisMesh.RenderFlags = otherMesh.RenderFlags;
+                thisMesh.Unk4 = otherMesh.Unk4;
+                thisMesh.Unk8 = otherMesh.Unk8;
+                thisMesh.UnkC = otherMesh.UnkC;
+                // Header section info (Section flags)
+                thisMesh.Unk14 = otherMesh.Unk14;
+                // Header section info (Vertex flags)
+                thisMesh.TransformMatrixSpecificIdxsObj1 = otherMesh.TransformMatrixSpecificIdxsObj1;
+                thisMesh.TransformMatrixSpecificIdxsObj2 = otherMesh.TransformMatrixSpecificIdxsObj2;
+                thisMesh.BoundingSphereCenter = otherMesh.BoundingSphereCenter;
+                thisMesh.Unk3C = otherMesh.Unk3C;
+                thisMesh.Unk40 = otherMesh.Unk40;
+            }
+
         }
     }
 }

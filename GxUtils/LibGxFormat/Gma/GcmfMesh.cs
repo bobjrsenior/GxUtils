@@ -57,24 +57,24 @@ namespace LibGxFormat.Gma
 
         public MeshLayer Layer { get; private set; }
 
-        public RenderFlag RenderFlags { get; private set; }
-        public uint Unk4 { get; private set; }
-        public uint Unk8 { get; private set; }
-        public uint UnkC { get; private set; }
-        public ushort Unk10 { get; private set; }
-        public ushort Unk14 { get; private set; }
-        public ushort PrimaryMaterialIdx { get; private set; }
-        public ushort SecondaryMaterialIdx { get; private set; }
-        public ushort TertiaryMaterialIdx { get; private set; }
-        public byte[] TransformMatrixSpecificIdxsObj1 { get; private set; }
-        public Vector3 BoundingSphereCenter { get; private set; }
-        public float Unk3C { get; private set; }
-        public uint Unk40 { get; private set; }
+        public RenderFlag RenderFlags { get; set; }
+        public uint Unk4 { get; set; }
+        public uint Unk8 { get; set; }
+        public uint UnkC { get; set; }
+        public ushort Unk10 { get; set; }
+        public ushort Unk14 { get; set; }
+        public ushort PrimaryMaterialIdx { get; set; }
+        public ushort SecondaryMaterialIdx { get; set; }
+        public ushort TertiaryMaterialIdx { get; set; }
+        public byte[] TransformMatrixSpecificIdxsObj1 { get; set; }
+        public Vector3 BoundingSphereCenter { get; set; }
+        public float Unk3C { get; set; }
+        public uint Unk40 { get; set; }
 
         public GcmfTriangleStripGroup Obj1StripsCcw { get; private set; }
         public GcmfTriangleStripGroup Obj1StripsCw { get; private set; }
 
-        public byte[] TransformMatrixSpecificIdxsObj2 { get; private set; }
+        public byte[] TransformMatrixSpecificIdxsObj2 { get; set; }
 
         public GcmfTriangleStripGroup Obj2StripsCcw { get; private set; }
         public GcmfTriangleStripGroup Obj2StripsCw { get; private set; }

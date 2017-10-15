@@ -145,6 +145,7 @@ namespace GxModelViewer
             this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -1387,9 +1388,10 @@ namespace GxModelViewer
             // 
             this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gmaImporttoolStripMenuItem,
+            this.importPreserveFLagsToolStripMenuItem,
             this.gmaExportTolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(111, 48);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 92);
             // 
             // gmaImporttoolStripMenuItem
             // 
@@ -1404,6 +1406,13 @@ namespace GxModelViewer
             this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.gmaExportTolStripMenuItem.Text = "Export";
             this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
+            // 
+            // importPreserveFLagsToolStripMenuItem
+            // 
+            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
+            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.importPreserveFLagsToolStripMenuItem.Text = "Import (Preserve FLags)";
+            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1569,5 +1578,6 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem gmaImporttoolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gmaExportTolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip gmaContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem importPreserveFLagsToolStripMenuItem;
     }
 }
