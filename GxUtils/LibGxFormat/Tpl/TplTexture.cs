@@ -115,10 +115,10 @@ namespace LibGxFormat.Tpl
 		{
 			get
 			{
-				if (LevelCount == 0)
-					throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
+                if (LevelCount == 0)
+                    throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
 
-				return format;
+                return format;
 			}
 		}
 
@@ -745,7 +745,7 @@ namespace LibGxFormat.Tpl
             int[] oldLevelData = new int[oldData.Height * oldData.Width];
             Marshal.Copy(oldData.Scan0, oldLevelData, 0, oldData.Height * oldData.Width);
             bmp.UnlockBits(oldData);
-
+            int stride = oldData.Stride;
             // Make room for the new pixel data
             int[] newLevelData = new int[newData.Height * newData.Width];
 
@@ -758,7 +758,8 @@ namespace LibGxFormat.Tpl
                 int xdst = 0;
                 for (; xdst < newWidth; xsrc += pixelDistance, ++xdst)
                 {
-                    newLevelData[(ydst * newWidth) + xdst] = oldLevelData[(ysrc * oldData.Height) + xsrc];
+                    int newValue = oldLevelData[(ysrc * oldData.Width) + xsrc];
+                    newLevelData[(ydst * newWidth) + xdst] = newValue;
                 }
             }
 

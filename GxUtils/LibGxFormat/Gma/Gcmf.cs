@@ -117,8 +117,13 @@ namespace LibGxFormat.Gma
 
             foreach (ObjMtlMaterial mat in modelObject.Meshes.Select(m => m.Material))
             {
-                modelMaterialMapping.Add(mat, Materials.Count);
-                Materials.Add(new GcmfMaterial(mat, modelTextureMapping));
+                if (!modelMaterialMapping.ContainsKey(mat))
+                {
+                    modelMaterialMapping.Add(mat, Materials.Count);
+                    Materials.Add(new GcmfMaterial(mat, modelTextureMapping));
+                }
+
+                
             }
 
             foreach (ObjMtlMesh mesh in modelObject.Meshes)
