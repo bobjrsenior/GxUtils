@@ -41,19 +41,19 @@ namespace LibGxFormat.Gma
         /// </summary>
         private const uint GcmfMagic = 0x47434D46;
 
-        public uint SectionFlags { get; private set; }
+        public uint SectionFlags { get; set; }
 
         /// <summary>
         /// Position of the center of the object (used along with the radius below)
         /// </summary>
-        public Vector3 BoundingSphereCenter { get; private set; }
+        public Vector3 BoundingSphereCenter { get; set; }
 
         /// <summary>
         /// Radius of the object (maximum distance to a vertex relative to the center)
         /// </summary>
-        public float BoundingSphereRadius { get; private set; }
+        public float BoundingSphereRadius { get; set; }
 
-        public byte[] TransformMatrixDefaultIdxs { get; private set; }
+        public byte[] TransformMatrixDefaultIdxs { get; set; }
 
         /// <summary>
         /// List of materials defined for this object.

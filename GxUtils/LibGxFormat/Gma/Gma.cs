@@ -251,7 +251,7 @@ namespace LibGxFormat.Gma
             return textureIds;
         }
 
-        private int GetEntryIndex(string name)
+        public int GetEntryIndex(string name)
         {
             for(int i = 0; i < Items.Count; ++i)
             {

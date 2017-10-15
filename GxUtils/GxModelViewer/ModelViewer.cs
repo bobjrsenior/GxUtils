@@ -1238,5 +1238,26 @@ namespace GxModelViewer
                 TextureHasChanged(textureData.TextureIdx);
             }
         }
+
+        private void editFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Select the clicked node
+            TreeNode selected = treeModel.SelectedNode;
+
+            int index = gma.GetEntryIndex(selected.Text);
+            Gcmf model = gma[index].ModelObject;
+
+            using (ModelFlagEditor flagEditor = new ModelFlagEditor(model))
+            {
+                switch (flagEditor.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        UpdateModelDisplay();
+                        break;
+                }
+            }
+
+
+        }
     }
 }

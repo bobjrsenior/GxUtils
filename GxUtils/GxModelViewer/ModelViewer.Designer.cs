@@ -144,8 +144,9 @@ namespace GxModelViewer
             this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -1389,23 +1390,17 @@ namespace GxModelViewer
             this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gmaImporttoolStripMenuItem,
             this.importPreserveFLagsToolStripMenuItem,
-            this.gmaExportTolStripMenuItem});
+            this.gmaExportTolStripMenuItem,
+            this.editFlagsToolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 92);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 114);
             // 
             // gmaImporttoolStripMenuItem
             // 
             this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
-            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.gmaImporttoolStripMenuItem.Text = "Import";
             this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
-            // 
-            // gmaExportTolStripMenuItem
-            // 
-            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
-            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(110, 22);
-            this.gmaExportTolStripMenuItem.Text = "Export";
-            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
             // 
             // importPreserveFLagsToolStripMenuItem
             // 
@@ -1413,6 +1408,20 @@ namespace GxModelViewer
             this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.importPreserveFLagsToolStripMenuItem.Text = "Import (Preserve FLags)";
             this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
+            // 
+            // gmaExportTolStripMenuItem
+            // 
+            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.gmaExportTolStripMenuItem.Text = "Export";
+            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem
+            // 
+            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
+            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.editFlagsToolStripMenuItem.Text = "Edit Flags";
+            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editFlagstoolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1579,5 +1588,6 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem gmaExportTolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip gmaContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem importPreserveFLagsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editFlagsToolStripMenuItem;
     }
 }

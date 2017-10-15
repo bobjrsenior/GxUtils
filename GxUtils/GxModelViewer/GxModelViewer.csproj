@@ -65,6 +65,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModelFlagEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModelFlagEditor.Designer.cs">
+      <DependentUpon>ModelFlagEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="ObjMtlWarningLogDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +95,9 @@
   <ItemGroup>
     <EmbeddedResource Include="GxTextureFormatPickerDialog.resx">
       <DependentUpon>GxTextureFormatPickerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelFlagEditor.resx">
+      <DependentUpon>ModelFlagEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelViewer.resx">
       <DependentUpon>ModelViewer.cs</DependentUpon>
