@@ -561,10 +561,13 @@ namespace LibGxFormat.Gma
                 GcmfMesh thisMesh = Meshes[i];
                 GcmfMesh otherMesh = other.Meshes[i];
 
+                thisMesh.Layer = otherMesh.Layer;
+
                 thisMesh.RenderFlags = otherMesh.RenderFlags;
                 thisMesh.Unk4 = otherMesh.Unk4;
                 thisMesh.Unk8 = otherMesh.Unk8;
                 thisMesh.UnkC = otherMesh.UnkC;
+                thisMesh.Unk10 = otherMesh.Unk10;
                 // Header section info (Section flags)
                 thisMesh.Unk14 = otherMesh.Unk14;
                 // Header section info (Vertex flags)
@@ -575,6 +578,17 @@ namespace LibGxFormat.Gma
                 thisMesh.Unk40 = otherMesh.Unk40;
             }
 
+            for(int i = 0; i < Materials.Count; i++)
+            {
+                GcmfMaterial thisMaterial = Materials[i];
+                GcmfMaterial otherMaterial = other.Materials[i];
+
+                thisMaterial.Flags = otherMaterial.Flags;
+                thisMaterial.Unk6 = otherMaterial.Unk6;
+                thisMaterial.AnisotropyLevel = otherMaterial.AnisotropyLevel;
+                thisMaterial.UnkC = otherMaterial.UnkC;
+                thisMaterial.Unk10 = otherMaterial.Unk10;
+            }
         }
     }
 }

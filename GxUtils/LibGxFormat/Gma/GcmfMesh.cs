@@ -55,7 +55,7 @@ namespace LibGxFormat.Gma
             UnkFlag200 = 0x200,
         }
 
-        public MeshLayer Layer { get; private set; }
+        public MeshLayer Layer { get; set; }
 
         public RenderFlag RenderFlags { get; set; }
         public uint Unk4 { get; set; }

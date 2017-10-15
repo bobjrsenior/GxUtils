@@ -22,15 +22,15 @@ namespace LibGxFormat.Gma
         //                  With increasing values, more mipmaps are shown big in the debug menu.
         // Bits 000000800 - Near mag & min filter (Shows as NEAR & MIPMAP XXX - NEAR in the debug menu)
         // Bits 0x0020000 - Makes some textures display a scrolling animation. Used for example for the booster pad animation.
-        public uint Flags { get; private set; }
+        public uint Flags { get; set; }
         /// <summary>
         /// Index of the texture in the .TPL file.
         /// </summary>
-        public ushort TextureIdx { get; private set; }
-        public byte Unk6 { get; private set; }
-        public byte AnisotropyLevel { get; private set; } // ANISO level (0 = ANISO 1, 1 = ANISO 2, 2 = ANISO 4)
-        public ushort UnkC { get; private set; }
-        public uint Unk10 { get; private set; }
+        public ushort TextureIdx { get; set; }
+        public byte Unk6 { get; set; }
+        public byte AnisotropyLevel { get; set; } // ANISO level (0 = ANISO 1, 1 = ANISO 2, 2 = ANISO 4)
+        public ushort UnkC { get; set; }
+        public uint Unk10 { get; set; }
 
         public GcmfMaterial()
         {
