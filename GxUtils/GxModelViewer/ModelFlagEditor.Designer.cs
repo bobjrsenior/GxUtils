@@ -66,7 +66,7 @@
             // 
             // sectionFlagsTextBox
             // 
-            this.sectionFlagsTextBox.Location = new System.Drawing.Point(130, 36);
+            this.sectionFlagsTextBox.Location = new System.Drawing.Point(181, 36);
             this.sectionFlagsTextBox.Name = "sectionFlagsTextBox";
             this.sectionFlagsTextBox.Size = new System.Drawing.Size(100, 20);
             this.sectionFlagsTextBox.TabIndex = 1;
@@ -74,7 +74,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(112, 39);
+            this.label2.Location = new System.Drawing.Point(156, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(18, 13);
             this.label2.TabIndex = 2;

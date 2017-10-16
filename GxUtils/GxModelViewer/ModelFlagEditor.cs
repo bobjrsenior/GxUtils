@@ -24,7 +24,7 @@ namespace GxModelViewer
         {
             InitializeComponent();
             this.model = model;
-            this.sectionFlagsTextBox.Text = String.Format("{0:X}", model.SectionFlags);
+            this.sectionFlagsTextBox.Text = String.Format("{0:X8}", model.SectionFlags);
 
             this.boundingSphereCenterX.Text = "" + model.BoundingSphereCenter.X;
             this.boundingSphereCenterY.Text = "" + model.BoundingSphereCenter.Y;
@@ -53,10 +53,12 @@ namespace GxModelViewer
         {
             try {
                 validateInput();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
             catch(InvalidOperationException ex)
             {
-                MessageBox.Show("The flags could not be updates: " + ex.Message,
+                MessageBox.Show("The flags could not be updated: " + ex.Message,
                     "Error updating flags.", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             
@@ -100,8 +102,6 @@ namespace GxModelViewer
             {
                 model.TransformMatrixDefaultIdxs[i] = matrixDefaultIds[i];
             }
-            this.DialogResult = DialogResult.OK;
-            this.Close();
         }
     }
 }

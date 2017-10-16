@@ -65,6 +65,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MaterialFlagEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MaterialFlagEditor.Designer.cs">
+      <DependentUpon>MaterialFlagEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MeshFlagEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MeshFlagEditor.Designer.cs">
+      <DependentUpon>MeshFlagEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModelFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +107,12 @@
   <ItemGroup>
     <EmbeddedResource Include="GxTextureFormatPickerDialog.resx">
       <DependentUpon>GxTextureFormatPickerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MaterialFlagEditor.resx">
+      <DependentUpon>MaterialFlagEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MeshFlagEditor.resx">
+      <DependentUpon>MeshFlagEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelFlagEditor.resx">
       <DependentUpon>ModelFlagEditor.cs</DependentUpon>
