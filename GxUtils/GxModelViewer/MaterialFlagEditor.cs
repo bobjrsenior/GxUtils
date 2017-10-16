@@ -13,6 +13,13 @@ namespace GxModelViewer
 {
     public partial class MaterialFlagEditor : Form
     {
+        private const string FLAGS = "FLAGS";
+        private const string TEXTURE_INDEX = "TEXTURE_INDEX";
+        private const string UNKNOWN_6 = "UNKNOWN_6";
+        private const string ANISOTROPY = "ANISOTROPY";
+        private const string UNKNOWN_C = "UNKNOWN_C";
+        private const string UNKNOWN_10 = "UNKNOWN_10";
+
         GcmfMaterial material;
 
         public MaterialFlagEditor()
@@ -112,6 +119,85 @@ namespace GxModelViewer
             {
                 hexValue = 0;
                 return false;
+            }
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            // Request image filename
+            if (saveFlagsFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            StringBuilder sb = new StringBuilder()
+                .Append(FLAGS).Append(" ").Append(this.flagsTextBox.Text).Append("\r\n")
+                .Append(TEXTURE_INDEX).Append(" ").Append(this.textureIndexTextBox.Text).Append("\r\n")
+                .Append(UNKNOWN_6).Append(" ").Append(this.unknown6TextBox.Text).Append("\r\n")
+                .Append(ANISOTROPY).Append(" ").Append(this.anistropyTextBox.Text).Append("\r\n")
+                .Append(UNKNOWN_C).Append(" ").Append(this.unknownCTextBox.Text).Append("\r\n")
+                .Append(UNKNOWN_10).Append(" ").Append(this.unknown10TextBox.Text);
+
+            System.IO.File.WriteAllText(saveFlagsFileDialog.FileName, sb.ToString());
+        }
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+            // Request image filename
+            if (openFlagsFileDialog.ShowDialog() != DialogResult.OK)
+                return;
+            try
+            {
+                string[] lines = System.IO.File.ReadAllLines(openFlagsFileDialog.FileName);
+
+                List<string> flagWarningLog = new List<string>();
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string[] line = lines[i].Split();
+                    if (line.Length == 2)
+                    {
+                        switch (line[0])
+                        {
+                            case FLAGS:
+                                this.flagsTextBox.Text = line[1];
+                                break;
+                            case TEXTURE_INDEX:
+                                this.textureIndexTextBox.Text = line[1];
+                                break;
+                            case UNKNOWN_6:
+                                this.unknown6TextBox.Text = line[1];
+                                break;
+                            case ANISOTROPY:
+                                this.anistropyTextBox.Text = line[1];
+                                break;
+                            case UNKNOWN_C:
+                                this.unknownCTextBox.Text = line[1];
+                                break;
+                            case UNKNOWN_10:
+                                this.unknown10TextBox.Text = line[1];
+                                break;
+                            default:
+                                flagWarningLog.Add("Warning Unknown Flag: " + lines[i]);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        flagWarningLog.Add("Warning Invalid Flag Format: " + lines[i]);
+                    }
+                }
+
+                if (flagWarningLog.Count != 0)
+                {
+                    // TODO
+                    //ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(flagWarningLog);
+                    //if (warningDlg.ShowDialog() != DialogResult.Yes)
+                    //    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading the Flags file. " + ex.Message, "Error loading the Flags file.",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
     }

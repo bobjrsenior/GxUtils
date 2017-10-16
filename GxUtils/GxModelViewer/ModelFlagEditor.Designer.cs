@@ -53,6 +53,10 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.boundingSphereRadius = new System.Windows.Forms.TextBox();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
+            this.saveFlagsFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFlagsFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -256,11 +260,45 @@
             this.boundingSphereRadius.Size = new System.Drawing.Size(100, 20);
             this.boundingSphereRadius.TabIndex = 24;
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(49, 234);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 26;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(140, 234);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(75, 23);
+            this.loadButton.TabIndex = 27;
+            this.loadButton.Text = "Load";
+            this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
+            // 
+            // saveFlagsFileDialog
+            // 
+            this.saveFlagsFileDialog.DefaultExt = "txt";
+            this.saveFlagsFileDialog.FileName = "ModelFlags";
+            this.saveFlagsFileDialog.Filter = "Text Files|*.txt|All FIles|*.*";
+            // 
+            // openFlagsFileDialog
+            // 
+            this.openFlagsFileDialog.DefaultExt = "txt";
+            this.openFlagsFileDialog.FileName = "ModelFlags";
+            this.openFlagsFileDialog.Filter = "Text Files|*.txt|All FIles|*.*";
+            // 
             // ModelFlagEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 285);
+            this.Controls.Add(this.loadButton);
+            this.Controls.Add(this.saveButton);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.boundingSphereRadius);
             this.Controls.Add(this.cancelButton);
@@ -320,5 +358,9 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox boundingSphereRadius;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button loadButton;
+        private System.Windows.Forms.SaveFileDialog saveFlagsFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFlagsFileDialog;
     }
 }

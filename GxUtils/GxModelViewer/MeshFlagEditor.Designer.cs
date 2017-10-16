@@ -72,6 +72,10 @@
             this.layerTextBox = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
+            this.saveFlagsFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFlagsFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -432,11 +436,45 @@
             this.label9.TabIndex = 50;
             this.label9.Text = "0x";
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(25, 382);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 51;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(113, 382);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(75, 23);
+            this.loadButton.TabIndex = 52;
+            this.loadButton.Text = "Load";
+            this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
+            // 
+            // saveFlagsFileDialog
+            // 
+            this.saveFlagsFileDialog.DefaultExt = "txt";
+            this.saveFlagsFileDialog.FileName = "MeshFlags";
+            this.saveFlagsFileDialog.Filter = "Text FIles|*.txt|All Files|*.*";
+            // 
+            // openFlagsFileDialog
+            // 
+            this.openFlagsFileDialog.DefaultExt = "txt";
+            this.openFlagsFileDialog.FileName = "MeshFlags";
+            this.openFlagsFileDialog.Filter = "Text Files|*.txt|All Files|*.*";
+            // 
             // MeshFlagEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 427);
+            this.Controls.Add(this.loadButton);
+            this.Controls.Add(this.saveButton);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.layerTextBox);
             this.Controls.Add(this.label10);
@@ -534,5 +572,9 @@
         private System.Windows.Forms.TextBox layerTextBox;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button loadButton;
+        private System.Windows.Forms.SaveFileDialog saveFlagsFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFlagsFileDialog;
     }
 }

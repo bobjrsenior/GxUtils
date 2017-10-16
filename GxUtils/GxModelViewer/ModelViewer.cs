@@ -453,6 +453,7 @@ namespace GxModelViewer
                             int layerNo = (model.Meshes[j].Layer == GcmfMesh.MeshLayer.Layer1) ? 1 : 2;
                             TreeNode meshItem = new TreeNode(string.Format("[Layer {0}] Mesh {1}", layerNo, j));
                             meshItem.Tag = new ModelMeshReference(i, j);
+                            meshItem.ContextMenuStrip = meshMenuStrip;
                             modelItem.Nodes.Add(meshItem);
                         }
                     }
@@ -571,6 +572,7 @@ namespace GxModelViewer
             {
                 TreeNode materialItem = new TreeNode(string.Format("Material {0}", i));
                 materialItem.Tag = new ModelMaterialReference(modelIdx, i);
+                materialItem.ContextMenuStrip = materialMenuStrip;
                 treeMaterials.Nodes.Add(materialItem);
             }
         }
@@ -1239,7 +1241,7 @@ namespace GxModelViewer
             }
         }
 
-        private void editFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        private void editModelFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
             TreeNode selected = treeModel.SelectedNode;
@@ -1256,8 +1258,46 @@ namespace GxModelViewer
                         break;
                 }
             }
+        }
 
+        private void editMeshFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Select the clicked node
+            TreeNode selected = treeModel.SelectedNode;
+            TreeNode parent = selected.Parent;
+            int meshIndex = selected.Index;
+            int modelIndex = gma.GetEntryIndex(parent.Text);
+            Gcmf model = gma[modelIndex].ModelObject;
+            GcmfMesh mesh = model.Meshes[meshIndex];
+ 
+            using (MeshFlagEditor meshEditor = new MeshFlagEditor(mesh))
+            {
+                switch (meshEditor.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        UpdateModelDisplay();
+                        UpdateModelTree();
+                        break;
+                }
+            }
+        }
 
+        private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Select the clicked node
+            TreeNode selected = treeMaterials.SelectedNode;
+            ModelMaterialReference itemData = (ModelMaterialReference)selected.Tag;
+            GcmfMaterial material = gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx];
+
+            using (MaterialFlagEditor materialEditor = new MaterialFlagEditor(material))
+            {
+                switch (materialEditor.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        UpdateMaterialDisplay();
+                        break;
+                }
+            }
         }
     }
 }

@@ -47,6 +47,10 @@
             this.label10 = new System.Windows.Forms.Label();
             this.unknown6TextBox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.loadButton = new System.Windows.Forms.Button();
+            this.saveFlagsFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFlagsFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -167,7 +171,7 @@
             // 
             // okayButton
             // 
-            this.okayButton.Location = new System.Drawing.Point(56, 209);
+            this.okayButton.Location = new System.Drawing.Point(56, 232);
             this.okayButton.Name = "okayButton";
             this.okayButton.Size = new System.Drawing.Size(75, 23);
             this.okayButton.TabIndex = 15;
@@ -177,7 +181,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(137, 209);
+            this.cancelButton.Location = new System.Drawing.Point(137, 232);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 16;
@@ -210,11 +214,45 @@
             this.label11.TabIndex = 17;
             this.label11.Text = "Unknown 6";
             // 
+            // saveButton
+            // 
+            this.saveButton.Location = new System.Drawing.Point(56, 203);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(75, 23);
+            this.saveButton.TabIndex = 20;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
+            // loadButton
+            // 
+            this.loadButton.Location = new System.Drawing.Point(137, 203);
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(75, 23);
+            this.loadButton.TabIndex = 21;
+            this.loadButton.Text = "Load";
+            this.loadButton.UseVisualStyleBackColor = true;
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
+            // 
+            // saveFlagsFileDialog
+            // 
+            this.saveFlagsFileDialog.DefaultExt = "txt";
+            this.saveFlagsFileDialog.FileName = "MaterialFlags";
+            this.saveFlagsFileDialog.Filter = "Text Files|*.txt|All FIles|*.*";
+            // 
+            // openFlagsFileDialog
+            // 
+            this.openFlagsFileDialog.DefaultExt = "txt";
+            this.openFlagsFileDialog.FileName = "MaterialFlags";
+            this.openFlagsFileDialog.Filter = "Text Files|*.txt|All FIles|*.*";
+            // 
             // MaterialFlagEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(282, 267);
+            this.Controls.Add(this.loadButton);
+            this.Controls.Add(this.saveButton);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.unknown6TextBox);
             this.Controls.Add(this.label11);
@@ -262,5 +300,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox unknown6TextBox;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button loadButton;
+        private System.Windows.Forms.SaveFileDialog saveFlagsFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFlagsFileDialog;
     }
 }
