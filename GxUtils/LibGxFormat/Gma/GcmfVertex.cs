@@ -23,7 +23,9 @@ namespace LibGxFormat.Gma
         public Vector2? PrimaryTexCoord { get; set; }
         public Vector2? SecondaryTexCoord { get; set; }
         public Vector2? TertiaryTexCoord { get; set; }
-        uint? unknown5_1, unknown5_2, unknown5_3, unknown5_4, unknown5_5, unknown5_6, unknown5_7, unknown5_8, unknown5_9;
+        public Vector3? Normal2 { get; set; }
+        public Vector3? Bitangent { get; set; }
+        public Vector3? Tangent { get; set; }
 
         Color colorIndexedRaw;
         uint unknown7_1, unknown7_2, unknown7_3;
@@ -72,9 +74,9 @@ namespace LibGxFormat.Gma
             /// </summary>
             TertiaryTextureCoordinates = 0x00008000,
             /// <summary>
-            /// Unknown. uint8_t[24]
+            /// NBT (Normal, Bitangent, Tangent). Three sets of float[3]
             /// </summary>
-            Unknown5 = 0x02000000
+            NormalBitangentTangent = 0x02000000
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace LibGxFormat.Gma
                     ((PrimaryTexCoord != null) ? GcmfVertexFlags.PrimaryTextureCoordinates : 0) |
                     ((SecondaryTexCoord != null) ? GcmfVertexFlags.SecondaryTextureCoordinates : 0) |
                     ((TertiaryTexCoord != null) ? GcmfVertexFlags.TertiaryTextureCoordinates : 0) |
-                    ((unknown5_1 != null) ? GcmfVertexFlags.Unknown5 : 0));
+                    ((Normal2 != null) ? GcmfVertexFlags.NormalBitangentTangent : 0));
             }
         }
 
@@ -162,7 +164,7 @@ namespace LibGxFormat.Gma
                                        GcmfVertexFlags.PrimaryTextureCoordinates |
                                        GcmfVertexFlags.SecondaryTextureCoordinates |
                                        GcmfVertexFlags.TertiaryTextureCoordinates |
-                                       GcmfVertexFlags.Unknown5)) != 0)
+                                       GcmfVertexFlags.NormalBitangentTangent)) != 0)
             {
                 throw new InvalidGmaFileException("[GcmfVertexNonIndexed] Unknown vertex flags.");
             }
@@ -216,18 +218,23 @@ namespace LibGxFormat.Gma
                     ReadNumberOfType(input, is16Bit));
             }
 
-            if ((vertexFlags & (uint)GcmfVertexFlags.Unknown5) != 0)
+            if ((vertexFlags & (uint)GcmfVertexFlags.NormalBitangentTangent) != 0)
             {
-                // TODO should use readNum?
-                unknown5_1 = input.ReadUInt32();
-                unknown5_2 = input.ReadUInt32();
-                unknown5_3 = input.ReadUInt32();
-                unknown5_4 = input.ReadUInt32();
-                unknown5_5 = input.ReadUInt32();
-                unknown5_6 = input.ReadUInt32();
-                unknown5_7 = input.ReadUInt32();
-                unknown5_8 = input.ReadUInt32();
-                unknown5_9 = input.ReadUInt32();
+                // TODO should this use readNum or is it always a float?
+                Normal2 = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
+
+                Bitangent = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
+
+                Tangent = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
             }
         }
 
@@ -267,7 +274,7 @@ namespace LibGxFormat.Gma
             if (TertiaryTexCoord != null)
                 size += SizeOfNumberOfType(is16Bit) * 2;
 
-            if (unknown5_1 != null)
+            if (Normal2 != null)
                 size += 4 * 9;
 
             return size;
@@ -326,17 +333,19 @@ namespace LibGxFormat.Gma
                 WriteNumberOfType(output, is16Bit, TertiaryTexCoord.Value.Y);
             }
 
-            if (unknown5_1 != null)
+            if (Normal2 != null)
             {
-                output.Write(unknown5_1.Value);
-                output.Write(unknown5_2.Value);
-                output.Write(unknown5_3.Value);
-                output.Write(unknown5_4.Value);
-                output.Write(unknown5_5.Value);
-                output.Write(unknown5_6.Value);
-                output.Write(unknown5_7.Value);
-                output.Write(unknown5_8.Value);
-                output.Write(unknown5_9.Value);
+                WriteNumberOfType(output, false, Normal2.Value.X);
+                WriteNumberOfType(output, false, Normal2.Value.Y);
+                WriteNumberOfType(output, false, Normal2.Value.Z);
+
+                WriteNumberOfType(output, false, Bitangent.Value.X);
+                WriteNumberOfType(output, false, Bitangent.Value.Y);
+                WriteNumberOfType(output, false, Bitangent.Value.Z);
+
+                WriteNumberOfType(output, false, Tangent.Value.X);
+                WriteNumberOfType(output, false, Tangent.Value.Y);
+                WriteNumberOfType(output, false, Tangent.Value.Z);
             }
         }
 
