@@ -239,17 +239,19 @@ namespace LibGxFormat.Gma
                     VertexPool.Add(vtx);
                 }
 
-                if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
+                // Just because it probably won't be there doesn't mean we shouldn't allow it
+                // and some stages have the things that are not allowed
+                /*if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
                 {
                     // SMB doesn't have have any 0x08 section flags, so it's unknown how this field may work in that case
                     if (offsetPartType8Unknown1 != 0)
                         throw new InvalidGmaFileException("Gcmf [PreSectionHdr] offsetPartType8Unknown1 is not zero on SMB.");
                 }
                 else
-                {
+                {*/
                     if (Convert.ToInt32(input.BaseStream.Position) != sectionBaseOffset + offsetPartType8Unknown1)
                         throw new InvalidGmaFileException("Gcmf [PreSectionHdr] offsetPartType8Unknown1 doesn't match expected value.");
-                }
+                //}
 
                 if ((SectionFlags & (uint)GcmfSectionFlags.SkinModel) != 0)
                 {
@@ -261,17 +263,19 @@ namespace LibGxFormat.Gma
                     }
                 }
 
-                if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
+                // Just because it probably won't be there doesn't mean we shouldn't allow it
+                // and some stages have the things that are not allowed
+                /*if ((game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX) && (SectionFlags & (uint)GcmfSectionFlags.EffectiveModel) != 0)
                 {
                     // SMB doesn't have have any 0x08 section flags, so it's unknown how this field may work in that case
                     if (offsetPartType8Unknown2 != 0)
                         throw new InvalidGmaFileException("Gcmf [PreSectionHdr] offsetPartType8Unknown2 is not zero on SMB.");
                 }
                 else
-                {
-                    if (Convert.ToInt32(input.BaseStream.Position) != sectionBaseOffset + offsetPartType8Unknown2)
+                {*/
+                if (Convert.ToInt32(input.BaseStream.Position) != sectionBaseOffset + offsetPartType8Unknown2)
                         throw new InvalidGmaFileException("Gcmf [PreSectionHdr] offsetPartType8Unknown2 doesn't match expected value.");
-                }
+                //}
 
                 if ((SectionFlags & (uint)GcmfSectionFlags.SkinModel) != 0)
                 {
@@ -545,10 +549,10 @@ namespace LibGxFormat.Gma
 
         public void CopyFlags(Gcmf other)
         {
-            if(Meshes.Count != other.Meshes.Count)
-            {
-                throw new InvalidOperationException("Replacing model must have the same number of meshes.");
-            }
+            //if(Meshes.Count != other.Meshes.Count)
+            //{
+            //    throw new InvalidOperationException("Replacing model must have the same number of meshes.");
+            //}
             SectionFlags = other.SectionFlags;
             BoundingSphereCenter = other.BoundingSphereCenter;
             TransformMatrices = other.TransformMatrices;
@@ -556,38 +560,44 @@ namespace LibGxFormat.Gma
             Type8Unknown1 = other.Type8Unknown1;
             Type8Unknown2 = other.Type8Unknown2;
 
-            for (int i = 0; i < Meshes.Count; i++)
+            if (Meshes.Count == other.Meshes.Count)
             {
-                GcmfMesh thisMesh = Meshes[i];
-                GcmfMesh otherMesh = other.Meshes[i];
+                for (int i = 0; i < Meshes.Count && i < other.Meshes.Count; i++)
+                {
+                    GcmfMesh thisMesh = Meshes[i];
+                    GcmfMesh otherMesh = other.Meshes[i];
 
-                thisMesh.Layer = otherMesh.Layer;
+                    thisMesh.Layer = otherMesh.Layer;
 
-                thisMesh.RenderFlags = otherMesh.RenderFlags;
-                thisMesh.Unk4 = otherMesh.Unk4;
-                thisMesh.Unk8 = otherMesh.Unk8;
-                thisMesh.UnkC = otherMesh.UnkC;
-                thisMesh.Unk10 = otherMesh.Unk10;
-                // Header section info (Section flags)
-                thisMesh.Unk14 = otherMesh.Unk14;
-                // Header section info (Vertex flags)
-                thisMesh.TransformMatrixSpecificIdxsObj1 = otherMesh.TransformMatrixSpecificIdxsObj1;
-                thisMesh.TransformMatrixSpecificIdxsObj2 = otherMesh.TransformMatrixSpecificIdxsObj2;
-                thisMesh.BoundingSphereCenter = otherMesh.BoundingSphereCenter;
-                thisMesh.Unk3C = otherMesh.Unk3C;
-                thisMesh.Unk40 = otherMesh.Unk40;
+                    thisMesh.RenderFlags = otherMesh.RenderFlags;
+                    thisMesh.Unk4 = otherMesh.Unk4;
+                    thisMesh.Unk8 = otherMesh.Unk8;
+                    thisMesh.UnkC = otherMesh.UnkC;
+                    thisMesh.Unk10 = otherMesh.Unk10;
+                    // Header section info (Section flags)
+                    thisMesh.Unk14 = otherMesh.Unk14;
+                    // Header section info (Vertex flags)
+                    thisMesh.TransformMatrixSpecificIdxsObj1 = otherMesh.TransformMatrixSpecificIdxsObj1;
+                    thisMesh.TransformMatrixSpecificIdxsObj2 = otherMesh.TransformMatrixSpecificIdxsObj2;
+                    thisMesh.BoundingSphereCenter = otherMesh.BoundingSphereCenter;
+                    thisMesh.Unk3C = otherMesh.Unk3C;
+                    thisMesh.Unk40 = otherMesh.Unk40;
+                }
             }
 
-            for(int i = 0; i < Materials.Count; i++)
+            if (Materials.Count == other.Materials.Count)
             {
-                GcmfMaterial thisMaterial = Materials[i];
-                GcmfMaterial otherMaterial = other.Materials[i];
+                for (int i = 0; i < Materials.Count && i < other.Materials.Count; i++)
+                {
+                    GcmfMaterial thisMaterial = Materials[i];
+                    GcmfMaterial otherMaterial = other.Materials[i];
 
-                thisMaterial.Flags = otherMaterial.Flags;
-                thisMaterial.Unk6 = otherMaterial.Unk6;
-                thisMaterial.AnisotropyLevel = otherMaterial.AnisotropyLevel;
-                thisMaterial.UnkC = otherMaterial.UnkC;
-                thisMaterial.Unk10 = otherMaterial.Unk10;
+                    thisMaterial.Flags = otherMaterial.Flags;
+                    thisMaterial.Unk6 = otherMaterial.Unk6;
+                    thisMaterial.AnisotropyLevel = otherMaterial.AnisotropyLevel;
+                    thisMaterial.UnkC = otherMaterial.UnkC;
+                    thisMaterial.Unk10 = otherMaterial.Unk10;
+                }
             }
         }
     }
