@@ -512,6 +512,31 @@ namespace LibGxFormat.ModelLoader
 
             // Load the associated texture
             string textureFileName = mtlParser.ReadRestOfLine().Trim();
+            // Handle unsupported flags
+            if (textureFileName.StartsWith("-")){
+                string keyword = textureFileName.Substring(0, 2);
+                switch (keyword)
+                {
+                    case "-o":
+                    case "-s":
+                    case "-t":
+                        warningLog.Add(string.Format(
+                                "{0}: Unrecognized map_kd keyword '{1}'.", mtlParser.GetFilePositionStr(), keyword));
+                        // Assume format similar to "-s 5.000000 50.000000 1.000000 ..."
+                        String[] split = textureFileName.Split(' ');
+                        System.Text.StringBuilder newTextureFilename = new System.Text.StringBuilder();
+                        for(int i = 4; i < split.Length; i++)
+                        {
+                            newTextureFilename.Append(split[i]);
+                            if(i != split.Length - 1)
+                            {
+                                newTextureFilename.Append(' ');
+                            }
+                        }
+                        textureFileName = newTextureFilename.ToString();
+                        break;
+                }
+            }
             string textureFilePath = Path.Combine(Path.GetDirectoryName(mtlPath), textureFileName);
 
             // https://stackoverflow.com/a/8701748
