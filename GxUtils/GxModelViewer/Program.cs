@@ -7,16 +7,22 @@ using System.Collections.Generic;
 
 namespace GxModelViewer
 {
-	class MainClass
+
+    class MainClass
 	{
         [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
+        private static extern IntPtr GetConsoleWindow();
 
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
+        private const int SW_HIDE = 0;
+        private const int SW_SHOW = 5;
+
+        private  const string HELP_FLAG = "-help";
+        private const string INTERACTIVE_HELP_FLAG = "-interhelp";
+        private const string INTERACTIVE_FLAG = "-interactive";
+        private const string IMPORT_OBJ_FLAG = "-importobj";
 
         [STAThread]
 		public static void Main (string[] args)
@@ -33,11 +39,64 @@ namespace GxModelViewer
             }
             else
             {
-                displayHelp();
+                bool startInteractive = HandleFlags(modelViewer, args);
+                modelViewer.Dispose();
+                // Place for breakpoint after flags that doesn't cause a warning
+                int x = 5;
+                int y = x;
+                x = y;
             }
 		}
 
-        public static void displayHelp()
+        /// <summary>
+        /// Handles the passed in flags. This method is used for both command line
+        /// and interactive mode commands.
+        /// </summary>
+        /// <param name="modelViewer">ModelViewer object to apply commands on</param>
+        /// <param name="flags">Array of flags to apply</param>
+        /// <returns>If the caller should enter interactive mode</returns>
+        private static bool HandleFlags(ModelViewer modelViewer, string[] flags)
+        {
+            //
+            bool startInteractive = false;
+            for (int i = 0; i < flags.Length; i++)
+            {
+                string flag = flags[i];
+                switch (flag)
+                {
+                    case HELP_FLAG:
+                        DisplayHelp();
+                        break;
+                    case INTERACTIVE_HELP_FLAG:
+
+                        break;
+                    case INTERACTIVE_FLAG:
+                        startInteractive = true;
+                        break;
+                    case IMPORT_OBJ_FLAG:
+                        if(i < flags.Length - 1)
+                        {
+                            try {
+                                modelViewer.ImportObjMtl(flags[i + 1], true);
+                                // Skip the model argument
+                                i++;
+                            }
+                            catch(Exception ex)
+                            {
+                                WriteCommandError(flag, "Error loading the OBJ file->" + ex.Message);
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                }
+            }
+            return startInteractive;
+        }
+
+        private static void DisplayHelp()
         {
             Console.WriteLine("GX Model Viewer Command Line Help");
             Console.WriteLine("Description:");
@@ -52,6 +111,12 @@ namespace GxModelViewer
             Console.WriteLine("\t-interactive\tStart GxModelViewer in interactive mode.");
             Console.WriteLine("\t\t\tWhile in interactive mode, GX takes newline separated commands from stdin.");
             Console.WriteLine("\t\t\tSee '-interhelp' for interactive specific commands and differences.");
+            Console.WriteLine("\t-importobj <model>\t\tImports the designated .obj file.");
         }
-	}
+
+        private static void WriteCommandError(string command, string error)
+        {
+            Console.WriteLine("Invalid Command [" + command + "]: " + error);
+        }
+    }
 }

@@ -825,24 +825,46 @@ namespace GxModelViewer
 
             if (ofdLoadObj.ShowDialog() != DialogResult.OK)
                 return;
+            try
+            {
+                ImportObjMtl(ofdLoadObj.FileName, false);
+            }
+            catch (Exception ex)
+            {
+                 MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 return;
+            }
+        }
 
+        public void ImportObjMtl(string filename, bool commandLine)
+        {
             List<string> modelWarningLog;
             ObjMtlModel model;
             try
             {
-                model = new ObjMtlModel(ofdLoadObj.FileName, out modelWarningLog);
+                model = new ObjMtlModel(filename, out modelWarningLog);
                 if (modelWarningLog.Count != 0)
                 {
-                    ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
-                    if (warningDlg.ShowDialog() != DialogResult.Yes)
-                        return;
+                    if (!commandLine)
+                    {
+                        ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
+                        if (warningDlg.ShowDialog() != DialogResult.Yes)
+                            return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Obj Import Warnings:");
+                        foreach(string warning in modelWarningLog)
+                        {
+                            Console.WriteLine("Import Warning: " + warning);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                throw ex;
             }
 
             Dictionary<Bitmap, int> textureIndexMapping;
