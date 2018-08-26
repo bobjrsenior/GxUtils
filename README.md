@@ -51,7 +51,7 @@ flag is not available in interactive mode and the -quit flag is not available in
             The -interactive command does NOT do anything in interactive mode.
 
     Special Interactive Mode Args:
-            -quit                       Quit interactive mode and exit the program. Mode Specifics:
+            -quit                       Quit interactive mode and exit the program.
 
 ## Known bugs
 
