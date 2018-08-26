@@ -350,11 +350,18 @@ namespace GxModelViewer
             if (ofdLoadGma.ShowDialog() != DialogResult.OK)
                 return;
 
-            LoadGmaFile(ofdLoadGma.FileName);
+            try {
+                LoadGmaFile(ofdLoadGma.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
-        private void LoadGmaFile(string newGmaPath)
+        public void LoadGmaFile(string newGmaPath)
         {
+            Exception exception = null;
             // Try to load the GMA file
             if (newGmaPath != null)
             {
@@ -368,9 +375,9 @@ namespace GxModelViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     gma = null;
                     gmaPath = null;
+                    exception = ex;
                 }
             }
             else
@@ -392,6 +399,12 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+
+            // Throw delayed until end to keep previous functionality (clear GMA on error)
+            if (exception != null)
+            {
+                throw exception;
+            }
         }
 
         private void tsBtnSaveGma_Click(object sender, EventArgs e)
@@ -419,6 +432,21 @@ namespace GxModelViewer
 
                 gmaPath = sfdSaveGma.FileName;
             }
+
+            using (Stream gmaStream = File.OpenWrite(gmaPath))
+            {
+                gma.Save(gmaStream, GetSelectedGame());
+            }
+
+            haveUnsavedGmaChanges = false;
+            UpdateModelButtons();
+            return true;
+        }
+
+        public bool SaveGmaFile(string filename)
+        {
+            // Unlike the UI version, this always sets a new underlying GMA
+            gmaPath = filename;
 
             using (Stream gmaStream = File.OpenWrite(gmaPath))
             {
@@ -668,11 +696,18 @@ namespace GxModelViewer
             if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
                 return;
 
-            LoadTplFile(ofdLoadTpl.FileName);
+            try {
+                LoadTplFile(ofdLoadTpl.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
-        private void LoadTplFile(string newTplPath)
+        public void LoadTplFile(string newTplPath)
         {
+            Exception exception = null;
             // Try to load the TPL file
             if (newTplPath != null)
             {
@@ -686,9 +721,9 @@ namespace GxModelViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     tpl = null;
                     tplPath = null;
+                    exception = ex;
                 }
             }
             else
@@ -706,6 +741,12 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+
+            // Throw delayed until end to keep previous functionality (clear TPL on error)
+            if(exception != null)
+            {
+                throw exception;
+            }
         }
 
         private void tsBtnSaveTpl_Click(object sender, EventArgs e)
@@ -733,6 +774,21 @@ namespace GxModelViewer
 
                 tplPath = sfdSaveTpl.FileName;
             }
+
+            using (Stream tplStream = File.OpenWrite(tplPath))
+            {
+                tpl.Save(tplStream, GetSelectedGame());
+            }
+
+            haveUnsavedTplChanges = false;
+            UpdateTextureButtons();
+            return true;
+        }
+
+        public bool SaveTplFile(string filename)
+        {
+            // Unlike the UI version, this always sets a new underlying TPL
+            tplPath = filename;
 
             using (Stream tplStream = File.OpenWrite(tplPath))
             {

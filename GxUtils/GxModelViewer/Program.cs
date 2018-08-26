@@ -20,9 +20,14 @@ namespace GxModelViewer
         private const int SW_SHOW = 5;
 
         private  const string HELP_FLAG = "-help";
-        private const string INTERACTIVE_HELP_FLAG = "-interhelp";
+        private const string INTERACTIVE_HELP_FLAG = "-interHelp";
         private const string INTERACTIVE_FLAG = "-interactive";
-        private const string IMPORT_OBJ_FLAG = "-importobj";
+        private const string IMPORT_OBJ_MTL_FLAG = "-importObjMtl";
+        private const string IMPORT_TPL_FLAG = "-importTPL";
+        private const string IMPORT_GMA_FLAG = "-importGMA";
+        private const string EXPORT_OBJ_MTL_FLAG = "-exportObjMtl";
+        private const string EXPORT_TPL_FLAG = "-exportTpl";
+        private const string EXPORT_GMA_FLAG = "-exportGma";
 
         [STAThread]
 		public static void Main (string[] args)
@@ -73,23 +78,117 @@ namespace GxModelViewer
                     case INTERACTIVE_FLAG:
                         startInteractive = true;
                         break;
-                    case IMPORT_OBJ_FLAG:
+                    case IMPORT_OBJ_MTL_FLAG:
                         if(i < flags.Length - 1)
                         {
                             try {
                                 modelViewer.ImportObjMtl(flags[i + 1], true);
-                                // Skip the model argument
-                                i++;
                             }
                             catch(Exception ex)
                             {
                                 WriteCommandError(flag, "Error loading the OBJ file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
                             }
                         }
                         else
                         {
                             WriteCommandError(flag, "Not enough args for command");
                         }
+                        break;
+                    case IMPORT_TPL_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                modelViewer.LoadTplFile(flags[i + 1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error loading the TPL file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case IMPORT_GMA_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                modelViewer.LoadGmaFile(flags[i + 1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error loading the GMA file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case EXPORT_TPL_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                modelViewer.SaveTplFile(flags[i + 1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error saving the TPL file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case EXPORT_GMA_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                modelViewer.SaveGmaFile(flags[i + 1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error saving the GMA file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    default:
+                        WriteCommandError(flag, "Unknown command");
                         break;
                 }
             }
@@ -107,16 +206,26 @@ namespace GxModelViewer
             Console.WriteLine("");
             Console.WriteLine("args:");
             Console.WriteLine("\t-help\t\tDisplay this help.");
-            Console.WriteLine("\t-interhelp\tDisplay help specific for interactive mode.");
+            Console.WriteLine("\t-interHelp\tDisplay help specific for interactive mode.");
             Console.WriteLine("\t-interactive\tStart GxModelViewer in interactive mode.");
             Console.WriteLine("\t\t\tWhile in interactive mode, GX takes newline separated commands from stdin.");
             Console.WriteLine("\t\t\tSee '-interhelp' for interactive specific commands and differences.");
-            Console.WriteLine("\t-importobj <model>\t\tImports the designated .obj file.");
+            Console.WriteLine("\t-importObj <model>\t\tImports the designated .obj file.");
+            Console.WriteLine("\t-importTpl <texture>\t\tImports the designated .tpl file.");
+            Console.WriteLine("\t-importGma <model>\t\tImports the designated .gma file.");
+            Console.WriteLine("\t-exportObjMtl <model>\t\tExports the loaded model as a .obj/.mtl file.");
+            Console.WriteLine("\t-exportTpl <textures>\t\tExports the loaded textures as a .tpl file.");
+            Console.WriteLine("\t-exportGma <model>\t\tExports the loaded model as a .gma file.");
         }
 
         private static void WriteCommandError(string command, string error)
         {
-            Console.WriteLine("Invalid Command [" + command + "]: " + error);
+            Console.WriteLine("Invalid Command Error [" + command + "]: " + error);
+        }
+
+        private static void WriteCommandWarning(string command, string error)
+        {
+            Console.WriteLine("Invalid Command Warning [" + command + "]: " + error);
         }
     }
 }
