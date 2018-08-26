@@ -23,11 +23,14 @@ namespace GxModelViewer
         private const string INTERACTIVE_HELP_FLAG = "-interHelp";
         private const string INTERACTIVE_FLAG = "-interactive";
         private const string IMPORT_OBJ_MTL_FLAG = "-importObjMtl";
-        private const string IMPORT_TPL_FLAG = "-importTPL";
-        private const string IMPORT_GMA_FLAG = "-importGMA";
+        private const string IMPORT_TPL_FLAG = "-importTpl";
+        private const string IMPORT_GMA_FLAG = "-importGma";
         private const string EXPORT_OBJ_MTL_FLAG = "-exportObjMtl";
         private const string EXPORT_TPL_FLAG = "-exportTpl";
         private const string EXPORT_GMA_FLAG = "-exportGma";
+
+        // Interactive Mode Only
+        private const string QUIT_FLAG = "-quit";
 
         [STAThread]
 		public static void Main (string[] args)
@@ -44,7 +47,11 @@ namespace GxModelViewer
             }
             else
             {
-                bool startInteractive = HandleFlags(modelViewer, args);
+                bool startInteractive = HandleFlags(modelViewer, args, false);
+                if (startInteractive)
+                {
+                    InteractiveMode(modelViewer);
+                }
                 modelViewer.Dispose();
                 // Place for breakpoint after flags that doesn't cause a warning
                 int x = 5;
@@ -53,16 +60,28 @@ namespace GxModelViewer
             }
 		}
 
+        private static void InteractiveMode(ModelViewer modelViewer)
+        {
+            bool continueReading = true;
+            do
+            {
+                string line = Console.ReadLine();
+                string[] args = SplitLineToArgs(line);
+                continueReading = HandleFlags(modelViewer, args, true);
+
+            } while (continueReading);
+        }
+
         /// <summary>
         /// Handles the passed in flags. This method is used for both command line
         /// and interactive mode commands.
         /// </summary>
         /// <param name="modelViewer">ModelViewer object to apply commands on</param>
         /// <param name="flags">Array of flags to apply</param>
-        /// <returns>If the caller should enter interactive mode</returns>
-        private static bool HandleFlags(ModelViewer modelViewer, string[] flags)
+        /// <param name="isInteractive">Determines if currently in interactive mode</param>
+        /// <returns>If the caller should enter interactive mode. If in interactive mode, this determines if input should continue.</returns>
+        private static bool HandleFlags(ModelViewer modelViewer, string[] flags, bool isInteractive)
         {
-            //
             bool startInteractive = false;
             for (int i = 0; i < flags.Length; i++)
             {
@@ -71,18 +90,30 @@ namespace GxModelViewer
                 {
                     case HELP_FLAG:
                         DisplayHelp();
+                        WriteCommandSuccess(flag);
                         break;
                     case INTERACTIVE_HELP_FLAG:
-
+                        DisplayInteractiveHelp();
+                        WriteCommandSuccess(flag);
                         break;
                     case INTERACTIVE_FLAG:
                         startInteractive = true;
+                        if (!isInteractive)
+                            WriteCommandSuccess(flag);
+                        break;
+                    case QUIT_FLAG:
+                        if (isInteractive)
+                        {
+                            WriteCommandSuccess(flag);
+                            return false;
+                        }
                         break;
                     case IMPORT_OBJ_MTL_FLAG:
                         if(i < flags.Length - 1)
                         {
                             try {
                                 modelViewer.ImportObjMtl(flags[i + 1], true);
+                                WriteCommandSuccess(flag);
                             }
                             catch(Exception ex)
                             {
@@ -105,6 +136,7 @@ namespace GxModelViewer
                             try
                             {
                                 modelViewer.LoadTplFile(flags[i + 1]);
+                                WriteCommandSuccess(flag);
                             }
                             catch (Exception ex)
                             {
@@ -127,6 +159,7 @@ namespace GxModelViewer
                             try
                             {
                                 modelViewer.LoadGmaFile(flags[i + 1]);
+                                WriteCommandSuccess(flag);
                             }
                             catch (Exception ex)
                             {
@@ -149,6 +182,7 @@ namespace GxModelViewer
                             try
                             {
                                 modelViewer.ExportObjMtl(flags[i + 1]);
+                                WriteCommandSuccess(flag);
                             }
                             catch (Exception ex)
                             {
@@ -171,6 +205,7 @@ namespace GxModelViewer
                             try
                             {
                                 modelViewer.SaveTplFile(flags[i + 1]);
+                                WriteCommandSuccess(flag);
                             }
                             catch (Exception ex)
                             {
@@ -193,6 +228,7 @@ namespace GxModelViewer
                             try
                             {
                                 modelViewer.SaveGmaFile(flags[i + 1]);
+                                WriteCommandSuccess(flag);
                             }
                             catch (Exception ex)
                             {
@@ -213,6 +249,12 @@ namespace GxModelViewer
                         WriteCommandError(flag, "Unknown command");
                         break;
                 }
+            }
+
+            // Interactive mode returns false to continue reading, true to quit
+            if (isInteractive)
+            {
+                return true;
             }
             return startInteractive;
         }
@@ -240,14 +282,68 @@ namespace GxModelViewer
             Console.WriteLine("\t-exportGma <model>\t\tExports the loaded model as a .gma file.");
         }
 
+        private static void DisplayInteractiveHelp()
+        {
+            Console.WriteLine("GX Model Viewer Interactive Mode Help");
+            Console.WriteLine("Description:");
+            Console.WriteLine("\tGX Model Viewer Interactive mode works by reading lines from standard input.");
+            Console.WriteLine("\tEach line of input works just like command line arguments, so each line can have multiple commands.");
+            Console.WriteLine("\tInput continues to be read until the -quit command is recieved.");
+            Console.WriteLine("\tThe -interactive command does NOT do anything in interactive mode.");
+            Console.WriteLine("");
+            Console.WriteLine("Special Interactive Mode Args:");
+            Console.WriteLine("\t-quit\t\tQuit interactive mode and exit the program.");
+   
+        }
+
+        private static void WriteCommandSuccess(string command)
+        {
+            WriteCommandInfo(command, "Command completed successfully");
+        }
+
         private static void WriteCommandError(string command, string error)
         {
             Console.WriteLine("Invalid Command Error [" + command + "]: " + error);
         }
 
-        private static void WriteCommandWarning(string command, string error)
+        private static void WriteCommandWarning(string command, string warning)
         {
-            Console.WriteLine("Invalid Command Warning [" + command + "]: " + error);
+            Console.WriteLine("Invalid Command Warning [" + command + "]: " + warning);
+        }
+
+        private static void WriteCommandInfo(string command, string info)
+        {
+            Console.WriteLine("Info [" + command + "]: " + info);
+        }
+
+        /// <summary>
+        /// Takes an input line and splits it into arguments. Use quotes to allow spaces
+        /// in an argument.
+        /// </summary>
+        /// <param name="line">Line to parse</param>
+        /// <returns>Parsed arguments</returns>
+        private static string[] SplitLineToArgs(string line)
+        {
+            // Takes the input line and replaces spaces with newline characters
+            // unless the spaces are within quotes.
+            // Note: This means quotes can be used as argument values
+            char[] separators = new char[] { '\n' };
+            char[] characters = line.ToCharArray();
+            bool inQuote = false;
+            for(int i = 0; i < characters.Length; i++)
+            {
+                if(characters[i] == '"')
+                {
+                    inQuote = !inQuote;
+                    characters[i] = '\n';
+                }
+                if(!inQuote && characters[i] == ' ')
+                {
+                    characters[i] = '\n';
+                }
+            }
+            string newLine = new string(characters);
+            return newLine.Split(separators, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
