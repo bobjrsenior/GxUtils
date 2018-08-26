@@ -788,7 +788,7 @@ namespace GxModelViewer
         public bool SaveTplFile(string filename)
         {
             // Unlike the UI version, this always sets a new underlying TPL
-            tplPath = sfdSaveTpl.FileName;
+            tplPath = filename;
 
             using (Stream tplStream = File.OpenWrite(tplPath))
             {
@@ -973,6 +973,29 @@ namespace GxModelViewer
                 {
                     exporter.ExportModel(gma);
                 }
+            }
+        }
+
+        public void ExportObjMtl(string objFilename)
+        {
+            string directory = Path.GetDirectoryName(objFilename);
+            string pathWithoutExtension = Path.GetFileNameWithoutExtension(objFilename);
+            // Export OBJ and MTL files
+            ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
+
+            // Export textures
+            if (tpl != null)
+            {
+                for (int i = 0; i < tpl.Count; i++)
+                {
+                    exporter.ExportTexture(i, tpl[i]);
+                }
+            }
+
+            // Export model
+            if (gma != null)
+            {
+                exporter.ExportModel(gma);
             }
         }
 

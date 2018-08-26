@@ -143,6 +143,28 @@ namespace GxModelViewer
                             WriteCommandError(flag, "Not enough args for command");
                         }
                         break;
+                    case EXPORT_OBJ_MTL_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                modelViewer.ExportObjMtl(flags[i + 1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error saving the OBJ/MTL file->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
                     case EXPORT_TPL_FLAG:
                         if (i < flags.Length - 1)
                         {
