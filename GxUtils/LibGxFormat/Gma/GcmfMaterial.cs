@@ -14,14 +14,14 @@ namespace LibGxFormat.Gma
     public class GcmfMaterial
     {
         // OR of all flags of all GMA files: 0x5AFFFF
-        // Bits 0x000000C - Texture Wrap S (0 - Clamp, 1 - Repeat, 2 - Mirror)
-        // Bits 0x0000030 - Texture Wrap T (0 - Clamp, 1 - Repeat, 2 - Mirror)
-        // Bits 0x0000040 - Anisotropic filtering? (Seems to be VERY related, but sometimes anisotropyLevel is set without this..)
-        // Bits 0x0000700 - Related to mipmaping (number/proportion of mipmap levels to use?)
+        // Bits 0x0000000C - Texture Wrap S (0 - Clamp, 1 - Repeat, 2 - Mirror)
+        // Bits 0x00000030 - Texture Wrap T (0 - Clamp, 1 - Repeat, 2 - Mirror)
+        // Bits 0x00000040 - Anisotropic filtering? (Seems to be VERY related, but sometimes anisotropyLevel is set without this..)
+        // Bits 0x00000700 - Related to mipmaping (number/proportion of mipmap levels to use?)
         //                  If set to zero, shows as XXX & MIPMAP NEAR - XXX
         //                  With increasing values, more mipmaps are shown big in the debug menu.
-        // Bits 000000800 - Near mag & min filter (Shows as NEAR & MIPMAP XXX - NEAR in the debug menu)
-        // Bits 0x0020000 - Makes some textures display a scrolling animation. Used for example for the booster pad animation.
+        // Bits 0x00000080 - Near mag & min filter (Shows as NEAR & MIPMAP XXX - NEAR in the debug menu)
+        // Bits 0x00020000 - Makes some textures display a scrolling animation. Used for example for the booster pad animation.
         public uint Flags { get; set; }
         /// <summary>
         /// Index of the texture in the .TPL file.
