@@ -165,14 +165,28 @@ namespace GxModelViewer
             return (GxGame)tsCmbGame.ComboBox.SelectedValue;
         }
 
+        public void SetSelectedGame(GxGame newGame)
+        {
+            tsCmbGame.ComboBox.SelectedValue = newGame;
+        }
+
         private GxInterpolationFormat GetSelectedMipmap()
         {
             return intFormat;
+        }
+        public void SetSelectedMipmap(GxInterpolationFormat format)
+        {
+            intFormat = format;
         }
 
         private int GetNumMipmaps()
         {
             return numMipmaps;
+        }
+
+        public void SetNumMipmaps(int num)
+        {
+            numMipmaps = num;
         }
 
         private void UnloadModel()

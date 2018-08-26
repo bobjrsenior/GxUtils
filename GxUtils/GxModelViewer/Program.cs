@@ -22,6 +22,9 @@ namespace GxModelViewer
         private  const string HELP_FLAG = "-help";
         private const string INTERACTIVE_HELP_FLAG = "-interHelp";
         private const string INTERACTIVE_FLAG = "-interactive";
+        private const string GAME_FLAG = "-game";
+        private const string MIPMAPS_FLAG = "-mipmaps";
+        private const string INTERPOLATION_FLAG = "-interpolate";
         private const string IMPORT_OBJ_MTL_FLAG = "-importObjMtl";
         private const string IMPORT_TPL_FLAG = "-importTpl";
         private const string IMPORT_GMA_FLAG = "-importGma";
@@ -53,11 +56,7 @@ namespace GxModelViewer
                     InteractiveMode(modelViewer);
                 }
                 modelViewer.Dispose();
-                // Place for breakpoint after flags that doesn't cause a warning
-                int x = 5;
-                int y = x;
-                x = y;
-            }
+             }
 		}
 
         private static void InteractiveMode(ModelViewer modelViewer)
@@ -106,6 +105,109 @@ namespace GxModelViewer
                         {
                             WriteCommandSuccess(flag);
                             return false;
+                        }
+                        break;
+                    case GAME_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            try
+                            {
+                                string gameOrig = flags[i + 1];
+                                bool valid = false;
+                                LibGxFormat.GxGame game = LibGxFormat.GxGame.SuperMonkeyBall;
+                                switch (gameOrig)
+                                {
+                                    case "smb":
+                                        game = LibGxFormat.GxGame.SuperMonkeyBall;
+                                        valid = true;
+                                        break;
+                                    case "deluxe":
+                                        game = LibGxFormat.GxGame.SuperMonkeyBallDX;
+                                        valid = true;
+                                        break;
+                                    case "fxero":
+                                        game = LibGxFormat.GxGame.FZeroGX;
+                                        valid = true;
+                                        break;
+                                }
+                                if (valid)
+                                {
+                                    modelViewer.SetSelectedGame(game);
+                                    WriteCommandSuccess(flag);
+                                }
+                                else
+                                {
+                                    WriteCommandError(flag, "Game selected does not exist->" + gameOrig);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error setting game->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case MIPMAPS_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            int value;
+                            bool validInt = int.TryParse(flags[i + 1], out value);
+                            if (validInt && value >= 0)
+                            {
+                                modelViewer.SetNumMipmaps(value);
+                                WriteCommandSuccess(flag);
+                            }
+                            else
+                            {
+                                WriteCommandError(flag, "Value is not a valid (positive/zero) int->" + flags[i + 1]);
+                            }
+                            i++;
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case INTERPOLATION_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            string interpolateString = flags[i + 1];
+                            bool valid = false;
+                            LibGxFormat.GxInterpolationFormat format = LibGxFormat.GxInterpolationFormat.CSharpDefault;
+                            switch (interpolateString)
+                            {
+                                case "default":
+                                    format = LibGxFormat.GxInterpolationFormat.CSharpDefault;
+                                    valid = true;
+                                    break;
+                                case "nearest":
+                                case "nn":
+                                    format = LibGxFormat.GxInterpolationFormat.NearestNeighbor;
+                                    valid = true;
+                                    break;
+                            }
+                            if (valid)
+                            {
+                                modelViewer.SetSelectedMipmap(format);
+                                WriteCommandSuccess(flag);
+                            }
+                            else
+                            {
+                                WriteCommandError(flag, "Value is not a valid interpolation type->" + interpolateString);
+                            }
+                            i++;
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
                         }
                         break;
                     case IMPORT_OBJ_MTL_FLAG:
@@ -269,11 +371,20 @@ namespace GxModelViewer
             Console.WriteLine(@"Usage: .\GxModelViewer [arg [value...]...]");
             Console.WriteLine("");
             Console.WriteLine("args:");
-            Console.WriteLine("\t-help\t\tDisplay this help.");
-            Console.WriteLine("\t-interHelp\tDisplay help specific for interactive mode.");
-            Console.WriteLine("\t-interactive\tStart GxModelViewer in interactive mode.");
-            Console.WriteLine("\t\t\tWhile in interactive mode, GX takes newline separated commands from stdin.");
-            Console.WriteLine("\t\t\tSee '-interhelp' for interactive specific commands and differences.");
+            Console.WriteLine("\t-help\t\t\t\tDisplay this help.");
+            Console.WriteLine("\t-interHelp\t\t\tDisplay help specific for interactive mode.");
+            Console.WriteLine("\t-interactive\t\t\tStart GxModelViewer in interactive mode.");
+            Console.WriteLine("\t\t\t\t\tWhile in interactive mode, GX takes newline separated commands from stdin.");
+            Console.WriteLine("\t\t\t\t\tSee '-interhelp' for interactive specific commands and differences.");
+            Console.WriteLine("\t-game <type>\t\t\tThe game to use when importing/exporting.");
+            Console.WriteLine("\t\t\t\t\t\tsmb: Super Monkey Ball 1/2 (default)");
+            Console.WriteLine("\t\t\t\t\t\tdeluxe: Super Monkey Ball Deluxe (beta)");
+            Console.WriteLine("\t\t\t\t\t\tfzero: F-Zero GX");
+            Console.WriteLine("\t-mipmaps <num>\t\t\tThe number of mipmaps to make on import.");
+            Console.WriteLine("\t-interpolate <type>\t\tThe type of interpolation to use with mipmap generation.");
+            Console.WriteLine("\t\t\t\t\t\tdefault: The C# default type (default)");
+            Console.WriteLine("\t\t\t\t\t\tnearest: Nearest neighbor");
+            Console.WriteLine("\t\t\t\t\t\tnn: Nearest Neighbor alias");
             Console.WriteLine("\t-importObj <model>\t\tImports the designated .obj file.");
             Console.WriteLine("\t-importTpl <texture>\t\tImports the designated .tpl file.");
             Console.WriteLine("\t-importGma <model>\t\tImports the designated .gma file.");
@@ -292,7 +403,7 @@ namespace GxModelViewer
             Console.WriteLine("\tThe -interactive command does NOT do anything in interactive mode.");
             Console.WriteLine("");
             Console.WriteLine("Special Interactive Mode Args:");
-            Console.WriteLine("\t-quit\t\tQuit interactive mode and exit the program.");
+            Console.WriteLine("\t-quit\t\t\t\tQuit interactive mode and exit the program.");
    
         }
 
