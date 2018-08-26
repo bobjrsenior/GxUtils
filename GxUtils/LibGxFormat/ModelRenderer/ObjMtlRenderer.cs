@@ -9,11 +9,6 @@ namespace LibGxFormat.ModelRenderer
 {
     class ObjMtlRenderer : IRenderer, IDisposable
     {
-        /// <summary>Default filename of the exported .OBJ file.</summary>
-        static readonly string ObjFileName = "model.obj";
-        /// <summary>Default filename of the exported .MTL file.</summary>
-        static readonly string MtlFileName = "model.mtl";
-
         /// <summary>Output stream for the .OBJ file.</summary>
         StreamWriter objStream;
         /// <summary>Output stream for the .MTL file.</summary>
@@ -43,15 +38,15 @@ namespace LibGxFormat.ModelRenderer
         /// </summary>
         /// <param name="objFileName">The path of the .OBJ file to write.</param>
         /// <param name="mtlFileName">The path of the .MTL file to write.</param>
-        public ObjMtlRenderer(string objOutputPath)
+        public ObjMtlRenderer(string objOutputPath, string filename)
         {
             try
             {
-                objStream = new StreamWriter(Path.Combine(objOutputPath, ObjFileName));
-                mtlStream = new StreamWriter(Path.Combine(objOutputPath, MtlFileName));
+                objStream = new StreamWriter(Path.Combine(objOutputPath, filename + ".obj"));
+                mtlStream = new StreamWriter(Path.Combine(objOutputPath, filename + ".mtl"));
 
                 // Write .mtl file reference in the .obj file
-                objStream.WriteLine("mtllib {0}", MtlFileName);
+                objStream.WriteLine("mtllib {0}", filename + ".mtl");
 
                 // Create empty material for when we want to unbind the current material
                 mtlStream.WriteLine("newmtl MAT_NULL");

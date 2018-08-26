@@ -788,7 +788,7 @@ namespace GxModelViewer
         public bool SaveTplFile(string filename)
         {
             // Unlike the UI version, this always sets a new underlying TPL
-            tplPath = filename;
+            tplPath = sfdSaveTpl.FileName;
 
             using (Stream tplStream = File.OpenWrite(tplPath))
             {
@@ -952,10 +952,12 @@ namespace GxModelViewer
 
         private void tsBtnExportObjMtl_Click(object sender, EventArgs e)
         {
-            if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
+            if (sfdModelExportPath.ShowDialog() == DialogResult.OK)
             {
+                string directory = Path.GetDirectoryName(sfdModelExportPath.FileName);
+                string pathWithoutExtension = Path.GetFileNameWithoutExtension(sfdModelExportPath.FileName);
                 // Export OBJ and MTL files
-                ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
+                ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
 
                 // Export textures
                 if (tpl != null)
@@ -1139,10 +1141,12 @@ namespace GxModelViewer
             {
                 string nodeName = selected.Text;
 
-                if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
+                if (sfdModelExportPath.ShowDialog() == DialogResult.OK)
                 {
+                    string directory = Path.GetDirectoryName(sfdModelExportPath.FileName);
+                    string pathWithoutExtension = Path.GetFileNameWithoutExtension(sfdModelExportPath.FileName);
                     // Export OBJ and MTL files
-                    ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
+                    ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
 
 
                     // Export model

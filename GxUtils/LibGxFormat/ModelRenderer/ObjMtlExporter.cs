@@ -15,15 +15,23 @@ namespace LibGxFormat.ModelRenderer
         string outputPath;
 
         /// <summary>
+        /// The filename for the OBJ and MTL files
+        /// </summary>
+        string outputFilename;
+
+        /// <summary>
         /// Create a new ObjMtlExporter.
         /// </summary>
         /// <param name="outputPath">The path where the output files will be written.</param>
-        public ObjMtlExporter(string outputPath)
+        public ObjMtlExporter(string outputPath, string outputFilename)
         {
             if (outputPath == null)
                 throw new ArgumentNullException("outputPath");
+            if (outputFilename == null)
+                throw new ArgumentNullException("outputFilename");
 
             this.outputPath = outputPath;
+            this.outputFilename = outputFilename;
         }
 
         /// <summary>
@@ -52,7 +60,7 @@ namespace LibGxFormat.ModelRenderer
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            using (ObjMtlRenderer renderer = new ObjMtlRenderer(outputPath))
+            using (ObjMtlRenderer renderer = new ObjMtlRenderer(outputPath, outputFilename))
             {
                 model.Render(renderer);
             }
@@ -67,7 +75,7 @@ namespace LibGxFormat.ModelRenderer
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            using (ObjMtlRenderer renderer = new ObjMtlRenderer(outputPath))
+            using (ObjMtlRenderer renderer = new ObjMtlRenderer(outputPath, outputFilename))
             {
                 return model.Render(renderer, modelName);
             }
