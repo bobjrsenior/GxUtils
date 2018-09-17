@@ -133,7 +133,6 @@ namespace GxModelViewer
             this.ofdLoadGma = new System.Windows.Forms.OpenFileDialog();
             this.ofdLoadTpl = new System.Windows.Forms.OpenFileDialog();
             this.sfdSaveTpl = new System.Windows.Forms.SaveFileDialog();
-            this.fbdModelExportPath = new System.Windows.Forms.FolderBrowserDialog();
             this.ofdTextureImportPath = new System.Windows.Forms.OpenFileDialog();
             this.sfdTextureExportPath = new System.Windows.Forms.SaveFileDialog();
             this.sfdSaveGma = new System.Windows.Forms.SaveFileDialog();
@@ -151,6 +150,8 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.materialMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
+            this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -183,6 +184,7 @@ namespace GxModelViewer
             this.gmaContextMenuStrip.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             this.materialMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -1333,10 +1335,6 @@ namespace GxModelViewer
             this.sfdSaveTpl.Filter = "TPL Files|*.tpl|All Files|*.*";
             this.sfdSaveTpl.Title = "Save TPL File...";
             // 
-            // fbdModelExportPath
-            // 
-            this.fbdModelExportPath.Description = "Select Model Export Path...";
-            // 
             // ofdTextureImportPath
             // 
             this.ofdTextureImportPath.Filter = "Image files|*.png;*.tiff;*.gif;*.jpg;*.jpeg;*.bmp|All Files|*.*";
@@ -1448,14 +1446,25 @@ namespace GxModelViewer
             this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editFlagsToolStripMenuItem2});
             this.materialMenuStrip.Name = "materialMenuStrip";
-            this.materialMenuStrip.Size = new System.Drawing.Size(153, 48);
+            this.materialMenuStrip.Size = new System.Drawing.Size(125, 26);
             // 
             // editFlagsToolStripMenuItem2
             // 
             this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
-            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(124, 22);
             this.editFlagsToolStripMenuItem2.Text = "Edit Flags";
             this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
+            // 
+            // sfdModelExportPath
+            // 
+            this.sfdModelExportPath.DefaultExt = "obj";
+            this.sfdModelExportPath.Filter = "OBJ Files|*.obj|All Files|*.*";
+            this.sfdModelExportPath.Title = "Save Model File...";
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
             // 
             // ModelViewer
             // 
@@ -1503,6 +1512,7 @@ namespace GxModelViewer
             this.gmaContextMenuStrip.ResumeLayout(false);
             this.meshMenuStrip.ResumeLayout(false);
             this.materialMenuStrip.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1539,7 +1549,6 @@ namespace GxModelViewer
         private System.Windows.Forms.OpenFileDialog ofdLoadGma;
         private System.Windows.Forms.OpenFileDialog ofdLoadTpl;
         private System.Windows.Forms.SaveFileDialog sfdSaveTpl;
-        private System.Windows.Forms.FolderBrowserDialog fbdModelExportPath;
         private System.Windows.Forms.ContextMenuStrip ctxMenuModelOptions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowTextures;
         private System.Windows.Forms.TreeView treeMaterials;
@@ -1629,5 +1638,7 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem editFlagsToolStripMenuItem1;
         private System.Windows.Forms.ContextMenuStrip materialMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem editFlagsToolStripMenuItem2;
+        private System.Windows.Forms.SaveFileDialog sfdModelExportPath;
+        private System.IO.FileSystemWatcher fileSystemWatcher1;
     }
 }

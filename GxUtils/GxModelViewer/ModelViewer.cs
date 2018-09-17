@@ -165,14 +165,28 @@ namespace GxModelViewer
             return (GxGame)tsCmbGame.ComboBox.SelectedValue;
         }
 
+        public void SetSelectedGame(GxGame newGame)
+        {
+            tsCmbGame.ComboBox.SelectedValue = newGame;
+        }
+
         private GxInterpolationFormat GetSelectedMipmap()
         {
             return intFormat;
+        }
+        public void SetSelectedMipmap(GxInterpolationFormat format)
+        {
+            intFormat = format;
         }
 
         private int GetNumMipmaps()
         {
             return numMipmaps;
+        }
+
+        public void SetNumMipmaps(int num)
+        {
+            numMipmaps = num;
         }
 
         private void UnloadModel()
@@ -350,11 +364,18 @@ namespace GxModelViewer
             if (ofdLoadGma.ShowDialog() != DialogResult.OK)
                 return;
 
-            LoadGmaFile(ofdLoadGma.FileName);
+            try {
+                LoadGmaFile(ofdLoadGma.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
-        private void LoadGmaFile(string newGmaPath)
+        public void LoadGmaFile(string newGmaPath)
         {
+            Exception exception = null;
             // Try to load the GMA file
             if (newGmaPath != null)
             {
@@ -368,9 +389,9 @@ namespace GxModelViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     gma = null;
                     gmaPath = null;
+                    exception = ex;
                 }
             }
             else
@@ -392,6 +413,12 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+
+            // Throw delayed until end to keep previous functionality (clear GMA on error)
+            if (exception != null)
+            {
+                throw exception;
+            }
         }
 
         private void tsBtnSaveGma_Click(object sender, EventArgs e)
@@ -419,6 +446,21 @@ namespace GxModelViewer
 
                 gmaPath = sfdSaveGma.FileName;
             }
+
+            using (Stream gmaStream = File.OpenWrite(gmaPath))
+            {
+                gma.Save(gmaStream, GetSelectedGame());
+            }
+
+            haveUnsavedGmaChanges = false;
+            UpdateModelButtons();
+            return true;
+        }
+
+        public bool SaveGmaFile(string filename)
+        {
+            // Unlike the UI version, this always sets a new underlying GMA
+            gmaPath = filename;
 
             using (Stream gmaStream = File.OpenWrite(gmaPath))
             {
@@ -668,11 +710,18 @@ namespace GxModelViewer
             if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
                 return;
 
-            LoadTplFile(ofdLoadTpl.FileName);
+            try {
+                LoadTplFile(ofdLoadTpl.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
-        private void LoadTplFile(string newTplPath)
+        public void LoadTplFile(string newTplPath)
         {
+            Exception exception = null;
             // Try to load the TPL file
             if (newTplPath != null)
             {
@@ -686,9 +735,9 @@ namespace GxModelViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     tpl = null;
                     tplPath = null;
+                    exception = ex;
                 }
             }
             else
@@ -706,6 +755,12 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+
+            // Throw delayed until end to keep previous functionality (clear TPL on error)
+            if(exception != null)
+            {
+                throw exception;
+            }
         }
 
         private void tsBtnSaveTpl_Click(object sender, EventArgs e)
@@ -733,6 +788,21 @@ namespace GxModelViewer
 
                 tplPath = sfdSaveTpl.FileName;
             }
+
+            using (Stream tplStream = File.OpenWrite(tplPath))
+            {
+                tpl.Save(tplStream, GetSelectedGame());
+            }
+
+            haveUnsavedTplChanges = false;
+            UpdateTextureButtons();
+            return true;
+        }
+
+        public bool SaveTplFile(string filename)
+        {
+            // Unlike the UI version, this always sets a new underlying TPL
+            tplPath = filename;
 
             using (Stream tplStream = File.OpenWrite(tplPath))
             {
@@ -825,24 +895,46 @@ namespace GxModelViewer
 
             if (ofdLoadObj.ShowDialog() != DialogResult.OK)
                 return;
+            try
+            {
+                ImportObjMtl(ofdLoadObj.FileName, false);
+            }
+            catch (Exception ex)
+            {
+                 MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 return;
+            }
+        }
 
+        public void ImportObjMtl(string filename, bool commandLine)
+        {
             List<string> modelWarningLog;
             ObjMtlModel model;
             try
             {
-                model = new ObjMtlModel(ofdLoadObj.FileName, out modelWarningLog);
+                model = new ObjMtlModel(filename, out modelWarningLog);
                 if (modelWarningLog.Count != 0)
                 {
-                    ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
-                    if (warningDlg.ShowDialog() != DialogResult.Yes)
-                        return;
+                    if (!commandLine)
+                    {
+                        ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(modelWarningLog);
+                        if (warningDlg.ShowDialog() != DialogResult.Yes)
+                            return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Obj Import Warnings:");
+                        foreach(string warning in modelWarningLog)
+                        {
+                            Console.WriteLine("Import Warning: " + warning);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                throw ex;
             }
 
             Dictionary<Bitmap, int> textureIndexMapping;
@@ -874,10 +966,12 @@ namespace GxModelViewer
 
         private void tsBtnExportObjMtl_Click(object sender, EventArgs e)
         {
-            if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
+            if (sfdModelExportPath.ShowDialog() == DialogResult.OK)
             {
+                string directory = Path.GetDirectoryName(sfdModelExportPath.FileName);
+                string pathWithoutExtension = Path.GetFileNameWithoutExtension(sfdModelExportPath.FileName);
                 // Export OBJ and MTL files
-                ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
+                ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
 
                 // Export textures
                 if (tpl != null)
@@ -893,6 +987,29 @@ namespace GxModelViewer
                 {
                     exporter.ExportModel(gma);
                 }
+            }
+        }
+
+        public void ExportObjMtl(string objFilename)
+        {
+            string directory = Path.GetDirectoryName(objFilename);
+            string pathWithoutExtension = Path.GetFileNameWithoutExtension(objFilename);
+            // Export OBJ and MTL files
+            ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
+
+            // Export textures
+            if (tpl != null)
+            {
+                for (int i = 0; i < tpl.Count; i++)
+                {
+                    exporter.ExportTexture(i, tpl[i]);
+                }
+            }
+
+            // Export model
+            if (gma != null)
+            {
+                exporter.ExportModel(gma);
             }
         }
 
@@ -1061,10 +1178,12 @@ namespace GxModelViewer
             {
                 string nodeName = selected.Text;
 
-                if (fbdModelExportPath.ShowDialog() == DialogResult.OK)
+                if (sfdModelExportPath.ShowDialog() == DialogResult.OK)
                 {
+                    string directory = Path.GetDirectoryName(sfdModelExportPath.FileName);
+                    string pathWithoutExtension = Path.GetFileNameWithoutExtension(sfdModelExportPath.FileName);
                     // Export OBJ and MTL files
-                    ObjMtlExporter exporter = new ObjMtlExporter(fbdModelExportPath.SelectedPath);
+                    ObjMtlExporter exporter = new ObjMtlExporter(directory, pathWithoutExtension);
 
 
                     // Export model

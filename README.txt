@@ -2,6 +2,69 @@ GxModelViewer - A F-Zero GX model viewer and editor
 ---------------------------------------------------
 ---------------------------------------------------
 
+Command line support
+---------------------------------------------------
+---------------------------------------------------
+GXModel viewer supports command line usage. It isn't as feature complete as the UI, but it
+has what most people need.
+
+The command line can be used with just command line flags or in interactive mode. Interative
+mode is activated with the -interactive flag and cause commands to be read from standard input.
+It reads one line of input at a time and tries to split it into commands/arguments. Then operates
+on them just like command line flags. This means multiple commands can be in one line of input.
+
+The only command difference in flags between non-interactive andmode  interactive mode is that the -interactive
+flag is not available in interactive mode and the -quit flag is not available in non-interactive mode.
+
+Usage:
+	GX Model Viewer Command Line Help
+    Description:
+    		If no arguments are given, GxModelViewer starts in its normal GUI mode.
+    		Otherwise the GUI will not open and it becomes command line only.
+    		See the '-interactive' switch for interactive mode.
+    Usage: .\GxModelViewer [arg [value...]...]
+
+    args:
+    		-help                           Display this help.
+    		-interHelp                      Display help specific for interactive mode.
+    		-interactive                    Start GxModelViewer in interactive mode.
+    										While in interactive mode, GX takes newline separated commands from stdin.
+    										See '-interhelp' for interactive specific commands and differences.
+    		-game <type>                    The game to use when importing/exporting.
+    												smb: Super Monkey Ball 1/2 (default)
+    												deluxe: Super Monkey Ball Deluxe (beta)
+    												fzero: F-Zero GX
+    		-mipmaps <num>                  The number of mipmaps to make on import.
+    		-interpolate <type>             The type of interpolation to use with mipmap generation.
+    												default: The C# default type (default)
+    												nearest: Nearest neighbor
+    												nn: Nearest Neighbor alias
+    		-importObj <model>              Imports the designated .obj file.
+    		-importTpl <texture>            Imports the designated .tpl file.
+    		-importGma <model>              Imports the designated .gma file.
+    		-exportObjMtl <model>           Exports the loaded model as a .obj/.mtl file.
+    		-exportTpl <textures>           Exports the loaded textures as a .tpl file.
+    		-exportGma <model>              Exports the loaded model as a .gma file.
+
+Interactive    GX Model Viewer Interactive Mode Help
+    Description:
+    		GX Model Viewer Interactive mode works by reading lines from standard input.
+    		Each line of input works just like command line arguments, so each line can have multiple commands.
+    		Input continues to be read until the -quit command is recieved.
+    		The -interactive command does NOT do anything in interactive mode.
+
+    Special Interactive Mode Args:
+    		-quit                           Quit interactive mode and exit the program. Mode Specifics:
+    GX Model Viewer Interactive Mode Help
+    Description:
+    		GX Model Viewer Interactive mode works by reading lines from standard input.
+    		Each line of input works just like command line arguments, so each line can have multiple commands.
+    		Input continues to be read until the -quit command is recieved.
+    		The -interactive command does NOT do anything in interactive mode.
+
+    Special Interactive Mode Args:
+    		-quit                           Quit interactive mode and exit the program.
+
 Known bugs
 ----------
 ----------
