@@ -60,7 +60,6 @@ namespace TreeViewMS
 		}
 
 
-
 // Triggers
 //
 // (overriden method, and base class called to ensure events are triggered)
@@ -93,8 +92,26 @@ namespace TreeViewMS
 			if (!bShift) m_firstNode = e.Node; // store begin of shift sequence
 		}
 
+        protected override void OnNodeMouseClick(TreeNodeMouseClickEventArgs e)
+        {
+            base.OnNodeMouseClick(e);
 
-		protected override void OnAfterSelect(TreeViewEventArgs e)
+            if (e.Button == MouseButtons.Right)
+            {
+                // Treat it the same as control click
+                // Otherwise the right click menu would break selections
+                if (!m_coll.Contains(e.Node))
+                {
+                    m_coll.Add(e.Node);
+                    m_fore.Add(e.Node.ForeColor);
+                    m_back.Add(e.Node.BackColor);
+                    paintSelectedNodes();
+                }
+            }
+        }
+
+
+        protected override void OnAfterSelect(TreeViewEventArgs e)
 		{
 			base.OnAfterSelect(e);
 

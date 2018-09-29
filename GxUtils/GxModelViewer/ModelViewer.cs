@@ -109,9 +109,6 @@ namespace GxModelViewer
             InitializeComponent();
             glControlModel.MouseWheel += glControlModel_MouseWheel;
 
-            // Make sure right clicking selects a node
-            treeModel.NodeMouseClick += (sender, args) => treeModel.SelectedNode = args.Node;
-
             // Populate ComboBox values from GxGame enum dynamically.
             tsCmbGame.ComboBox.ValueMember = "Key";
             tsCmbGame.ComboBox.DisplayMember = "Value";
@@ -521,7 +518,7 @@ namespace GxModelViewer
         private void UpdateModelDisplay()
         {
             // If no item is selected in the list, hide the display completely
-            if (treeModel.SelectedNode == null)
+            if (treeModel.SelectedNodes.Count == 0)
             {
                 tlpModelDisplay.Visible = false;
                 tlpMeshDisplay.Visible = false;
@@ -529,7 +526,7 @@ namespace GxModelViewer
             }
 
             // Otherwise, extract the ModelTreeItem structure to get the selected model/mesh
-            ModelMeshReference modelMeshReference = (ModelMeshReference)treeModel.SelectedNode.Tag;
+            ModelMeshReference modelMeshReference = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
             if (gma[modelMeshReference.ModelIdx] == null)
             {
                 tlpModelDisplay.Visible = false;
@@ -578,11 +575,11 @@ namespace GxModelViewer
         int GetSelectedModelIdx()
         {
             // If no item is selected in the list, return -1
-            if (treeModel.SelectedNode == null)
+            if (treeModel.SelectedNodes.Count == 0)
                 return -1;
 
             // Otherwise, extract the model/mesh reference structure and get the model index from there
-            ModelMeshReference itemData = (ModelMeshReference)treeModel.SelectedNode.Tag;
+            ModelMeshReference itemData = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
             return ((ModelMeshReference)treeModel.SelectedNode.Tag).ModelIdx;
         }
 
@@ -1172,7 +1169,7 @@ namespace GxModelViewer
         {
            
             // Select the clicked node
-            TreeNode selected = treeModel.SelectedNode;
+            TreeNode selected = treeModel.SelectedNodes[0];
 
             if (selected != null)
             {
@@ -1209,14 +1206,14 @@ namespace GxModelViewer
         private void gmaImporttoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
-            TreeNode selected = treeModel.SelectedNode;
+            TreeNode selected = treeModel.SelectedNodes[0];
             gmaImport(selected, false);
         }
 
         private void gmaImportPreserveFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
-            TreeNode selected = treeModel.SelectedNode;
+            TreeNode selected = treeModel.SelectedNodes[0];
             gmaImport(selected, true);
         }
 
@@ -1362,13 +1359,20 @@ namespace GxModelViewer
 
         private void editModelFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Select the clicked node
-            TreeNode selected = treeModel.SelectedNode;
+            // Grab selected nodes
+            List<TreeNode> selectedNodes = treeModel.SelectedNodes;
+            List<Gcmf> models = new List<Gcmf>(selectedNodes.Count);
+            foreach(TreeNode node in selectedNodes)
+            {
+                // Make sure these are all models, not meshes
+                if (node.Parent == null)
+                {
+                    int index = gma.GetEntryIndex(node.Text);
+                    models.Add(gma[index].ModelObject);
+                }
+            }
 
-            int index = gma.GetEntryIndex(selected.Text);
-            Gcmf model = gma[index].ModelObject;
-
-            using (ModelFlagEditor flagEditor = new ModelFlagEditor(model))
+            using (ModelFlagEditor flagEditor = new ModelFlagEditor(models))
             {
                 switch (flagEditor.ShowDialog())
                 {
@@ -1382,7 +1386,7 @@ namespace GxModelViewer
         private void editMeshFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
-            TreeNode selected = treeModel.SelectedNode;
+            TreeNode selected = treeModel.SelectedNodes[0];
             TreeNode parent = selected.Parent;
             int meshIndex = selected.Index;
             int modelIndex = gma.GetEntryIndex(parent.Text);
