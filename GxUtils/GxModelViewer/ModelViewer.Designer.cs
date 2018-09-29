@@ -59,7 +59,6 @@ namespace GxModelViewer
             this.btnModelShowLayer1 = new System.Windows.Forms.Button();
             this.btnModelShowLayer2 = new System.Windows.Forms.Button();
             this.btnModelShowAll = new System.Windows.Forms.Button();
-            this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
             this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
@@ -117,7 +116,6 @@ namespace GxModelViewer
             this.lblMaterialAnisotropyLevel = new System.Windows.Forms.Label();
             this.lblMaterialUnkC = new System.Windows.Forms.Label();
             this.lblMaterialUnk10 = new System.Windows.Forms.Label();
-            this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.treeTextures = new System.Windows.Forms.TreeView();
@@ -129,7 +127,6 @@ namespace GxModelViewer
             this.lblTextureDimensions = new System.Windows.Forms.Label();
             this.lblTextureFormatText = new System.Windows.Forms.Label();
             this.lblTextureFormat = new System.Windows.Forms.Label();
-            this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.ofdLoadGma = new System.Windows.Forms.OpenFileDialog();
             this.ofdLoadTpl = new System.Windows.Forms.OpenFileDialog();
             this.sfdSaveTpl = new System.Windows.Forms.SaveFileDialog();
@@ -152,6 +149,9 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
+            this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
+            this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -171,7 +171,6 @@ namespace GxModelViewer
             this.splitContainer1.SuspendLayout();
             this.tlpMaterialDisplay.SuspendLayout();
             this.tlpMaterialProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
             this.tabPageTextures.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -179,12 +178,13 @@ namespace GxModelViewer
             this.splitContainer2.SuspendLayout();
             this.tlpTextureDisplay.SuspendLayout();
             this.tlpTextureProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.gmaContextMenuStrip.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             this.materialMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -463,16 +463,6 @@ namespace GxModelViewer
             this.btnModelShowAll.Text = "Show All";
             this.btnModelShowAll.UseVisualStyleBackColor = true;
             this.btnModelShowAll.Click += new System.EventHandler(this.btnModelShowAll_Click);
-            // 
-            // treeModel
-            // 
-            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeModel.Location = new System.Drawing.Point(3, 3);
-            this.treeModel.Name = "treeModel";
-            this.treeModel.Size = new System.Drawing.Size(301, 370);
-            this.treeModel.TabIndex = 0;
-            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
-            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1160,15 +1150,6 @@ namespace GxModelViewer
             this.lblMaterialUnk10.TabIndex = 11;
             this.lblMaterialUnk10.Text = "-";
             // 
-            // pbMaterialTextureImage
-            // 
-            this.pbMaterialTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbMaterialTextureImage.Location = new System.Drawing.Point(3, 3);
-            this.pbMaterialTextureImage.Name = "pbMaterialTextureImage";
-            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 350);
-            this.pbMaterialTextureImage.TabIndex = 2;
-            this.pbMaterialTextureImage.TabStop = false;
-            // 
             // tabPageTextures
             // 
             this.tabPageTextures.Controls.Add(this.splitContainer2);
@@ -1307,15 +1288,6 @@ namespace GxModelViewer
             this.lblTextureFormat.Size = new System.Drawing.Size(295, 20);
             this.lblTextureFormat.TabIndex = 3;
             this.lblTextureFormat.Text = "-";
-            // 
-            // pbTextureImage
-            // 
-            this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
-            this.pbTextureImage.Name = "pbTextureImage";
-            this.pbTextureImage.Size = new System.Drawing.Size(602, 392);
-            this.pbTextureImage.TabIndex = 4;
-            this.pbTextureImage.TabStop = false;
             // 
             // ofdLoadGma
             // 
@@ -1466,6 +1438,34 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // treeModel
+            // 
+            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeModel.Location = new System.Drawing.Point(3, 3);
+            this.treeModel.Name = "treeModel";
+            this.treeModel.Size = new System.Drawing.Size(301, 370);
+            this.treeModel.TabIndex = 0;
+            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
+            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
+            // 
+            // pbMaterialTextureImage
+            // 
+            this.pbMaterialTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbMaterialTextureImage.Location = new System.Drawing.Point(3, 3);
+            this.pbMaterialTextureImage.Name = "pbMaterialTextureImage";
+            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 350);
+            this.pbMaterialTextureImage.TabIndex = 2;
+            this.pbMaterialTextureImage.TabStop = false;
+            // 
+            // pbTextureImage
+            // 
+            this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
+            this.pbTextureImage.Name = "pbTextureImage";
+            this.pbTextureImage.Size = new System.Drawing.Size(602, 392);
+            this.pbTextureImage.TabIndex = 4;
+            this.pbTextureImage.TabStop = false;
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1498,7 +1498,6 @@ namespace GxModelViewer
             this.splitContainer1.ResumeLayout(false);
             this.tlpMaterialDisplay.ResumeLayout(false);
             this.tlpMaterialProperties.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
             this.tabPageTextures.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -1506,13 +1505,14 @@ namespace GxModelViewer
             this.splitContainer2.ResumeLayout(false);
             this.tlpTextureDisplay.ResumeLayout(false);
             this.tlpTextureProperties.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.gmaContextMenuStrip.ResumeLayout(false);
             this.meshMenuStrip.ResumeLayout(false);
             this.materialMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

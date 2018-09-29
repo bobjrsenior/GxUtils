@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace TreeViewMS
 {
@@ -12,13 +13,18 @@ namespace TreeViewMS
 	/// </summary>
 	public class TreeViewMS : System.Windows.Forms.TreeView
 	{
-		protected ArrayList		m_coll;
+		protected List<TreeNode>     m_coll;
+        protected List<Color> m_fore;
+        protected List<Color> m_back;
 		protected TreeNode		m_lastNode, m_firstNode;
 
 		public TreeViewMS()
 		{
-			m_coll = new ArrayList();
-		}
+			m_coll = new List<TreeNode>();
+            m_fore = new List<Color>();
+            m_back = new List<Color>();
+
+        }
 
 		protected override void OnPaint(PaintEventArgs pe)
 		{
@@ -29,7 +35,7 @@ namespace TreeViewMS
 		}
 
 
-		public ArrayList SelectedNodes
+		public List<TreeNode> SelectedNodes
 		{
 			get
 			{
@@ -39,8 +45,17 @@ namespace TreeViewMS
 			{
 				removePaintFromNodes();
 				m_coll.Clear();
+                m_fore.Clear();
+                m_back.Clear();
 				m_coll = value;
-				paintSelectedNodes();
+                for (int i = 0; i < m_coll.Count; i++)
+                {
+                    TreeNode n = m_coll[i];
+
+                    m_fore.Add(n.ForeColor);
+                    m_back.Add(n.BackColor);
+                }
+                paintSelectedNodes();
 			}
 		}
 
@@ -66,8 +81,11 @@ namespace TreeViewMS
 	
 				// update nodes
 				removePaintFromNodes();
-				m_coll.Remove( e.Node );
-				paintSelectedNodes();
+                int index = m_coll.IndexOf(e.Node);
+                m_coll.RemoveAt(index);
+                m_fore.RemoveAt(index);
+                m_back.RemoveAt(index);
+                paintSelectedNodes();
 				return;
 			}
 
@@ -88,11 +106,16 @@ namespace TreeViewMS
 				if ( !m_coll.Contains( e.Node ) ) // new node ?
 				{
 					m_coll.Add( e.Node );
+                    m_fore.Add( e.Node.ForeColor );
+                    m_back.Add( e.Node.BackColor );
 				}
 				else  // not new, remove it from the collection
 				{
 					removePaintFromNodes();
-					m_coll.Remove( e.Node );
+                    int index = m_coll.IndexOf(e.Node);
+					m_coll.RemoveAt(index);
+                    m_fore.RemoveAt(index);
+                    m_back.RemoveAt(index);
 				}
 				paintSelectedNodes();
 			}
@@ -101,9 +124,11 @@ namespace TreeViewMS
 				// SHIFT is pressed
 				if (bShift)
 				{
-					Queue myQueue = new Queue();
-					
-					TreeNode uppernode = m_firstNode;
+					Queue<TreeNode> myNodeQueue = new Queue<TreeNode>();
+                    Queue<Color> myForeQueue = new Queue<Color>();
+                    Queue<Color> myBackQueue = new Queue<Color>();
+
+                    TreeNode uppernode = m_firstNode;
 					TreeNode bottomnode = e.Node;
 					// case 1 : begin and end nodes are parent
 					bool bParent = isParent(m_firstNode, e.Node); // is m_firstNode parent (direct or not) of e.Node
@@ -122,8 +147,12 @@ namespace TreeViewMS
 						TreeNode n = bottomnode;
 						while ( n != uppernode.Parent)
 						{
-							if ( !m_coll.Contains( n ) ) // new node ?
-								myQueue.Enqueue( n );
+                            if (!m_coll.Contains(n)) // new node ?
+                            {
+                                myNodeQueue.Enqueue(n);
+                                myForeQueue.Enqueue(n.ForeColor);
+                                myBackQueue.Enqueue(n.BackColor);
+                            }
 
 							n = n.Parent;
 						}
@@ -147,8 +176,12 @@ namespace TreeViewMS
 							TreeNode n = uppernode;
 							while (nIndexUpper <= nIndexBottom)
 							{
-								if ( !m_coll.Contains( n ) ) // new node ?
-									myQueue.Enqueue( n );
+                                if (!m_coll.Contains(n)) // new node ?
+                                {
+                                    myNodeQueue.Enqueue(n);
+                                    myForeQueue.Enqueue(n.ForeColor);
+                                    myBackQueue.Enqueue(n.BackColor);
+                                }
 								
 								n = n.NextNode;
 
@@ -158,12 +191,24 @@ namespace TreeViewMS
 						}
 						else
 						{
-							if ( !m_coll.Contains( uppernode ) ) myQueue.Enqueue( uppernode );
-							if ( !m_coll.Contains( bottomnode ) ) myQueue.Enqueue( bottomnode );
+                            if (!m_coll.Contains(uppernode))
+                            {
+                                myNodeQueue.Enqueue(uppernode);
+                                myForeQueue.Enqueue(uppernode.ForeColor);
+                                myBackQueue.Enqueue(uppernode.BackColor);
+                            }
+                            if (!m_coll.Contains(bottomnode))
+                            {
+                                myNodeQueue.Enqueue(bottomnode);
+                                myForeQueue.Enqueue(bottomnode.ForeColor);
+                                myBackQueue.Enqueue(bottomnode.BackColor);
+                            }
 						}
 					}
 
-					m_coll.AddRange( myQueue );
+					m_coll.AddRange( myNodeQueue );
+                    m_fore.AddRange( myForeQueue );
+                    m_back.AddRange( myBackQueue );
 
 					paintSelectedNodes();
 					m_firstNode = e.Node; // let us chain several SHIFTs if we like it
@@ -175,8 +220,12 @@ namespace TreeViewMS
 					{
 						removePaintFromNodes();
 						m_coll.Clear();
+                        m_fore.Clear();
+                        m_back.Clear();
 					}
 					m_coll.Add( e.Node );
+                    m_fore.Add( e.Node.ForeColor );
+                    m_back.Add( e.Node.BackColor );
 				}
 			}
 		}
@@ -216,14 +265,12 @@ namespace TreeViewMS
 		{
 			if (m_coll.Count==0) return;
 
-			TreeNode n0 = (TreeNode) m_coll[0];
-			Color back = n0.TreeView.BackColor;
-			Color fore = n0.TreeView.ForeColor;
-
-			foreach ( TreeNode n in m_coll )
+			for ( int i = 0; i < m_coll.Count; i++ )
 			{
-				n.BackColor = back;
-				n.ForeColor = fore;
+                TreeNode n = m_coll[i];
+
+                n.BackColor = m_back[i];
+				n.ForeColor = m_fore[i];
 			}
 
 		}
