@@ -1418,5 +1418,28 @@ namespace GxModelViewer
                 }
             }
         }
+
+        /// <summary>
+        /// Sets the mipmap level of all texture to the specified value.
+        /// Only currently works when shrinking the number of mipmaps.
+        /// </summary>
+        /// <param name="level">Number of mipmaps to make all textures</param>
+        public void setAllMipmaps(int level)
+        {
+            if (level < 0)
+            {
+                throw new InvalidOperationException("Only non-negative mipmap values are allowed.");
+            }
+            if (tpl != null)
+            {
+                foreach(TplTexture texture in tpl){
+                    texture.LevelCount = level;
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("A TPL must be loaded to call this method.");
+            }
+        }
     }
 }

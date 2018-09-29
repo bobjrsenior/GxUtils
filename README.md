@@ -41,6 +41,8 @@ flag is not available in interactive mode and the -quit flag is not available in
             -exportObjMtl <model>       Exports the loaded model as a .obj/.mtl file.
             -exportTpl <textures>       Exports the loaded textures as a .tpl file.
             -exportGma <model>          Exports the loaded model as a .gma file.
+            -setAllMipmaps <num>        Sets the number of mipmaps for every loaded texture to <num>.
+                                        Texture files should be loaded before calling this flag.
 
 ### Interactive Mode Specifics
     GX Model Viewer Interactive Mode Help

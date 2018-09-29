@@ -31,6 +31,7 @@ namespace GxModelViewer
         private const string EXPORT_OBJ_MTL_FLAG = "-exportObjMtl";
         private const string EXPORT_TPL_FLAG = "-exportTpl";
         private const string EXPORT_GMA_FLAG = "-exportGma";
+        private const string SET_ALL_MIPMAPS = "-setAllMipmaps";
 
         // Interactive Mode Only
         private const string QUIT_FLAG = "-quit";
@@ -347,6 +348,34 @@ namespace GxModelViewer
                             WriteCommandError(flag, "Not enough args for command");
                         }
                         break;
+                    case SET_ALL_MIPMAPS:
+                        if (i < flags.Length - 1)
+                        {
+                            int value;
+                            bool validInt = int.TryParse(flags[i + 1], out value);
+                            if (validInt && value >= 0)
+                            {
+                                try
+                                {
+                                    modelViewer.setAllMipmaps(value);
+                                    WriteCommandSuccess(flag);
+                                }
+                                catch (Exception ex)
+                                {
+                                    WriteCommandError(flag, "Error setting mipmap values->" + ex.Message);
+                                }
+                            }
+                            else
+                            {
+                                WriteCommandError(flag, "Value is not a valid (positive/zero) int->" + flags[i + 1]);
+                            }
+                            i++;
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
                     default:
                         WriteCommandError(flag, "Unknown command");
                         break;
@@ -391,6 +420,8 @@ namespace GxModelViewer
             Console.WriteLine("\t-exportObjMtl <model>\t\tExports the loaded model as a .obj/.mtl file.");
             Console.WriteLine("\t-exportTpl <textures>\t\tExports the loaded textures as a .tpl file.");
             Console.WriteLine("\t-exportGma <model>\t\tExports the loaded model as a .gma file.");
+            Console.WriteLine("\t-setAllMipmaps <num>\t\tSets the number of mipmaps for every loaded texture to <num>.");
+            Console.WriteLine("\t\t\t\t\tTexture files should be loaded before calling this flag.");
         }
 
         private static void DisplayInteractiveHelp()

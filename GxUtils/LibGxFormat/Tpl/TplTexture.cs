@@ -170,6 +170,20 @@ namespace LibGxFormat.Tpl
 			{
 				return encodedLevelData.Count;
 			}
+            set
+            {
+                if(encodedLevelData.Count > value)
+                {
+                    if(value >= 0)
+                    {
+                        encodedLevelData.RemoveRange(value, (encodedLevelData.Count - value));
+                    }
+                }
+                else
+                {
+                    // TODO Implement re-growing the Texture
+                }
+            }
 		}
 
         /// <summary>
