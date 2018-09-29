@@ -580,22 +580,23 @@ namespace GxModelViewer
 
             // Otherwise, extract the model/mesh reference structure and get the model index from there
             ModelMeshReference itemData = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
-            return ((ModelMeshReference)treeModel.SelectedNode.Tag).ModelIdx;
+            return ((ModelMeshReference)treeModel.SelectedNodes[0].Tag).ModelIdx;
         }
 
         private GcmfMaterial GetSelectedMaterial()
         {
             // If no item is selected in the list, return nullptr
-            if (treeMaterials.SelectedNode == null)
+            if (treeMaterials.SelectedNodes.Count == 0)
                 return null;
 
             // Otherwise, extract the ModelMaterialReference structure to get the selected model/mesh
-            ModelMaterialReference itemData = (ModelMaterialReference)treeMaterials.SelectedNode.Tag;
+            ModelMaterialReference itemData = (ModelMaterialReference)treeMaterials.SelectedNodes[0].Tag;
             return gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx];
         }
 
         private void UpdateMaterialList()
         {
+            treeMaterials.Clear();
             treeMaterials.Nodes.Clear();
 
             // Make sure that an item is selected in the model list and it corresponds to a non-null model
@@ -1415,12 +1416,14 @@ namespace GxModelViewer
 
         private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Select the clicked node
-            TreeNode selected = treeMaterials.SelectedNode;
-            ModelMaterialReference itemData = (ModelMaterialReference)selected.Tag;
-            GcmfMaterial material = gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx];
-
-            using (MaterialFlagEditor materialEditor = new MaterialFlagEditor(material))
+            // Grab selected nodes
+            List<TreeNode> selectedNodes = treeMaterials.SelectedNodes;
+            List<GcmfMaterial> materials = new List<GcmfMaterial>(selectedNodes.Count);
+            foreach (TreeNode node in selectedNodes) {
+                ModelMaterialReference itemData = (ModelMaterialReference)node.Tag;
+                materials.Add(gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx]);
+            }
+            using (MaterialFlagEditor materialEditor = new MaterialFlagEditor(materials))
             {
                 switch (materialEditor.ShowDialog())
                 {

@@ -188,34 +188,6 @@ namespace GxModelViewer
 
         }
 
-        private bool tryParseShortHex(string hex, out ushort hexValue)
-        {
-            try
-            {
-                hexValue = Convert.ToUInt16(hex, 16);
-                return true;
-            }
-            catch(Exception ex)
-            {
-                hexValue = 0;
-                return false;
-            }
-        }
-
-        private bool tryParseIntHex(string hex, out uint hexValue)
-        {
-            try
-            {
-                hexValue = Convert.ToUInt32(hex, 16);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                hexValue = 0;
-                return false;
-            }
-        }
-
         private void saveButton_Click(object sender, EventArgs e)
         {
             // Request image filename

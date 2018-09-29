@@ -34,6 +34,14 @@ namespace TreeViewMS
 			base.OnPaint(pe);
 		}
 
+        public void Clear()
+        {
+            removePaintFromNodes();
+            m_coll.Clear();
+            m_fore.Clear();
+            m_back.Clear();
+        }
+
 
 		public List<TreeNode> SelectedNodes
 		{
@@ -107,14 +115,17 @@ namespace TreeViewMS
                     m_back.Add(e.Node.BackColor);
                     paintSelectedNodes();
                 }
+                //base.SelectedNode = e.Node;
+            }
+            else if(e.Button == MouseButtons.Left)
+            {
+                //base.SelectedNode = e.Node;
             }
         }
 
 
         protected override void OnAfterSelect(TreeViewEventArgs e)
 		{
-			base.OnAfterSelect(e);
-
 			bool bControl = (ModifierKeys==Keys.Control);
 			bool bShift = (ModifierKeys==Keys.Shift);
 
@@ -245,7 +256,9 @@ namespace TreeViewMS
                     m_back.Add( e.Node.BackColor );
 				}
 			}
-		}
+
+            base.OnAfterSelect(e);
+        }
 
 
 
