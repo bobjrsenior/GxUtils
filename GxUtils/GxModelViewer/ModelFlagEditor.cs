@@ -26,7 +26,6 @@ namespace GxModelViewer
         private const string TRANSFORMATION_MATRIX_DEFAULT_ID_SIX = "TRANSFORMATION_MATRIX_DEFAULT_ID_SIX";
         private const string TRANSFORMATION_MATRIX_DEFAULT_ID_SEVEN = "TRANSFORMATION_MATRIX_DEFAULT_ID_SEVEN";
         private const string TRANSFORMATION_MATRIX_DEFAULT_ID_EIGHT = "TRANSFORMATION_MATRIX_DEFAULT_ID_EIGHT";
-        private const string ERROR_VALUE = "CONF";
 
 
         //private Gcmf model;
@@ -60,27 +59,24 @@ namespace GxModelViewer
             this.transformationMatrixDefaultIdSeven.Text = "" + models[0].TransformMatrixDefaultIdxs[6];
             this.transformationMatrixDefaultIdEight.Text = "" + models[0].TransformMatrixDefaultIdxs[7];
 
-            for(int i = 0; i < models.Count; i++)
+            for(int i = 1; i < models.Count; i++)
             {
-                if(models[i].SectionFlags != models[0].SectionFlags) this.sectionFlagsTextBox.Text = ERROR_VALUE;
+                if(models[i].SectionFlags != models[0].SectionFlags) this.sectionFlagsTextBox.Text = FlagHelper.ERROR_VALUE;
 
-                if (models[i].BoundingSphereCenter != models[0].BoundingSphereCenter)
-                {
-                    if (models[i].BoundingSphereCenter.X != models[0].BoundingSphereCenter.X) this.boundingSphereCenterX.Text = ERROR_VALUE;
-                    if (models[i].BoundingSphereCenter.Y != models[0].BoundingSphereCenter.Y) this.boundingSphereCenterY.Text = ERROR_VALUE;
-                    if (models[i].BoundingSphereCenter.Z != models[0].BoundingSphereCenter.Z) this.boundingSphereCenterZ.Text = ERROR_VALUE;
-                }
-                if (models[i].BoundingSphereRadius != models[0].BoundingSphereRadius) this.boundingSphereRadius.Text = ERROR_VALUE;
+                if (models[i].BoundingSphereCenter.X != models[0].BoundingSphereCenter.X) this.boundingSphereCenterX.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].BoundingSphereCenter.Y != models[0].BoundingSphereCenter.Y) this.boundingSphereCenterY.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].BoundingSphereCenter.Z != models[0].BoundingSphereCenter.Z) this.boundingSphereCenterZ.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].BoundingSphereRadius != models[0].BoundingSphereRadius) this.boundingSphereRadius.Text = FlagHelper.ERROR_VALUE;
 
 
-                if (models[i].TransformMatrixDefaultIdxs[0] != models[0].TransformMatrixDefaultIdxs[0]) this.transformationMatrixDefaultIdOne.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[1] != models[0].TransformMatrixDefaultIdxs[1]) this.transformationMatrixDefaultIdTwo.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[2] != models[0].TransformMatrixDefaultIdxs[2]) this.transformationMatrixDefaultIdThree.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[3] != models[0].TransformMatrixDefaultIdxs[3]) this.transformationMatrixDefaultIdFour.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[4] != models[0].TransformMatrixDefaultIdxs[4]) this.transformationMatrixDefaultIdFive.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[5] != models[0].TransformMatrixDefaultIdxs[5]) this.transformationMatrixDefaultIdSix.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[6] != models[0].TransformMatrixDefaultIdxs[6]) this.transformationMatrixDefaultIdSeven.Text = ERROR_VALUE;
-                if (models[i].TransformMatrixDefaultIdxs[7] != models[0].TransformMatrixDefaultIdxs[7]) this.transformationMatrixDefaultIdEight.Text = ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[0] != models[0].TransformMatrixDefaultIdxs[0]) this.transformationMatrixDefaultIdOne.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[1] != models[0].TransformMatrixDefaultIdxs[1]) this.transformationMatrixDefaultIdTwo.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[2] != models[0].TransformMatrixDefaultIdxs[2]) this.transformationMatrixDefaultIdThree.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[3] != models[0].TransformMatrixDefaultIdxs[3]) this.transformationMatrixDefaultIdFour.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[4] != models[0].TransformMatrixDefaultIdxs[4]) this.transformationMatrixDefaultIdFive.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[5] != models[0].TransformMatrixDefaultIdxs[5]) this.transformationMatrixDefaultIdSix.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[6] != models[0].TransformMatrixDefaultIdxs[6]) this.transformationMatrixDefaultIdSeven.Text = FlagHelper.ERROR_VALUE;
+                if (models[i].TransformMatrixDefaultIdxs[7] != models[0].TransformMatrixDefaultIdxs[7]) this.transformationMatrixDefaultIdEight.Text = FlagHelper.ERROR_VALUE;
             }
         }
 
@@ -110,25 +106,25 @@ namespace GxModelViewer
             // Validate input
             uint sectionFlags;
             bool sectionFlagsValid;
-            sectionFlagsValid = parseHexToInt32(this.sectionFlagsTextBox.Text, out sectionFlags, "Section Flags is not a valid 4 byte hex value");
+            sectionFlagsValid = FlagHelper.parseHexToInt32(this.sectionFlagsTextBox.Text, out sectionFlags, "Section Flags is not a valid 4 byte hex value");
 
             float boundingSphereX, boundingSphereY, boundingSphereZ, boundingSphereRadius;
             bool boundingSphereXValid, boundingSphereYValid, boundingSphereZValid, boundingSphereRadiusValid;
-            boundingSphereXValid = parseFloat(this.boundingSphereCenterX.Text, out boundingSphereX, "Bounding Sphere Center X is not a valid float value");
-            boundingSphereYValid = parseFloat(this.boundingSphereCenterY.Text, out boundingSphereY, "Bounding Sphere Center Y is not a valid float value");
-            boundingSphereZValid = parseFloat(this.boundingSphereCenterZ.Text, out boundingSphereZ, "Bounding Sphere Center Z is not a valid float value");
-            boundingSphereRadiusValid = parseFloat(this.boundingSphereRadius.Text, out boundingSphereRadius, "Bounding Sphere Radius is not a valid float value");
+            boundingSphereXValid = FlagHelper.parseFloat(this.boundingSphereCenterX.Text, out boundingSphereX, "Bounding Sphere Center X is not a valid float value");
+            boundingSphereYValid = FlagHelper.parseFloat(this.boundingSphereCenterY.Text, out boundingSphereY, "Bounding Sphere Center Y is not a valid float value");
+            boundingSphereZValid = FlagHelper.parseFloat(this.boundingSphereCenterZ.Text, out boundingSphereZ, "Bounding Sphere Center Z is not a valid float value");
+            boundingSphereRadiusValid = FlagHelper.parseFloat(this.boundingSphereRadius.Text, out boundingSphereRadius, "Bounding Sphere Radius is not a valid float value");
 
             byte[] matrixDefaultIds = new byte[8];
             bool[] matrixDefaultIdsValid = new bool[8];
-            matrixDefaultIdsValid[0] = parseByte(this.transformationMatrixDefaultIdOne.Text, out matrixDefaultIds[0], "Transformation Matrix Default Id One is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[1] = parseByte(this.transformationMatrixDefaultIdTwo.Text, out matrixDefaultIds[1], "Transformation Matrix Default Id Two is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[2] = parseByte(this.transformationMatrixDefaultIdThree.Text, out matrixDefaultIds[2], "Transformation Matrix Default Id Three is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[3] = parseByte(this.transformationMatrixDefaultIdFour.Text, out matrixDefaultIds[3], "Transformation Matrix Default Id Four is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[4] = parseByte(this.transformationMatrixDefaultIdFive.Text, out matrixDefaultIds[4], "Transformation Matrix Default Id Five is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[5] = parseByte(this.transformationMatrixDefaultIdSix.Text, out matrixDefaultIds[5], "Transformation Matrix Default Id Six is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[6] = parseByte(this.transformationMatrixDefaultIdSeven.Text, out matrixDefaultIds[6], "Transformation Matrix Default Id Seven is not a valid byte value (0-255)");
-            matrixDefaultIdsValid[7] = parseByte(this.transformationMatrixDefaultIdEight.Text, out matrixDefaultIds[7], "Transformation Matrix Default Id Eight is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[0] = FlagHelper.parseByte(this.transformationMatrixDefaultIdOne.Text, out matrixDefaultIds[0], "Transformation Matrix Default Id One is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[1] = FlagHelper.parseByte(this.transformationMatrixDefaultIdTwo.Text, out matrixDefaultIds[1], "Transformation Matrix Default Id Two is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[2] = FlagHelper.parseByte(this.transformationMatrixDefaultIdThree.Text, out matrixDefaultIds[2], "Transformation Matrix Default Id Three is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[3] = FlagHelper.parseByte(this.transformationMatrixDefaultIdFour.Text, out matrixDefaultIds[3], "Transformation Matrix Default Id Four is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[4] = FlagHelper.parseByte(this.transformationMatrixDefaultIdFive.Text, out matrixDefaultIds[4], "Transformation Matrix Default Id Five is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[5] = FlagHelper.parseByte(this.transformationMatrixDefaultIdSix.Text, out matrixDefaultIds[5], "Transformation Matrix Default Id Six is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[6] = FlagHelper.parseByte(this.transformationMatrixDefaultIdSeven.Text, out matrixDefaultIds[6], "Transformation Matrix Default Id Seven is not a valid byte value (0-255)");
+            matrixDefaultIdsValid[7] = FlagHelper.parseByte(this.transformationMatrixDefaultIdEight.Text, out matrixDefaultIds[7], "Transformation Matrix Default Id Eight is not a valid byte value (0-255)");
 
 
             foreach (Gcmf model in models)
@@ -162,21 +158,21 @@ namespace GxModelViewer
 
             StringBuilder sb = new StringBuilder();
 
-            if (this.sectionFlagsTextBox.Text != ERROR_VALUE) sb.Append(SECTION_FLAGS).Append(" ").Append(this.sectionFlagsTextBox.Text).Append("\r\n");
+            if (this.sectionFlagsTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(SECTION_FLAGS).Append(" ").Append(this.sectionFlagsTextBox.Text).Append("\r\n");
 
-            if (this.boundingSphereCenterX.Text != ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_X).Append(" ").Append(this.boundingSphereCenterX.Text).Append("\r\n");
-            if (this.boundingSphereCenterY.Text != ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Y).Append(" ").Append(this.boundingSphereCenterY.Text).Append("\r\n");
-            if (this.boundingSphereCenterZ.Text != ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Z).Append(" ").Append(this.boundingSphereCenterZ.Text).Append("\r\n");
-            if (this.boundingSphereRadius.Text != ERROR_VALUE) sb.Append(BOUNDING_SPHERE_RADIUS).Append(" ").Append(this.boundingSphereRadius.Text).Append("\r\n");
+            if (this.boundingSphereCenterX.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_X).Append(" ").Append(this.boundingSphereCenterX.Text).Append("\r\n");
+            if (this.boundingSphereCenterY.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Y).Append(" ").Append(this.boundingSphereCenterY.Text).Append("\r\n");
+            if (this.boundingSphereCenterZ.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Z).Append(" ").Append(this.boundingSphereCenterZ.Text).Append("\r\n");
+            if (this.boundingSphereRadius.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_RADIUS).Append(" ").Append(this.boundingSphereRadius.Text).Append("\r\n");
 
-            if (this.transformationMatrixDefaultIdOne.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_ONE).Append(" ").Append(this.transformationMatrixDefaultIdOne.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdTwo.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_TWO).Append(" ").Append(this.transformationMatrixDefaultIdTwo.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdThree.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_THREE).Append(" ").Append(this.transformationMatrixDefaultIdThree.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdFour.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_FOUR).Append(" ").Append(this.transformationMatrixDefaultIdFour.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdFive.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_FIVE).Append(" ").Append(this.transformationMatrixDefaultIdFive.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdSix.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_SIX).Append(" ").Append(this.transformationMatrixDefaultIdSix.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdSeven.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_SEVEN).Append(" ").Append(this.transformationMatrixDefaultIdSeven.Text).Append("\r\n");
-            if (this.transformationMatrixDefaultIdEight.Text != ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_EIGHT).Append(" ").Append(this.transformationMatrixDefaultIdEight.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdOne.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_ONE).Append(" ").Append(this.transformationMatrixDefaultIdOne.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdTwo.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_TWO).Append(" ").Append(this.transformationMatrixDefaultIdTwo.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdThree.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_THREE).Append(" ").Append(this.transformationMatrixDefaultIdThree.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdFour.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_FOUR).Append(" ").Append(this.transformationMatrixDefaultIdFour.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdFive.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_FIVE).Append(" ").Append(this.transformationMatrixDefaultIdFive.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdSix.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_SIX).Append(" ").Append(this.transformationMatrixDefaultIdSix.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdSeven.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_SEVEN).Append(" ").Append(this.transformationMatrixDefaultIdSeven.Text).Append("\r\n");
+            if (this.transformationMatrixDefaultIdEight.Text != FlagHelper.ERROR_VALUE) sb.Append(TRANSFORMATION_MATRIX_DEFAULT_ID_EIGHT).Append(" ").Append(this.transformationMatrixDefaultIdEight.Text).Append("\r\n");
 
 
             System.IO.File.WriteAllText(saveFlagsFileDialog.FileName, sb.ToString());
@@ -261,84 +257,6 @@ namespace GxModelViewer
                 MessageBox.Show("Error loading the Flags file. " + ex.Message, "Error loading the Flags file.",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            }
-        }
-
-        /// <summary>
-        /// A wrapper over float.parseFloat. This method is similar except
-        /// that it returns false if the string value is ERROR_VALUE and throws
-        /// and InvalidOperationException if the string isn't a valid float value.
-        /// The exception using the throwText parameter as it's message
-        /// </summary>
-        /// <param name="s">string to parse</param>
-        /// <param name="result">float to store the result in</param>
-        /// <returns></returns>
-        private bool parseFloat(string s, out float result, string throwText)
-        {
-            if (s.Equals(ERROR_VALUE))
-            {
-                result = -1;
-                return false;
-            }
-            else
-            {
-                if (!float.TryParse(s, out result)) throw new InvalidOperationException(throwText);
-
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// A wrapper over byte.tryParse. This method is similar except
-        /// that it returns false if the string value is ERROR_VALUE and throws
-        /// and InvalidOperationException if the string isn't a valid byte value.
-        /// The exception using the throwText parameter as it's message
-        /// </summary>
-        /// <param name="s">string to parse</param>
-        /// <param name="result">byte to store the result in</param>
-        /// <returns></returns>
-        private bool parseByte(string s, out byte result, string throwText)
-        {
-            if (s.Equals(ERROR_VALUE))
-            {
-                result = 255;
-                return false;
-            }
-            else
-            {
-                if (!byte.TryParse(s, out result)) throw new InvalidOperationException(throwText);
-
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// A wrapper over byte.tryParse. This method is similar except
-        /// that it returns false if the string value is ERROR_VALUE and throws
-        /// and InvalidOperationException if the string isn't a valid int32 value.
-        /// The exception using the throwText parameter as it's message
-        /// </summary>
-        /// <param name="s">string to parse</param>
-        /// <param name="result">byte to store the result in</param>
-        /// <returns></returns>
-        private bool parseHexToInt32(string s, out uint result, string throwText)
-        {
-            if (s.Equals(ERROR_VALUE))
-            {
-                result = uint.MaxValue;
-                return false;
-            }
-            else
-            {
-                try
-                {
-                    result = (uint)Convert.ToInt32(this.sectionFlagsTextBox.Text, 16);
-                }
-                catch
-                {
-                    throw new InvalidOperationException(throwText);
-                }
-                return true;
             }
         }
     }

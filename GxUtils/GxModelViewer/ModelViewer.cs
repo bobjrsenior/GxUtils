@@ -1385,15 +1385,23 @@ namespace GxModelViewer
 
         private void editMeshFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Select the clicked node
-            TreeNode selected = treeModel.SelectedNodes[0];
-            TreeNode parent = selected.Parent;
-            int meshIndex = selected.Index;
-            int modelIndex = gma.GetEntryIndex(parent.Text);
-            Gcmf model = gma[modelIndex].ModelObject;
-            GcmfMesh mesh = model.Meshes[meshIndex];
- 
-            using (MeshFlagEditor meshEditor = new MeshFlagEditor(mesh))
+            // Grab selected nodes
+            List<TreeNode> selectedNodes = treeModel.SelectedNodes;
+            List<GcmfMesh> meshes = new List<GcmfMesh>(selectedNodes.Count);
+            foreach (TreeNode node in selectedNodes)
+            {
+                // Make sure these are all meshes, not models
+                if (node.Parent != null)
+                {
+                    TreeNode parent = node.Parent;
+                    int meshIndex = node.Index;
+                    int modelIndex = gma.GetEntryIndex(parent.Text);
+                    Gcmf model = gma[modelIndex].ModelObject;
+                    meshes.Add(model.Meshes[meshIndex]);
+                }
+            }
+
+            using (MeshFlagEditor meshEditor = new MeshFlagEditor(meshes))
             {
                 switch (meshEditor.ShowDialog())
                 {
