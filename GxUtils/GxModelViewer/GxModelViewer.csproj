@@ -63,6 +63,10 @@
       <Project>{ab5aa934-9b3f-4509-82a2-b79be5929aa5}</Project>
       <Name>LibGxTexture</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TreeViewMS\TreeViewMS.csproj">
+      <Project>{7c2cce0a-a288-4869-a7b7-cc0d18af3b8c}</Project>
+      <Name>TreeViewMS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MaterialFlagEditor.cs">

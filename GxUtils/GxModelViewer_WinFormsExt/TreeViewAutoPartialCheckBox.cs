@@ -32,7 +32,7 @@ namespace GxModelViewer_WinFormsExt
     /// or by calling the SetCheckState method, only on the single node on which the action has been taken -
     /// - NOT on all nodes whose CheckState is affected by the action!
     /// </summary>
-    public class TreeViewAutoPartialCheckBox : TreeView
+    public class TreeViewAutoPartialCheckBox : TreeViewMS.TreeViewMS
     {
         /// <summary>
         /// Called after a mouse or keyboard action causes the CheckState action of the affected node to change.
