@@ -69,6 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FlagHelper.cs" />
     <Compile Include="MaterialFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +87,12 @@
     </Compile>
     <Compile Include="ModelFlagEditor.Designer.cs">
       <DependentUpon>ModelFlagEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlagsWarningLogDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FlagsWarningLogDialog.Designer.cs">
+      <DependentUpon>FlagsWarningLogDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ObjMtlWarningLogDialog.cs">
       <SubType>Form</SubType>
@@ -123,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ModelViewer.resx">
       <DependentUpon>ModelViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FlagsWarningLogDialog.resx">
+      <DependentUpon>FlagsWarningLogDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ObjMtlWarningLogDialog.resx">
       <DependentUpon>ObjMtlWarningLogDialog.cs</DependentUpon>

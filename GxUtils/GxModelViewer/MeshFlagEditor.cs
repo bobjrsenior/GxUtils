@@ -313,10 +313,9 @@ namespace GxModelViewer
 
                 if (flagWarningLog.Count != 0)
                 {
-                    // TODO
-                    //ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(flagWarningLog);
-                    //if (warningDlg.ShowDialog() != DialogResult.Yes)
-                    //    return;
+                    FlagsWarningLogDialog warningDlg = new FlagsWarningLogDialog(flagWarningLog, "Mesh Flag Import Warnings", "The following warnings were issued while importing the mesh flags:");
+                    if (warningDlg.ShowDialog() != DialogResult.Yes)
+                        return;
                 }
             }
             catch (Exception ex)
