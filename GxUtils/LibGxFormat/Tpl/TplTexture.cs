@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Text.RegularExpressions;
 using MiscUtil.IO;
 using LibGxFormat.ModelRenderer;
 using LibGxTexture;
@@ -211,7 +213,7 @@ namespace LibGxFormat.Tpl
         /// <param name="bmp">The bitmap to build the texture from.</param>
         public TplTexture(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp)
         {
-            DefineTextureFromBitmap(format, intFormat, numMipmaps, bmp);
+            DefineTextureFromBitmap(format, intFormat, numMipmaps, bmp, " ");
         }
 
 		/// <summary>
@@ -368,49 +370,76 @@ namespace LibGxFormat.Tpl
             DefineLevelData(level, bmpData.Stride, levelData);
         }
 
-        /// <summary>
-        /// Defines the texture from a bitmap.
-        /// All texture levels will be generated until the texture size is no longer divisible by two.
-        /// </summary>
-        /// <param name="format">The format to encode the new texture as.</param>
-        /// <param name="intFormat">The type of interpolation to use</param>
-        /// <param name="bmp">The bitmap that will define the texture.</param>
-        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp)
-        {
-            if (!SupportedTextureFormats.Contains(format))
-                throw new ArgumentOutOfRangeException("format", "Unsupported format.");
-            if (bmp == null)
-                throw new ArgumentNullException("bmp");
+		/// <summary>
+		/// Defines the texture from a bitmap.
+		/// All texture levels will be generated until the texture size is no longer divisible by two.
+		/// </summary>
+		/// <param name="format">The format to encode the new texture as.</param>
+		/// <param name="intFormat">The type of interpolation to use</param>
+		/// <param name="bmp">The bitmap that will define the texture.</param>
+		public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path)
+		{
+			if (!SupportedTextureFormats.Contains(format))
+				throw new ArgumentOutOfRangeException("format", "Unsupported format.");
+			if (bmp == null)
+				throw new ArgumentNullException("bmp");
 
-            // Define all possible texture levels until the size
-            // of the texture can no longer be divided by two
-            int currentWidth = bmp.Width, currentHeight = bmp.Height;
-            for (int mipmapLevel = 0; mipmapLevel < numMipmaps; mipmapLevel++)
-            {
-                if (mipmapLevel == 0)
-                {
-                    DefineMainLevelFromBitmap(format, intFormat, bmp);
-                }
-                else
-                {
-                    DefineLevelDataFromBitmap(mipmapLevel, intFormat, DownscaleBitmap(mipmapLevel, intFormat, bmp));
-                }
+			// If the filename ends in '_0' or ' 0', import them from the respective files, otherwise, generate them. 
+			if ((path.Contains("_0")) || (path.Contains(" 0")) ) {				
+				DefineMainLevelFromBitmap(format, intFormat, bmp);
 
-                if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
-                    break;
+				path = Regex.Replace(path, @"\d{1,}(?=\....)", "1");
+				DefineAllLevelsFromFiles(format, intFormat, path);
+			}
 
-                currentWidth /= 2;
-                currentHeight /= 2;
-            }
-        }
+			else {
+				// Define all possible texture levels until the size
+				// of the texture can no longer be divided by two
+				int currentWidth = bmp.Width, currentHeight = bmp.Height;
+				for (int mipmapLevel = 0; mipmapLevel < numMipmaps; mipmapLevel++)
+				{
+					if (mipmapLevel == 0)
+					{
+						DefineMainLevelFromBitmap(format, intFormat, bmp);
+					}
+					else
+					{
+						DefineLevelDataFromBitmap(mipmapLevel, intFormat, DownscaleBitmap(mipmapLevel, intFormat, bmp));
+					}
+
+					if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
+						break;
+
+					currentWidth /= 2;
+					currentHeight /= 2;
+				}
+			}
+		}
+		/// <summary>
+		/// Defines a texture and the respective mipmap levels of the texture from the respective files.
+		/// 
+		/// </summary>
+		/// <param name="format">The format to encode the new texture as.</param>
+		/// <param name="intFormat">The type of interpolation to use.</param>
+		/// <param name="path">The path to the level 1 bitmap.</param>
+		public void DefineAllLevelsFromFiles(GxTextureFormat format, GxInterpolationFormat intFormat, String path)
+		{
+			int currentMipmapLevel = 1;
+			while (File.Exists(path))
+			{
+				DefineLevelDataFromBitmap(currentMipmapLevel, intFormat, new Bitmap(path));
+				currentMipmapLevel++;
+				path = Regex.Replace(path, @"\d{1,}(?=\....)", currentMipmapLevel.ToString());
+			}
+		}
 
 		/// <summary>
 		/// Decodes the specified level of the encoded texture to an array of RGBA8 pixels.
 		/// </summary>
-        /// <param name="level">The level of the texture to decode.</param>
-        /// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
-        /// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
-        public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
+		/// <param name="level">The level of the texture to decode.</param>
+		/// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
+		/// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
+		public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
 		{
             if (level < 0 || level >= LevelCount)
 				throw new ArgumentOutOfRangeException("level");

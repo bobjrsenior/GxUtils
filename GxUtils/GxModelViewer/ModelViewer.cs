@@ -11,6 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 using LibGxFormat.ModelLoader;
 using System.Collections.Generic;
 
@@ -850,7 +851,7 @@ namespace GxModelViewer
 
             tlpTextureProperties.Visible = true;
             lblTextureDimensions.Text = string.Format("{0} x {1}",
-                tex.WidthOfLevel(effTextureLevel), tex.HeightOfLevel(effTextureLevel));
+            tex.WidthOfLevel(effTextureLevel), tex.HeightOfLevel(effTextureLevel));
             lblTextureFormat.Text = string.Format("{0} ({1})", tex.Format, EnumUtils.GetEnumDescription(tex.Format));
             btnExportTextureLevel.Enabled = true;
             btnImportTextureLevel.Enabled = true;
@@ -1283,22 +1284,37 @@ namespace GxModelViewer
             TextureReference textureData = (TextureReference)treeTextures.SelectedNode.Tag;
             TplTexture tex = tpl[textureData.TextureIdx];
 
-            // If selecting the whole texture, then export data about the first level, otherwise from the selected model
-            int effTextureLevel = (textureData.TextureLevel != -1) ? textureData.TextureLevel : 0;
+			// If selecting the whole texture, then export data about the first level, otherwise loop and extract all levels
+			int effTextureLevel = (textureData.TextureLevel != -1) ? textureData.TextureLevel : 0;
 
-            sfdTextureExportPath.FileName = string.Format("{0}_{1}.png", textureData.TextureIdx, effTextureLevel);
-            if (sfdTextureExportPath.ShowDialog() != DialogResult.OK)
-                return;
+			sfdTextureExportPath.FileName = string.Format("{0}_{1}.png", textureData.TextureIdx, effTextureLevel);
 
-            try
-            {
-                tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("The texture could not be exported: " + ex.Message,
-                    "Error exporting texture.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+			if (sfdTextureExportPath.ShowDialog() != DialogResult.OK)
+				return;
+
+			try
+			{
+				if (textureData.TextureLevel != -1)
+				{
+					tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
+				}
+				else
+				{
+					for (effTextureLevel = 0; effTextureLevel < tpl[textureData.TextureIdx].LevelCount; effTextureLevel++)
+					{
+						sfdTextureExportPath.FileName = Regex.Replace(sfdTextureExportPath.FileName, @"\d{1,}(?=\....)", effTextureLevel.ToString());
+						tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
+					}
+
+				}
+			}
+
+			catch (Exception ex)
+			{
+				MessageBox.Show("The texture could not be exported: " + ex.Message,
+					"Error exporting texture.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		
         }
 
         private void btnImportTextureLevel_Click(object sender, EventArgs e)
@@ -1326,6 +1342,7 @@ namespace GxModelViewer
 
             if (textureData.TextureLevel == -1) // Replacing whole texture
             {
+				
                 // Ask the user to select the format to import
                 GxTextureFormatPickerDialog formatPickerDlg = new GxTextureFormatPickerDialog(
                     TplTexture.SupportedTextureFormats, tex.Format);
@@ -1333,14 +1350,23 @@ namespace GxModelViewer
                     return;
 
                 GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
+				try
+				{
+					// Redefine the entire texture from the bitmap
+					tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
+					TextureHasChanged(textureData.TextureIdx);
+					UpdateTextureTree();
+					treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
+					.Where(tn => ((TextureReference)tn.Tag).TextureIdx == textureData.TextureIdx).First();
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("An error occured while importing the texture(s).\n" +
+									"If you are importing multiple mipmap levels, ensure\n",
+									"that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					return;
+				}
 
-                // Redefine the entire texture from the bitmap
-                tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp);
-
-                TextureHasChanged(textureData.TextureIdx);
-                UpdateTextureTree();
-                treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
-                    .Where(tn => ((TextureReference)tn.Tag).TextureIdx == textureData.TextureIdx).First();
             }
             else // Replacing single level
             {
@@ -1401,7 +1427,12 @@ namespace GxModelViewer
             }
         }
 
-        private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+		private void tlpTextureProperties_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
             TreeNode selected = treeMaterials.SelectedNode;
