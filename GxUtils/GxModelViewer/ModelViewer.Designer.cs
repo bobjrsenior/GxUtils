@@ -74,6 +74,8 @@ namespace GxModelViewer
             this.lblModelNumTransformMatrices = new System.Windows.Forms.Label();
             this.glControlModel = new OpenTK.GLControl();
             this.tlpMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.lblMeshUnk12 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.lblMeshRenderFlagsText = new System.Windows.Forms.Label();
             this.lblMeshUnk4Text = new System.Windows.Forms.Label();
             this.lblMeshUnk8Text = new System.Windows.Forms.Label();
@@ -152,8 +154,6 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblMeshUnk12 = new System.Windows.Forms.Label();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -702,6 +702,26 @@ namespace GxModelViewer
             this.tlpMeshDisplay.Size = new System.Drawing.Size(610, 280);
             this.tlpMeshDisplay.TabIndex = 1;
             // 
+            // lblMeshUnk12
+            // 
+            this.lblMeshUnk12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk12.Location = new System.Drawing.Point(308, 100);
+            this.lblMeshUnk12.Name = "lblMeshUnk12";
+            this.lblMeshUnk12.Size = new System.Drawing.Size(299, 20);
+            this.lblMeshUnk12.TabIndex = 30;
+            this.lblMeshUnk12.Text = "-";
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(299, 20);
+            this.label1.TabIndex = 29;
+            this.label1.Text = "Material Count (0x12):";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // lblMeshRenderFlagsText
             // 
             this.lblMeshRenderFlagsText.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -787,7 +807,7 @@ namespace GxModelViewer
             this.lblMeshSecondaryMaterialIdxText.Name = "lblMeshSecondaryMaterialIdxText";
             this.lblMeshSecondaryMaterialIdxText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshSecondaryMaterialIdxText.TabIndex = 7;
-            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Index (0x18):";
+            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Index (Dec) (0x18):";
             this.lblMeshSecondaryMaterialIdxText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshTertiaryMaterialIdxText
@@ -1474,26 +1494,6 @@ namespace GxModelViewer
             // 
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
-            // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(299, 20);
-            this.label1.TabIndex = 29;
-            this.label1.Text = "Material Count (0x12):";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMeshUnk12
-            // 
-            this.lblMeshUnk12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshUnk12.Location = new System.Drawing.Point(308, 100);
-            this.lblMeshUnk12.Name = "lblMeshUnk12";
-            this.lblMeshUnk12.Size = new System.Drawing.Size(299, 20);
-            this.lblMeshUnk12.TabIndex = 30;
-            this.lblMeshUnk12.Text = "-";
             // 
             // ModelViewer
             // 

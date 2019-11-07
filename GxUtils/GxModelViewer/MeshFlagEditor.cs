@@ -143,7 +143,7 @@ namespace GxModelViewer
             unk16Valid = FlagHelper.parseHexToShort(this.unknown16TextBox.Text, out unk16, "Primary Material Index 0x16 is not a valid 2 byte hex value");
             unk18Valid = FlagHelper.parseHexToShort(this.unknown18TextBox.Text, out unk18, "Secondary Material Index 0x18 is not a valid 2 byte hex value");
             unk1AValid = FlagHelper.parseHexToShort(this.unknown1ATextBox.Text, out unk1A, "Tertiary Material Index 0x1A is not a valid 2 byte hex value");
-        
+
             byte[] matrixSpecificIds = new byte[8];
             bool[] matrixSpecificIdsValid = new bool[8];
 
@@ -194,8 +194,8 @@ namespace GxModelViewer
                 else bSphereZ = mesh.BoundingSphereCenter.Z;
                 mesh.BoundingSphereCenter = new OpenTK.Vector3(bSphereX, bSphereY, bSphereZ);
 
-                if(unk3CValid) mesh.Unk3C = unk3C;
-                if(unk40Valid) mesh.Unk40 = unk40;
+                if (unk3CValid) mesh.Unk3C = unk3C;
+                if (unk40Valid) mesh.Unk40 = unk40;
             }
 
         }

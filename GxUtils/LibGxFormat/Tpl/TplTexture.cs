@@ -62,68 +62,68 @@ using LibGxTexture;
 
 namespace LibGxFormat.Tpl
 {
-	/// <summary>A texture inside a TPL texture container.</summary>
-	public class TplTexture : ITexture
-	{
+    /// <summary>A texture inside a TPL texture container.</summary>
+    public class TplTexture : ITexture
+    {
         static readonly IReadOnlyCollection<GxTextureFormat> supportedTextureFormatsBackingField = new List<GxTextureFormat> {
-			GxTextureFormat.I4,
-			GxTextureFormat.I8,
-			GxTextureFormat.IA4,
-			GxTextureFormat.RGB565,
-			GxTextureFormat.RGB5A3,
-			GxTextureFormat.RGBA8,
-			GxTextureFormat.CMPR
-		}.AsReadOnly();
+            GxTextureFormat.I4,
+            GxTextureFormat.I8,
+            GxTextureFormat.IA4,
+            GxTextureFormat.RGB565,
+            GxTextureFormat.RGB5A3,
+            GxTextureFormat.RGBA8,
+            GxTextureFormat.CMPR
+        }.AsReadOnly();
 
-		/// <summary>Get the list of formats supported for textures.</summary>
-		public static IReadOnlyCollection<GxTextureFormat> SupportedTextureFormats
-		{
-			get
-			{
+        /// <summary>Get the list of formats supported for textures.</summary>
+        public static IReadOnlyCollection<GxTextureFormat> SupportedTextureFormats
+        {
+            get
+            {
                 return supportedTextureFormatsBackingField;
-			}
-		}
+            }
+        }
 
 
-		/// <summary>
-		/// Value of the format field for textures with no levels defined.
-		/// On textures with no levels defined, this will have nonsense values,
-		/// which we save here in order to resave the original files perfectly.
-		/// </summary>
-		int formatRaw;
+        /// <summary>
+        /// Value of the format field for textures with no levels defined.
+        /// On textures with no levels defined, this will have nonsense values,
+        /// which we save here in order to resave the original files perfectly.
+        /// </summary>
+        int formatRaw;
 
-		/// <summary>
-		/// Get the value of the format field for a texture with no levels defined.
-		/// </summary>
-		/// <value>The value of the format field for a texture with no levels defined.</value>
-		public int FormatRaw
-		{
-			get
-			{
-				if (LevelCount != 0)
-					throw new InvalidOperationException("Trying to get the raw format of a texture with levels defined.");
+        /// <summary>
+        /// Get the value of the format field for a texture with no levels defined.
+        /// </summary>
+        /// <value>The value of the format field for a texture with no levels defined.</value>
+        public int FormatRaw
+        {
+            get
+            {
+                if (LevelCount != 0)
+                    throw new InvalidOperationException("Trying to get the raw format of a texture with levels defined.");
 
-				return formatRaw;
-			}
-		}
+                return formatRaw;
+            }
+        }
 
-		/// <summary>
+        /// <summary>
         /// Format of the texture, or 0 if no texture levels are defined.
-		/// </summary>
-		GxTextureFormat format;
+        /// </summary>
+        GxTextureFormat format;
 
-		/// <summary>Gets the format of the texture.</summary>
-		public GxTextureFormat Format
-		{
-			get
-			{
+        /// <summary>Gets the format of the texture.</summary>
+        public GxTextureFormat Format
+        {
+            get
+            {
                 if (LevelCount == 0)
                     return GxTextureFormat.CMPR;
-					//throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
+                //throw new InvalidOperationException ("Trying to get the format of a texture with no levels defined.");
 
-				return format;
-			}
-		}
+                return format;
+            }
+        }
 
         /// <summary>Width of the main level of the texture, or 0 if no texture levels are defined</summary>
 		int width;
@@ -159,24 +159,24 @@ namespace LibGxFormat.Tpl
             }
         }
 
-		/// <summary>The texture data of each texture level (mipmap), in the encoded format.</summary>
-		List<byte[]> encodedLevelData;
+        /// <summary>The texture data of each texture level (mipmap), in the encoded format.</summary>
+        List<byte[]> encodedLevelData;
 
-		/// <summary>
-		/// Gets the number of texture levels.
-		/// </summary>
-		/// <value>The number of texture levels.</value>
-		public int LevelCount
-		{
-			get
-			{
-				return encodedLevelData.Count;
-			}
+        /// <summary>
+        /// Gets the number of texture levels.
+        /// </summary>
+        /// <value>The number of texture levels.</value>
+        public int LevelCount
+        {
+            get
+            {
+                return encodedLevelData.Count;
+            }
             set
             {
-                if(encodedLevelData.Count > value)
+                if (encodedLevelData.Count > value)
                 {
-                    if(value >= 0)
+                    if (value >= 0)
                     {
                         encodedLevelData.RemoveRange(value, (encodedLevelData.Count - value));
                     }
@@ -186,7 +186,7 @@ namespace LibGxFormat.Tpl
                     // TODO Implement re-growing the Texture
                 }
             }
-		}
+        }
 
         /// <summary>
         /// Checks if the texture is empty, that is, if it has no texture levels defined.
@@ -200,11 +200,11 @@ namespace LibGxFormat.Tpl
             }
         }
 
-		/// <summary>Create an empty (null) texture.</summary>
-		public TplTexture()
-		{
-			DefineEmptyTexture(0);
-		}
+        /// <summary>Create an empty (null) texture.</summary>
+        public TplTexture()
+        {
+            DefineEmptyTexture(0);
+        }
 
         /// <summary>
         /// Create a new texture from the given bitmap.
@@ -216,67 +216,67 @@ namespace LibGxFormat.Tpl
             DefineTextureFromBitmap(format, intFormat, numMipmaps, bmp, " ");
         }
 
-		/// <summary>
-		/// Get the width of the specified texture level.
-		/// </summary>
-		/// <returns>The texture level.</returns>
-		/// <param name="level">The width of the specified texture level.</param>
-		public int WidthOfLevel(int level)
-		{
-			if (level < 0 || level >= LevelCount)
-				throw new ArgumentOutOfRangeException("level");
+        /// <summary>
+        /// Get the width of the specified texture level.
+        /// </summary>
+        /// <returns>The texture level.</returns>
+        /// <param name="level">The width of the specified texture level.</param>
+        public int WidthOfLevel(int level)
+        {
+            if (level < 0 || level >= LevelCount)
+                throw new ArgumentOutOfRangeException("level");
 
-			return width >> level;
-		}
+            return width >> level;
+        }
 
-		/// <summary>
-		/// Get the height of the specified texture level.
-		/// </summary>
-		/// <returns>The texture level.</returns>
-		/// <param name="level">The width of the specified texture level.</param>
-		public int HeightOfLevel(int level)
-		{
-			if (level < 0 || level >= encodedLevelData.Count)
-				throw new ArgumentOutOfRangeException("level");
+        /// <summary>
+        /// Get the height of the specified texture level.
+        /// </summary>
+        /// <returns>The texture level.</returns>
+        /// <param name="level">The width of the specified texture level.</param>
+        public int HeightOfLevel(int level)
+        {
+            if (level < 0 || level >= encodedLevelData.Count)
+                throw new ArgumentOutOfRangeException("level");
 
-			return height >> level;
-		}
+            return height >> level;
+        }
 
         /// <summary>Define the texture as a texture with no texture levels.</summary>
         /// <param name="newFormatRaw">See definition of the FormatRaw property.</param>
 		public void DefineEmptyTexture(int newFormatRaw)
-		{
-			formatRaw = newFormatRaw;
-			format = (GxTextureFormat)0;
-			width = 0;
-			height = 0;
-			encodedLevelData = new List<byte[]>();
-		}
+        {
+            formatRaw = newFormatRaw;
+            format = (GxTextureFormat)0;
+            width = 0;
+            height = 0;
+            encodedLevelData = new List<byte[]>();
+        }
 
         /// <summary>Define the main level of the texture from the given properties.</summary>
 		public void DefineMainLevel(GxTextureFormat newFormat, int newWidth, int newHeight,
-			int newImageStride, byte[] newImageData)
-		{
+            int newImageStride, byte[] newImageData)
+        {
             if (SupportedTextureFormats.Contains(newFormat))
-				throw new ArgumentOutOfRangeException("newFormat", "Unsupported format.");
-			if (newWidth <= 0)
-				throw new ArgumentOutOfRangeException("newWidth");
-			if (newHeight <= 0)
+                throw new ArgumentOutOfRangeException("newFormat", "Unsupported format.");
+            if (newWidth <= 0)
+                throw new ArgumentOutOfRangeException("newWidth");
+            if (newHeight <= 0)
                 throw new ArgumentOutOfRangeException("newHeight");
             if (newImageStride < 0)
                 throw new ArgumentOutOfRangeException("newImageStride");
             if (newImageStride < newWidth * 4)
                 throw new ArgumentOutOfRangeException("newImageStride", "Stride is too small to contain a row of data.");
-			if (newImageData == null)
-				throw new ArgumentNullException("newImageData");
+            if (newImageData == null)
+                throw new ArgumentNullException("newImageData");
 
-			format = newFormat;
-			width = newWidth;
-			height = newHeight;
+            format = newFormat;
+            width = newWidth;
+            height = newHeight;
             encodedLevelData = new List<byte[]>();
 
-			DefineLevelData(0, newImageStride, newImageData);
-		}
+            DefineLevelData(0, newImageStride, newImageData);
+        }
 
         /// <summary>Define the main level of the texture from the given bitmap.</summary>
         public void DefineMainLevelFromBitmap(GxTextureFormat newFormat, GxInterpolationFormat intFormat, Bitmap bmp)
@@ -294,45 +294,45 @@ namespace LibGxFormat.Tpl
             DefineLevelDataFromBitmap(0, intFormat, bmp);
         }
 
-		/// <summary>
-		/// Create or replace the specified texture level from the specified image data.
-		/// New texture levels must be created in order.
-		/// </summary>
-		/// <param name="level">The level of the texture to create or replace.</param>
-		/// <param name="newImageDataStride">The stride (number of bytes per row) of the new image data.</param>
-		/// <param name="newImageData">The new image data for the level.</param>
-		public void DefineLevelData(int level, int newImageDataStride, byte[] newImageData)
-		{
-			if (level > LevelCount) // We allow to either replace an existing level or to generate the next level
-				throw new ArgumentOutOfRangeException("level");
+        /// <summary>
+        /// Create or replace the specified texture level from the specified image data.
+        /// New texture levels must be created in order.
+        /// </summary>
+        /// <param name="level">The level of the texture to create or replace.</param>
+        /// <param name="newImageDataStride">The stride (number of bytes per row) of the new image data.</param>
+        /// <param name="newImageData">The new image data for the level.</param>
+        public void DefineLevelData(int level, int newImageDataStride, byte[] newImageData)
+        {
+            if (level > LevelCount) // We allow to either replace an existing level or to generate the next level
+                throw new ArgumentOutOfRangeException("level");
             if (newImageDataStride < 0)
                 throw new ArgumentOutOfRangeException("newImageDataStride");
-			if (newImageData == null)
-				throw new ArgumentNullException("newImageData");
+            if (newImageData == null)
+                throw new ArgumentNullException("newImageData");
 
-			// Check that this texture level can be defined (size is not too small)
+            // Check that this texture level can be defined (size is not too small)
             // This checks that width and height can be divided evenly by 2^level
-			if ((width & ((1 << level) - 1)) != 0 ||
-				(height & ((1 << level) - 1)) != 0)
-			{
+            if ((width & ((1 << level) - 1)) != 0 ||
+                (height & ((1 << level) - 1)) != 0)
+            {
                 throw new ArgumentOutOfRangeException("level", "Level is too low for the image dimensions.");
-			}
+            }
 
-			int levelWidth = width >> level;
-			int levelHeight = height >> level;
+            int levelWidth = width >> level;
+            int levelHeight = height >> level;
 
             if (newImageDataStride < levelWidth * 4)
                 throw new ArgumentOutOfRangeException("newImageDataStride", "Stride is too small to contain a row of data.");
 
-			// Adding a new mipmap?
-			if (level == LevelCount)
-				encodedLevelData.Add(new byte[CalculateSizeOfLevel(level)]);
+            // Adding a new mipmap?
+            if (level == LevelCount)
+                encodedLevelData.Add(new byte[CalculateSizeOfLevel(level)]);
 
-			// Encode
+            // Encode
             GxTextureFormatCodec.GetCodec(format).EncodeTexture(
                 newImageData, 0, levelWidth, levelHeight, newImageDataStride,
                 encodedLevelData[level], 0, null, 0);
-		}
+        }
 
         /// <summary>
         /// Create or replace the specified texture level from the specified bitmap.
@@ -365,102 +365,104 @@ namespace LibGxFormat.Tpl
             // LockBits gives us the data as ARGB when seen as uint,
             // so we need to shuffle the bitmap data accordingly to go to RGBA
             SwapRgbaFromToArgbAsUint(levelData, bmpData.Width, bmpData.Height, bmpData.Stride);
-            
+
             // Encode the data to the given format
             DefineLevelData(level, bmpData.Stride, levelData);
         }
 
-		/// <summary>
-		/// Defines the texture from a bitmap.
-		/// All texture levels will be generated (if the provided bitmap is not specified as level 0) until the texture size is no longer divisible by two.
-		/// </summary>
-		/// <param name="format">The format to encode the new texture as.</param>
-		/// <param name="intFormat">The type of interpolation to use</param>
-		/// <param name="bmp">The bitmap that will define the texture.</param>
+        /// <summary>
+        /// Defines the texture from a bitmap.
+        /// All texture levels will be generated (if the provided bitmap is not specified as level 0) until the texture size is no longer divisible by two.
+        /// </summary>
+        /// <param name="format">The format to encode the new texture as.</param>
+        /// <param name="intFormat">The type of interpolation to use</param>
+        /// <param name="bmp">The bitmap that will define the texture.</param>
         /// <param name="path">The path to the bitmap file.</param>
-		public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path)
-		{
-			if (!SupportedTextureFormats.Contains(format))
-				throw new ArgumentOutOfRangeException("format", "Unsupported format.");
-			if (bmp == null)
-				throw new ArgumentNullException("bmp");
+        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path)
+        {
+            if (!SupportedTextureFormats.Contains(format))
+                throw new ArgumentOutOfRangeException("format", "Unsupported format.");
+            if (bmp == null)
+                throw new ArgumentNullException("bmp");
 
-			// If the filename ends in '_0.???(?)' or ' 0.???(?)', import them from the respective files, otherwise, generate them. 
-			if (Regex.IsMatch(path, @"(_| )0(?=\..{3,4}$)") ) {				
-				DefineMainLevelFromBitmap(format, intFormat, bmp);
+            // If the filename ends in '_0.???(?)' or ' 0.???(?)', import them from the respective files, otherwise, generate them. 
+            if (Regex.IsMatch(path, @"(_| )0(?=\..{3,4}$)"))
+            {
+                DefineMainLevelFromBitmap(format, intFormat, bmp);
                 // Gets the path to the potential level 1 mipmap of the texture.
-				path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", "1");
-				DefineAllLevelsFromFiles(format, intFormat, path);
-			}
+                path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", "1");
+                DefineAllLevelsFromFiles(format, intFormat, path);
+            }
 
-			else {
-				// Define all possible texture levels until the size
-				// of the texture can no longer be divided by two
-				int currentWidth = bmp.Width, currentHeight = bmp.Height;
-				for (int mipmapLevel = 0; mipmapLevel < numMipmaps; mipmapLevel++)
-				{
-					if (mipmapLevel == 0)
-					{
-						DefineMainLevelFromBitmap(format, intFormat, bmp);
-					}
-					else
-					{
-						DefineLevelDataFromBitmap(mipmapLevel, intFormat, DownscaleBitmap(mipmapLevel, intFormat, bmp));
-					}
+            else
+            {
+                // Define all possible texture levels until the size
+                // of the texture can no longer be divided by two
+                int currentWidth = bmp.Width, currentHeight = bmp.Height;
+                for (int mipmapLevel = 0; mipmapLevel < numMipmaps; mipmapLevel++)
+                {
+                    if (mipmapLevel == 0)
+                    {
+                        DefineMainLevelFromBitmap(format, intFormat, bmp);
+                    }
+                    else
+                    {
+                        DefineLevelDataFromBitmap(mipmapLevel, intFormat, DownscaleBitmap(mipmapLevel, intFormat, bmp));
+                    }
 
-					if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
-						break;
+                    if ((currentWidth % 2) != 0 || (currentHeight % 2) != 0)
+                        break;
 
-					currentWidth /= 2;
-					currentHeight /= 2;
-				}
-			}
-		}
-		/// <summary>
-		/// Defines a texture and the respective mipmap levels of the texture from the respective files, starting from level 1.
-		/// 
-		/// </summary>
-		/// <param name="format">The format to encode the new texture as.</param>
-		/// <param name="intFormat">The type of interpolation to use.</param>
-		/// <param name="path">The path to the level 1 bitmap.</param>
-		public void DefineAllLevelsFromFiles(GxTextureFormat format, GxInterpolationFormat intFormat, String path)
-		{
-			int currentMipmapLevel = 1;
+                    currentWidth /= 2;
+                    currentHeight /= 2;
+                }
+            }
+        }
+        /// <summary>
+        /// Defines a texture and the respective mipmap levels of the texture from the respective files, starting from level 1.
+        /// 
+        /// </summary>
+        /// <param name="format">The format to encode the new texture as.</param>
+        /// <param name="intFormat">The type of interpolation to use.</param>
+        /// <param name="path">The path to the level 1 bitmap.</param>
+        public void DefineAllLevelsFromFiles(GxTextureFormat format, GxInterpolationFormat intFormat, String path)
+        {
+            int currentMipmapLevel = 1;
             // Iterates until no more mipmap levels exist.
-			while (File.Exists(path))
-			{
-				DefineLevelDataFromBitmap(currentMipmapLevel, intFormat, new Bitmap(path));
-				currentMipmapLevel++;
+            while (File.Exists(path))
+            {
+                DefineLevelDataFromBitmap(currentMipmapLevel, intFormat, new Bitmap(path));
+                currentMipmapLevel++;
                 // Gets the path to the next mipmap.
-				path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", currentMipmapLevel.ToString());
-			}
-		}
+                path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", currentMipmapLevel.ToString());
+            }
+        }
 
-		/// <summary>
-		/// Decodes the specified level of the encoded texture to an array of RGBA8 pixels.
-		/// </summary>
-		/// <param name="level">The level of the texture to decode.</param>
-		/// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
-		/// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
-		public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
-		{
+        /// <summary>
+        /// Decodes the specified level of the encoded texture to an array of RGBA8 pixels.
+        /// </summary>
+        /// <param name="level">The level of the texture to decode.</param>
+        /// <param name="desiredStride">Desired stride (number of bytes per scanline) of the result.</param>
+        /// <returns>An array with the RGBA8 data of the level (with no extra row padding).</returns>
+        public byte[] DecodeLevelToRGBA8(int level, int desiredStride)
+        {
             if (level < 0 || level >= LevelCount)
-				throw new ArgumentOutOfRangeException("level");
+                throw new ArgumentOutOfRangeException("level");
             if (desiredStride < 0)
                 throw new ArgumentOutOfRangeException("desiredStride");
 
-			int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
+            int levelWidth = WidthOfLevel(level), levelHeight = HeightOfLevel(level);
 
             if (desiredStride < levelWidth * 4)
                 throw new ArgumentOutOfRangeException("desiredStride", "Stride is too small to contain a row of data.");
 
-			// Decode texture as RGBA8 (GxTextureDecode format)
+            // Decode texture as RGBA8 (GxTextureDecode format)
             byte[] decodedData = new byte[levelHeight * desiredStride];
             GxTextureFormatCodec.GetCodec(format).DecodeTexture(decodedData, 0,
-				levelWidth, levelHeight, desiredStride,
+                levelWidth, levelHeight, desiredStride,
                 encodedLevelData[level], 0, null, 0);
             return decodedData;
-		}
+        }
 
         /// <summary>
         /// Decodes the specified level of the encoded texture to a bitmap.
@@ -541,51 +543,51 @@ namespace LibGxFormat.Tpl
             }
         }
 
-		/// <summary>
-		/// Calculates the size of a level of the texture.
-		/// </summary>
-		/// <param name="level">The level of the texture.</param>
-		/// <param name="replicateCmprBug">true to replicate the F-Zero GX CMPR encoding bug.</param>
-		/// <returns>The size of the encoded data in the specified level.</returns>
-		private int CalculateSizeOfLevel(int level, bool replicateCmprBug = false)
-		{
+        /// <summary>
+        /// Calculates the size of a level of the texture.
+        /// </summary>
+        /// <param name="level">The level of the texture.</param>
+        /// <param name="replicateCmprBug">true to replicate the F-Zero GX CMPR encoding bug.</param>
+        /// <returns>The size of the encoded data in the specified level.</returns>
+        private int CalculateSizeOfLevel(int level, bool replicateCmprBug = false)
+        {
             // Here we allow also to specify the "next" level for easier implementation
             // of the methods that encode the new texture
-			if (level < 0 || level > LevelCount)
-				throw new ArgumentOutOfRangeException("level");
+            if (level < 0 || level > LevelCount)
+                throw new ArgumentOutOfRangeException("level");
 
             int levelWidth = width >> level, levelHeight = height >> level;
 
-			// Hack: CMPR sizes are not calculated correctly, replicate the bug
-			if (replicateCmprBug && format == GxTextureFormat.CMPR)
-			{
-				int w = PaddingUtils.Align(levelWidth, 4); // Align to 4 (should really be 8)
-				int h = PaddingUtils.Align(levelHeight, 4); // Align to 4 (should really be 8)
-				int sz = (w * h * 4) / 8; // CMPR is 4 bits per pixel
-				int szpad = PaddingUtils.Align(sz, 32); // Align to 32 (this should normally not be needed)
-				return szpad;
-			}
+            // Hack: CMPR sizes are not calculated correctly, replicate the bug
+            if (replicateCmprBug && format == GxTextureFormat.CMPR)
+            {
+                int w = PaddingUtils.Align(levelWidth, 4); // Align to 4 (should really be 8)
+                int h = PaddingUtils.Align(levelHeight, 4); // Align to 4 (should really be 8)
+                int sz = (w * h * 4) / 8; // CMPR is 4 bits per pixel
+                int szpad = PaddingUtils.Align(sz, 32); // Align to 32 (this should normally not be needed)
+                return szpad;
+            }
 
             return GxTextureFormatCodec.GetCodec(format).CalcTextureSize(levelWidth, levelHeight);
-		}
+        }
 
-		/// <summary>
-		/// Reads a texture with the specified characteristics from a binary stream.
-		/// </summary>
-		internal void LoadTextureData(EndianBinaryReader input, GxGame game, GxTextureFormat format, int width, int height, int levelCount)
-		{
-			if (!SupportedTextureFormats.Contains(format))
-				throw new InvalidTplFileException("Unsupported texture format.");
+        /// <summary>
+        /// Reads a texture with the specified characteristics from a binary stream.
+        /// </summary>
+        internal void LoadTextureData(EndianBinaryReader input, GxGame game, GxTextureFormat format, int width, int height, int levelCount)
+        {
+            if (!SupportedTextureFormats.Contains(format))
+                throw new InvalidTplFileException("Unsupported texture format.");
 
-			this.format = format;
-			this.width = width;
-			this.height = height;
+            this.format = format;
+            this.width = width;
+            this.height = height;
 
-			for (int level = 0; level < levelCount; level++)
-			{
-				byte[] levelData = new byte[CalculateSizeOfLevel(level)];
-				input.Read(levelData, 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
-                if(game == GxGame.SuperMonkeyBallDX)
+            for (int level = 0; level < levelCount; level++)
+            {
+                byte[] levelData = new byte[CalculateSizeOfLevel(level)];
+                input.Read(levelData, 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
+                if (game == GxGame.SuperMonkeyBallDX)
                 {
                     if (format == GxTextureFormat.CMPR)
                     {
@@ -602,16 +604,16 @@ namespace LibGxFormat.Tpl
                         }
                     }
                 }
-                
-				encodedLevelData.Add(levelData);
-			}
-		}
 
-		/// <summary>
-		/// Writes this texture to a binary stream.
-		/// </summary>
-		internal void SaveTextureData(EndianBinaryWriter output, GxGame game)
-		{
+                encodedLevelData.Add(levelData);
+            }
+        }
+
+        /// <summary>
+        /// Writes this texture to a binary stream.
+        /// </summary>
+        internal void SaveTextureData(EndianBinaryWriter output, GxGame game)
+        {
 
             if (LevelCount != 0 && game == GxGame.SuperMonkeyBallDX)
             {
@@ -698,14 +700,14 @@ namespace LibGxFormat.Tpl
             }
 
             for (int level = 0; level < LevelCount; level++)
-			{
-                if(game == GxGame.SuperMonkeyBallDX)
+            {
+                if (game == GxGame.SuperMonkeyBallDX)
                 {
-                    if(Format == GxTextureFormat.CMPR)
+                    if (Format == GxTextureFormat.CMPR)
                     {
                         // Swap pallete byte order
                         byte[] swappedOrder = new byte[encodedLevelData[level].Length];
-                        for(int i = 0; i < CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)); i += 8)
+                        for (int i = 0; i < CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)); i += 8)
                         {
                             swappedOrder[i] = encodedLevelData[level][i + 1];
                             swappedOrder[i + 1] = encodedLevelData[level][i];
@@ -731,24 +733,24 @@ namespace LibGxFormat.Tpl
                     output.Write(encodedLevelData[level], 0, CalculateSizeOfLevel(level, (game == GxGame.FZeroGX)));
                 }
 
-               
-			}
-		}
 
-		/// Gets the size of the texture when written to a binary stream.
-		internal int SizeOfTextureData(GxGame game)
-		{
-			int size = 0;
-            if(game == GxGame.SuperMonkeyBallDX)
+            }
+        }
+
+        /// Gets the size of the texture when written to a binary stream.
+        internal int SizeOfTextureData(GxGame game)
+        {
+            int size = 0;
+            if (game == GxGame.SuperMonkeyBallDX)
             {
                 size += 0x20;
             }
-			for (int level = 0; level < LevelCount; level++)
-			{
-				size += CalculateSizeOfLevel(level, (game == GxGame.FZeroGX));
-			}
-			return size;
-		}
+            for (int level = 0; level < LevelCount; level++)
+            {
+                size += CalculateSizeOfLevel(level, (game == GxGame.FZeroGX));
+            }
+            return size;
+        }
 
         /// <summary>
         /// Downscales a bitmap image with a specified interpolation algorithm
@@ -759,7 +761,7 @@ namespace LibGxFormat.Tpl
         /// <returns>The downscaled bitmap</returns>
         internal Bitmap DownscaleBitmap(int level, GxInterpolationFormat intFormat, Bitmap bmp)
         {
-            if(intFormat == GxInterpolationFormat.NearestNeighbor)
+            if (intFormat == GxInterpolationFormat.NearestNeighbor)
             {
                 return DownscaleBitmapNearestNeighbor(level, bmp);
             }

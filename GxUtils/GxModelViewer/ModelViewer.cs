@@ -53,8 +53,8 @@ namespace GxModelViewer
             public int ModelIdx;
             /// <summary>The index of the material within the model</summary>
             public int MaterialIdx;
-            
-            public  ModelMaterialReference(int modelIdx, int materialIdx)
+
+            public ModelMaterialReference(int modelIdx, int materialIdx)
             {
                 this.ModelIdx = modelIdx;
                 this.MaterialIdx = materialIdx;
@@ -79,7 +79,7 @@ namespace GxModelViewer
         bool reloadOnNextRedraw;
         /// <summary>Manager for the textures and display lists associated with the .GMA/.TPL files.</summary>
         OpenGlModelContext ctx = new OpenGlModelContext();
-        
+
         /// <summary>
         /// A tree containing the objects defined in the currently loaded GMA file.
         /// The first level of tree children contains a node for each GCMF model in the GMA file,
@@ -100,7 +100,7 @@ namespace GxModelViewer
         /// <summary>The max number of mipmaps to create when importing textures.</summary>
         int numMipmaps = 255;
         /// <summary>Menu items specifying the possible number of mipmaps</summary>
-        ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem [10];
+        ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem[10];
 
         GxInterpolationFormat intFormat = GxInterpolationFormat.NearestNeighbor;
         ToolStripMenuItem[] mipMapIntItems;
@@ -116,7 +116,7 @@ namespace GxModelViewer
             tsCmbGame.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxGame)).Cast<GxGame>()
                 .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
 
-            
+
             // Populate the Menu Strip for the number of mipmaps
             int i;
             for (i = 0; i < mipmapItems.Length - 1; ++i)
@@ -140,12 +140,12 @@ namespace GxModelViewer
             mipMapIntItems = new ToolStripMenuItem[interpolationTypes.Count<GxInterpolationFormat>()];
 
             i = 0;
-            foreach(GxInterpolationFormat intFormatEnum in interpolationTypes)
+            foreach (GxInterpolationFormat intFormatEnum in interpolationTypes)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(EnumUtils.GetEnumDescription(intFormatEnum));
                 item.Click += new EventHandler(mipmapInterpolationDropDownItemClicked);
                 mipMapIntItems[i] = item;
-                if(intFormatEnum == intFormat)
+                if (intFormatEnum == intFormat)
                 {
                     item.Checked = true;
                 }
@@ -320,7 +320,7 @@ namespace GxModelViewer
 
                 angleX += (float)deltaX;
                 angleY += (float)deltaY;
-                
+
                 modelViewerLastMouseX = e.X;
                 modelViewerLastMouseY = e.Y;
 
@@ -362,7 +362,8 @@ namespace GxModelViewer
             if (ofdLoadGma.ShowDialog() != DialogResult.OK)
                 return;
 
-            try {
+            try
+            {
                 LoadGmaFile(ofdLoadGma.FileName);
             }
             catch (Exception ex)
@@ -483,7 +484,7 @@ namespace GxModelViewer
                     modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
                     modelItem.ContextMenuStrip = gmaContextMenuStrip;
                     treeModel.Nodes.Add(modelItem);
-                    
+
                     // Add display list entries for the meshes within the model
                     if (gma[i] != null)
                     {
@@ -497,7 +498,7 @@ namespace GxModelViewer
                             modelItem.Nodes.Add(meshItem);
                         }
                     }
-                    
+
                     treeModel.SetCheckState(modelItem, CheckState.Checked);
                 }
             }
@@ -712,7 +713,8 @@ namespace GxModelViewer
             if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
                 return;
 
-            try {
+            try
+            {
                 LoadTplFile(ofdLoadTpl.FileName);
             }
             catch (Exception ex)
@@ -759,7 +761,7 @@ namespace GxModelViewer
             glControlModel.Invalidate();
 
             // Throw delayed until end to keep previous functionality (clear TPL on error)
-            if(exception != null)
+            if (exception != null)
             {
                 throw exception;
             }
@@ -903,9 +905,9 @@ namespace GxModelViewer
             }
             catch (Exception ex)
             {
-                 MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                 return;
+                MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
@@ -927,7 +929,7 @@ namespace GxModelViewer
                     else
                     {
                         Console.WriteLine("Obj Import Warnings:");
-                        foreach(string warning in modelWarningLog)
+                        foreach (string warning in modelWarningLog)
                         {
                             Console.WriteLine("Import Warning: " + warning);
                         }
@@ -1020,7 +1022,7 @@ namespace GxModelViewer
             haveUnsavedTplChanges = true;
             UpdateTextureButtons();
             UpdateTextureDisplay();
-            
+
             glControlModel.MakeCurrent();
             ctx.SetTexture(idx, tpl[idx]);
             glControlModel.Invalidate();
@@ -1138,9 +1140,9 @@ namespace GxModelViewer
             int mipmapAmt = int.Parse(text);
             numMipmaps = mipmapAmt;
 
-            foreach(ToolStripMenuItem item in mipmapItems)
+            foreach (ToolStripMenuItem item in mipmapItems)
             {
-                if(item.Text == text)
+                if (item.Text == text)
                 {
                     item.Checked = true;
                 }
@@ -1172,7 +1174,7 @@ namespace GxModelViewer
 
         private void gmaExportTolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
             // Select the clicked node
             TreeNode selected = treeModel.SelectedNodes[0];
 
@@ -1393,7 +1395,7 @@ namespace GxModelViewer
             // Grab selected nodes
             List<TreeNode> selectedNodes = treeModel.SelectedNodes;
             List<Gcmf> models = new List<Gcmf>(selectedNodes.Count);
-            foreach(TreeNode node in selectedNodes)
+            foreach (TreeNode node in selectedNodes)
             {
                 // Make sure these are all models, not meshes
                 if (node.Parent == null)
@@ -1439,6 +1441,8 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateModelDisplay();
                         UpdateModelTree();
+                        reloadOnNextRedraw = true;
+                        glControlModel.Invalidate();
                         break;
                 }
             }
@@ -1449,7 +1453,8 @@ namespace GxModelViewer
             // Grab selected nodes
             List<TreeNode> selectedNodes = treeMaterials.SelectedNodes;
             List<GcmfMaterial> materials = new List<GcmfMaterial>(selectedNodes.Count);
-            foreach (TreeNode node in selectedNodes) {
+            foreach (TreeNode node in selectedNodes)
+            {
                 ModelMaterialReference itemData = (ModelMaterialReference)node.Tag;
                 materials.Add(gma[itemData.ModelIdx].ModelObject.Materials[itemData.MaterialIdx]);
             }
@@ -1477,7 +1482,8 @@ namespace GxModelViewer
             }
             if (tpl != null)
             {
-                foreach(TplTexture texture in tpl){
+                foreach (TplTexture texture in tpl)
+                {
                     texture.LevelCount = level;
                 }
             }
