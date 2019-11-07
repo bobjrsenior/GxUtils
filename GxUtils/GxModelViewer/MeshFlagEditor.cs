@@ -55,6 +55,9 @@ namespace GxModelViewer
             this.unknown10TextBox.Text = String.Format("{0:X4}", meshes[0].Unk10);
             //this.sectionFlagsTextBox.Text = String.Format("{0:X}", meshes[0].);
             this.unknown14TextBox.Text = String.Format("{0:X4}", meshes[0].Unk14);
+            this.unknown16TextBox.Text = String.Format("{0:X4}", meshes[0].PrimaryMaterialIdx);
+            this.unknown18TextBox.Text = String.Format("{0:X4}", meshes[0].SecondaryMaterialIdx);
+            this.unknown1ATextBox.Text = String.Format("{0:X4}", meshes[0].TertiaryMaterialIdx);
             //this.vertexFlagsTextBox.Text = String.Format("{0:X}", meshes[0].);
             this.matrixId1TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[0];
             this.matrixId2TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[1];
@@ -122,10 +125,10 @@ namespace GxModelViewer
 
         private void validateInput()
         {
-            ushort unk10, unk14;
+            ushort unk10, unk14, unk16, unk18, unk1A;
             uint renderFlags, unk4, unk8, unkC, unk40;
             uint layer;
-            bool unk10Valid, unk14Valid, renderFlagsValid, unk4Valid, unk8Valid, unkCValid, unk40Valid, layerValid;
+            bool unk10Valid, unk14Valid, unk16Valid, unk18Valid, unk1AValid, renderFlagsValid, unk4Valid, unk8Valid, unkCValid, unk40Valid, layerValid;
             float boundingSphereX, boundingSphereY, boundingSphereZ, unk3C;
             bool boundingSphereXValid, boundingSphereYValid, boundingSphereZValid, unk3CValid;
 
@@ -137,7 +140,10 @@ namespace GxModelViewer
             unkCValid = FlagHelper.parseHexToInt32(this.unknownCTextBox.Text, out unkC, "Unknown C is not a valid 4 byte hex value");
             unk10Valid = FlagHelper.parseHexToShort(this.unknown10TextBox.Text, out unk10, "Unknown 10 is not a valid 2 byte hex value");
             unk14Valid = FlagHelper.parseHexToShort(this.unknown14TextBox.Text, out unk14, "Unknown 14 is not a valid 2 byte hex value");
-
+            unk16Valid = FlagHelper.parseHexToShort(this.unknown16TextBox.Text, out unk16, "Unknown 16 is not a valid 2 byte hex value");
+            unk18Valid = FlagHelper.parseHexToShort(this.unknown18TextBox.Text, out unk18, "Unknown 18 is not a valid 2 byte hex value");
+            unk1AValid = FlagHelper.parseHexToShort(this.unknown1ATextBox.Text, out unk1A, "Unknown 1A is not a valid 2 byte hex value");
+        
             byte[] matrixSpecificIds = new byte[8];
             bool[] matrixSpecificIdsValid = new bool[8];
 
@@ -167,6 +173,12 @@ namespace GxModelViewer
                 if (unkCValid) mesh.UnkC = unkC;
                 if (unk10Valid) mesh.Unk10 = unk10;
                 if (unk14Valid) mesh.Unk14 = unk14;
+                if (unk16Valid) mesh.PrimaryMaterialIdx = unk16;
+                if (unk18Valid) mesh.SecondaryMaterialIdx = unk18;
+                if (unk1AValid) mesh.TertiaryMaterialIdx = unk1A;
+                mesh.calculatedUsedMaterialCount = Convert.ToByte(((unk16 != ushort.MaxValue) ? 1 : 0) +
+                        ((unk18 != ushort.MaxValue) ? 1 : 0) +
+                        ((unk1A != ushort.MaxValue) ? 1 : 0));
 
                 for (int i = 0; i < matrixSpecificIds.Length; i++)
                 {
