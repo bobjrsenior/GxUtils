@@ -107,7 +107,7 @@ namespace GxModelViewer
             try
             {
                 validateInput();
-                this.DialogResult = DialogResult.OK;
+                this.DialogResult = reloadCheckBox.Checked ? DialogResult.Yes : DialogResult.OK;
                 this.Close();
             }
             catch (InvalidOperationException ex)
@@ -348,5 +348,6 @@ namespace GxModelViewer
                 return;
             }
         }
+
     }
 }

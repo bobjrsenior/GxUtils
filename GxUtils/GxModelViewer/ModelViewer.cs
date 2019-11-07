@@ -1441,6 +1441,10 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateModelDisplay();
                         UpdateModelTree();
+                        break;
+                    case DialogResult.Yes:
+                        UpdateModelDisplay();
+                        UpdateModelTree();  
                         reloadOnNextRedraw = true;
                         glControlModel.Invalidate();
                         break;

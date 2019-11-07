@@ -713,7 +713,7 @@ namespace GxModelViewer
             // 
             // label1
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(3, 100);
             this.label1.Name = "label1";
@@ -724,7 +724,7 @@ namespace GxModelViewer
             // 
             // lblMeshRenderFlagsText
             // 
-            this.lblMeshRenderFlagsText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshRenderFlagsText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshRenderFlagsText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshRenderFlagsText.Location = new System.Drawing.Point(3, 0);
             this.lblMeshRenderFlagsText.Name = "lblMeshRenderFlagsText";
@@ -735,7 +735,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnk4Text
             // 
-            this.lblMeshUnk4Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk4Text.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnk4Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnk4Text.Location = new System.Drawing.Point(3, 20);
             this.lblMeshUnk4Text.Name = "lblMeshUnk4Text";
@@ -746,7 +746,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnk8Text
             // 
-            this.lblMeshUnk8Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk8Text.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnk8Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnk8Text.Location = new System.Drawing.Point(3, 40);
             this.lblMeshUnk8Text.Name = "lblMeshUnk8Text";
@@ -757,7 +757,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnkCText
             // 
-            this.lblMeshUnkCText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnkCText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnkCText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnkCText.Location = new System.Drawing.Point(3, 60);
             this.lblMeshUnkCText.Name = "lblMeshUnkCText";
@@ -779,7 +779,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnk14Text
             // 
-            this.lblMeshUnk14Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk14Text.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnk14Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnk14Text.Location = new System.Drawing.Point(3, 120);
             this.lblMeshUnk14Text.Name = "lblMeshUnk14Text";
@@ -790,7 +790,7 @@ namespace GxModelViewer
             // 
             // lblMeshPrimaryMaterialIdxText
             // 
-            this.lblMeshPrimaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshPrimaryMaterialIdxText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshPrimaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshPrimaryMaterialIdxText.Location = new System.Drawing.Point(3, 140);
             this.lblMeshPrimaryMaterialIdxText.Name = "lblMeshPrimaryMaterialIdxText";
@@ -801,7 +801,7 @@ namespace GxModelViewer
             // 
             // lblMeshSecondaryMaterialIdxText
             // 
-            this.lblMeshSecondaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshSecondaryMaterialIdxText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshSecondaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshSecondaryMaterialIdxText.Location = new System.Drawing.Point(3, 160);
             this.lblMeshSecondaryMaterialIdxText.Name = "lblMeshSecondaryMaterialIdxText";
@@ -812,7 +812,7 @@ namespace GxModelViewer
             // 
             // lblMeshTertiaryMaterialIdxText
             // 
-            this.lblMeshTertiaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshTertiaryMaterialIdxText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshTertiaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshTertiaryMaterialIdxText.Location = new System.Drawing.Point(3, 180);
             this.lblMeshTertiaryMaterialIdxText.Name = "lblMeshTertiaryMaterialIdxText";
@@ -823,7 +823,7 @@ namespace GxModelViewer
             // 
             // lblMeshTransformMatrixSpecificReferencesText
             // 
-            this.lblMeshTransformMatrixSpecificReferencesText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshTransformMatrixSpecificReferencesText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshTransformMatrixSpecificReferencesText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshTransformMatrixSpecificReferencesText.Location = new System.Drawing.Point(3, 200);
             this.lblMeshTransformMatrixSpecificReferencesText.Name = "lblMeshTransformMatrixSpecificReferencesText";
@@ -834,7 +834,7 @@ namespace GxModelViewer
             // 
             // lblMeshCenterText
             // 
-            this.lblMeshCenterText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshCenterText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshCenterText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshCenterText.Location = new System.Drawing.Point(3, 220);
             this.lblMeshCenterText.Name = "lblMeshCenterText";
@@ -845,7 +845,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnk3CText
             // 
-            this.lblMeshUnk3CText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk3CText.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnk3CText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnk3CText.Location = new System.Drawing.Point(3, 240);
             this.lblMeshUnk3CText.Name = "lblMeshUnk3CText";
@@ -856,7 +856,7 @@ namespace GxModelViewer
             // 
             // lblMeshUnk40Text
             // 
-            this.lblMeshUnk40Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk40Text.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lblMeshUnk40Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMeshUnk40Text.Location = new System.Drawing.Point(3, 260);
             this.lblMeshUnk40Text.Name = "lblMeshUnk40Text";

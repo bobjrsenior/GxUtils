@@ -87,6 +87,7 @@
             this.unknown16TextBox = new System.Windows.Forms.TextBox();
             this.unknown1ATextBox = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.reloadCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -177,7 +178,7 @@
             this.okayButton.Name = "okayButton";
             this.okayButton.Size = new System.Drawing.Size(75, 23);
             this.okayButton.TabIndex = 34;
-            this.okayButton.Text = "Okay";
+            this.okayButton.Text = "OK";
             this.okayButton.UseVisualStyleBackColor = true;
             this.okayButton.Click += new System.EventHandler(this.okayButton_Click);
             // 
@@ -696,11 +697,23 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(490, 28);
             this.tableLayoutPanel3.TabIndex = 65;
             // 
+            // reloadCheckBox
+            // 
+            this.reloadCheckBox.AutoSize = true;
+            this.reloadCheckBox.Location = new System.Drawing.Point(304, 402);
+            this.reloadCheckBox.Name = "reloadCheckBox";
+            this.reloadCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.reloadCheckBox.TabIndex = 66;
+            this.reloadCheckBox.Text = "Reload Model Viewer after Applying";
+            this.reloadCheckBox.UseVisualStyleBackColor = true;
+            
+            // 
             // MeshFlagEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(520, 463);
+            this.Controls.Add(this.reloadCheckBox);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel2);
@@ -721,6 +734,7 @@
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -784,5 +798,6 @@
         private System.Windows.Forms.TextBox unknown16TextBox;
         private System.Windows.Forms.TextBox unknown1ATextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.CheckBox reloadCheckBox;
     }
 }
