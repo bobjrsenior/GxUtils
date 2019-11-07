@@ -1,4 +1,4 @@
-GxUtils/GxUtils.v12.suo
+GxUtils/.vs
 GxUtils/GxExtender/bin
 GxUtils/GxExtender/obj
 GxUtils/GxLoadSaveTestApp/bin
@@ -12,3 +12,6 @@ GxUtils/LibGxFormat/bin
 GxUtils/LibGxFormat/obj
 GxUtils/LibGxTexture/bin
 GxUtils/LibGxTexture/obj
+GxUtils/.vs/GxUtils/v16/.suo
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/db.lock
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/storage.ide

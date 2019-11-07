@@ -71,7 +71,22 @@ namespace LibGxFormat.Gma
         public float Unk3C { get; set; }
         public uint Unk40 { get; set; }
 
-        public GcmfTriangleStripGroup Obj1StripsCcw { get; private set; }
+        private byte _calculatedUsedMaterialCount;
+        public byte calculatedUsedMaterialCount {
+            get
+            {
+                return Convert.ToByte(((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
+            }
+            set
+            {
+                _calculatedUsedMaterialCount = value;
+            }
+          
+            }
+
+    public GcmfTriangleStripGroup Obj1StripsCcw { get; private set; }
         public GcmfTriangleStripGroup Obj1StripsCw { get; private set; }
 
         public byte[] TransformMatrixSpecificIdxsObj2 { get; set; }
@@ -275,10 +290,6 @@ namespace LibGxFormat.Gma
             output.Write(Unk8);
             output.Write(UnkC);
             output.Write(Unk10);
-            byte calculatedUsedMaterialCount = (byte)(
-                ((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
-                ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
-                ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
             output.Write(calculatedUsedMaterialCount);
             output.Write(sectionFlags);
             output.Write(Unk14);

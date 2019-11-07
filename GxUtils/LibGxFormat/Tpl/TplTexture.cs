@@ -372,11 +372,12 @@ namespace LibGxFormat.Tpl
 
 		/// <summary>
 		/// Defines the texture from a bitmap.
-		/// All texture levels will be generated until the texture size is no longer divisible by two.
+		/// All texture levels will be generated (if the provided bitmap is not specified as level 0) until the texture size is no longer divisible by two.
 		/// </summary>
 		/// <param name="format">The format to encode the new texture as.</param>
 		/// <param name="intFormat">The type of interpolation to use</param>
 		/// <param name="bmp">The bitmap that will define the texture.</param>
+        /// <param name="path">The path to the bitmap file.</param>
 		public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path)
 		{
 			if (!SupportedTextureFormats.Contains(format))
@@ -384,11 +385,11 @@ namespace LibGxFormat.Tpl
 			if (bmp == null)
 				throw new ArgumentNullException("bmp");
 
-			// If the filename ends in '_0' or ' 0', import them from the respective files, otherwise, generate them. 
-			if ((path.Contains("_0")) || (path.Contains(" 0")) ) {				
+			// If the filename ends in '_0.???(?)' or ' 0.???(?)', import them from the respective files, otherwise, generate them. 
+			if (Regex.IsMatch(path, @"(_| )0(?=\..{3,4}$)") ) {				
 				DefineMainLevelFromBitmap(format, intFormat, bmp);
-
-				path = Regex.Replace(path, @"\d{1,}(?=\....)", "1");
+                // Gets the path to the potential level 1 mipmap of the texture.
+				path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", "1");
 				DefineAllLevelsFromFiles(format, intFormat, path);
 			}
 
@@ -416,7 +417,7 @@ namespace LibGxFormat.Tpl
 			}
 		}
 		/// <summary>
-		/// Defines a texture and the respective mipmap levels of the texture from the respective files.
+		/// Defines a texture and the respective mipmap levels of the texture from the respective files, starting from level 1.
 		/// 
 		/// </summary>
 		/// <param name="format">The format to encode the new texture as.</param>
@@ -425,11 +426,13 @@ namespace LibGxFormat.Tpl
 		public void DefineAllLevelsFromFiles(GxTextureFormat format, GxInterpolationFormat intFormat, String path)
 		{
 			int currentMipmapLevel = 1;
+            // Iterates until no more mipmap levels exist.
 			while (File.Exists(path))
 			{
 				DefineLevelDataFromBitmap(currentMipmapLevel, intFormat, new Bitmap(path));
 				currentMipmapLevel++;
-				path = Regex.Replace(path, @"\d{1,}(?=\....)", currentMipmapLevel.ToString());
+                // Gets the path to the next mipmap.
+				path = Regex.Replace(path, @"\d{1,}(?=\..{3,4}$)", currentMipmapLevel.ToString());
 			}
 		}
 

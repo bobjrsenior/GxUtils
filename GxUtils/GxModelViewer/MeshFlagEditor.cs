@@ -55,6 +55,9 @@ namespace GxModelViewer
             //this.sectionFlagsTextBox.Text = String.Format("{0:X}", mesh.);
             this.unknown14TextBox.Text = String.Format("{0:X4}", mesh.Unk14);
             //this.vertexFlagsTextBox.Text = String.Format("{0:X}", mesh.);
+            this.unknown16TextBox.Text = String.Format("{0:X4}", mesh.PrimaryMaterialIdx);
+            this.unknown18TextBox.Text = String.Format("{0:X4}", mesh.SecondaryMaterialIdx);
+            this.unknown1ATextBox.Text = String.Format("{0:X4}", mesh.TertiaryMaterialIdx);
             this.matrixId1TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[0];
             this.matrixId2TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[1];
             this.matrixId3TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[2];
@@ -95,19 +98,21 @@ namespace GxModelViewer
 
         private void validateInput()
         {
-            ushort unk10, unk14;
+            ushort unk10, unk14, unk16, unk18, unk1A;
             uint renderFlags, unk4, unk8, unkC, unk40;
             uint layer;
             float boundingSphereX, boundingSphereY, boundingSphereZ, unk3C;
             if (!tryParseIntHex(this.renderFlagsTextBox.Text, out renderFlags)) throw new InvalidOperationException("Render Flags is not a valid 4 byte hex value");
             if (!tryParseIntHex(this.layerTextBox.Text, out layer)) throw new InvalidOperationException("Layer is not a valid 4 byte hex value");
             if (layer != 0 && layer != 1) throw new InvalidOperationException("Layer is not 0 or 1");
-            if (!tryParseIntHex(this.unknown4TextBox.Text, out unk4)) throw new InvalidOperationException("Unknown 4 is not a valid 4 byte hex value");
-            if (!tryParseIntHex(this.unknown8TextBox.Text, out unk8)) throw new InvalidOperationException("Unknown 8 is not a valid 4 byte hex value");
-            if (!tryParseIntHex(this.unknownCTextBox.Text, out unkC)) throw new InvalidOperationException("Unknown C is not a valid 4 byte hex value");
-            if (!tryParseShortHex(this.unknown10TextBox.Text, out unk10)) throw new InvalidOperationException("Unknown 10 is not a valid 4 byte hex value");
-            if (!tryParseShortHex(this.unknown14TextBox.Text, out unk14)) throw new InvalidOperationException("Unknown 14 is not a valid 4 byte hex value");
-
+            if (!tryParseIntHex(this.unknown4TextBox.Text, out unk4)) throw new InvalidOperationException("Unknown 0x04 is not a valid 4 byte hex value");
+            if (!tryParseIntHex(this.unknown8TextBox.Text, out unk8)) throw new InvalidOperationException("Unknown 0x08 is not a valid 4 byte hex value");
+            if (!tryParseIntHex(this.unknownCTextBox.Text, out unkC)) throw new InvalidOperationException("Unknown 0x0C is not a valid 4 byte hex value");
+            if (!tryParseShortHex(this.unknown10TextBox.Text, out unk10)) throw new InvalidOperationException("Unknown 0x10 is not a valid 2 byte hex value");
+            if (!tryParseShortHex(this.unknown14TextBox.Text, out unk14)) throw new InvalidOperationException("Unknown 0x14 is not a valid 2 byte hex value");
+            if (!tryParseShortHex(this.unknown16TextBox.Text, out unk16)) throw new InvalidOperationException("Primary Material Index 0x16 is not a valid 2 byte hex value");
+            if (!tryParseShortHex(this.unknown18TextBox.Text, out unk18)) throw new InvalidOperationException("Secondary Material Index 0x18 is not a valid 2 byte hex value");
+            if (!tryParseShortHex(this.unknown1ATextBox.Text, out unk1A)) throw new InvalidOperationException("Tertiary Material Index 0x1A is not a valid 2 byte hex value");
             byte[] matrixSpecificIds = new byte[8];
             if (!byte.TryParse(this.matrixId1TextBox.Text, out matrixSpecificIds[0])) throw new InvalidOperationException("Transformation Matrix Specific Id One is not a valid byte value (0-255)");
             if (!byte.TryParse(this.matrixId2TextBox.Text, out matrixSpecificIds[1])) throw new InvalidOperationException("Transformation Matrix Specific Id Two is not a valid byte value (0-255)");
@@ -132,6 +137,13 @@ namespace GxModelViewer
             mesh.UnkC = unkC;
             mesh.Unk10 = unk10;
             mesh.Unk14 = unk14;
+            mesh.PrimaryMaterialIdx = unk16;
+            mesh.SecondaryMaterialIdx = unk18;
+            mesh.TertiaryMaterialIdx = unk1A;
+            mesh.calculatedUsedMaterialCount = Convert.ToByte(((unk16 != ushort.MaxValue) ? 1 : 0) +
+                                                     ((unk18 != ushort.MaxValue) ? 1 : 0) + 
+                                                     ((unk1A != ushort.MaxValue) ? 1 : 0));
+            Console.WriteLine(mesh.calculatedUsedMaterialCount);
 
             for (int i = 0; i < matrixSpecificIds.Length; i++)
             {
@@ -187,6 +199,9 @@ namespace GxModelViewer
                 .Append(UNKNOWN_C).Append(" ").Append(this.unknownCTextBox.Text).Append("\r\n")
                 .Append(UNKNOWN_10).Append(" ").Append(this.unknown10TextBox.Text).Append("\r\n")
                 .Append(UNKNOWN_14).Append(" ").Append(this.unknown14TextBox.Text).Append("\r\n")
+                .Append("UNKNOWN_16").Append(" ").Append(this.unknown16TextBox.Text).Append("\r\n")
+                .Append("UNKNOWN_18").Append(" ").Append(this.unknown18TextBox.Text).Append("\r\n")
+                .Append("UNKNOWN_1A").Append(" ").Append(this.unknown1ATextBox.Text).Append("\r\n")
                 .Append(MATRIX_SPECIFIC_IDS_ONE).Append(" ").Append(this.matrixId1TextBox.Text).Append("\r\n")
                 .Append(MATRIX_SPECIFIC_IDS_TWO).Append(" ").Append(this.matrixId2TextBox.Text).Append("\r\n")
                 .Append(MATRIX_SPECIFIC_IDS_THREE).Append(" ").Append(this.matrixId3TextBox.Text).Append("\r\n")
@@ -241,6 +256,15 @@ namespace GxModelViewer
                                 break;
                             case UNKNOWN_14:
                                 this.unknown14TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_16":
+                                this.unknown16TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_18":
+                                this.unknown18TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_1A":
+                                this.unknown1ATextBox.Text = line[1];
                                 break;
                             case MATRIX_SPECIFIC_IDS_ONE:
                                 this.matrixId1TextBox.Text = line[1];

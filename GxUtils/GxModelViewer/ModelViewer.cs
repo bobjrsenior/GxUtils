@@ -53,8 +53,8 @@ namespace GxModelViewer
             public int ModelIdx;
             /// <summary>The index of the material within the model</summary>
             public int MaterialIdx;
-            
-            public  ModelMaterialReference(int modelIdx, int materialIdx)
+
+            public ModelMaterialReference(int modelIdx, int materialIdx)
             {
                 this.ModelIdx = modelIdx;
                 this.MaterialIdx = materialIdx;
@@ -79,7 +79,7 @@ namespace GxModelViewer
         bool reloadOnNextRedraw;
         /// <summary>Manager for the textures and display lists associated with the .GMA/.TPL files.</summary>
         OpenGlModelContext ctx = new OpenGlModelContext();
-        
+
         /// <summary>
         /// A tree containing the objects defined in the currently loaded GMA file.
         /// The first level of tree children contains a node for each GCMF model in the GMA file,
@@ -100,7 +100,7 @@ namespace GxModelViewer
         /// <summary>The max number of mipmaps to create when importing textures.</summary>
         int numMipmaps = 255;
         /// <summary>Menu items specifying the possible number of mipmaps</summary>
-        ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem [10];
+        ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem[10];
 
         GxInterpolationFormat intFormat = GxInterpolationFormat.NearestNeighbor;
         ToolStripMenuItem[] mipMapIntItems;
@@ -119,7 +119,7 @@ namespace GxModelViewer
             tsCmbGame.ComboBox.DataSource = new BindingSource(Enum.GetValues(typeof(GxGame)).Cast<GxGame>()
                 .Select(g => new { Key = g, Value = EnumUtils.GetEnumDescription(g) }).ToArray(), null);
 
-            
+
             // Populate the Menu Strip for the number of mipmaps
             int i;
             for (i = 0; i < mipmapItems.Length - 1; ++i)
@@ -143,12 +143,12 @@ namespace GxModelViewer
             mipMapIntItems = new ToolStripMenuItem[interpolationTypes.Count<GxInterpolationFormat>()];
 
             i = 0;
-            foreach(GxInterpolationFormat intFormatEnum in interpolationTypes)
+            foreach (GxInterpolationFormat intFormatEnum in interpolationTypes)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(EnumUtils.GetEnumDescription(intFormatEnum));
                 item.Click += new EventHandler(mipmapInterpolationDropDownItemClicked);
                 mipMapIntItems[i] = item;
-                if(intFormatEnum == intFormat)
+                if (intFormatEnum == intFormat)
                 {
                     item.Checked = true;
                 }
@@ -323,7 +323,7 @@ namespace GxModelViewer
 
                 angleX += (float)deltaX;
                 angleY += (float)deltaY;
-                
+
                 modelViewerLastMouseX = e.X;
                 modelViewerLastMouseY = e.Y;
 
@@ -365,7 +365,8 @@ namespace GxModelViewer
             if (ofdLoadGma.ShowDialog() != DialogResult.OK)
                 return;
 
-            try {
+            try
+            {
                 LoadGmaFile(ofdLoadGma.FileName);
             }
             catch (Exception ex)
@@ -486,7 +487,7 @@ namespace GxModelViewer
                     modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
                     modelItem.ContextMenuStrip = gmaContextMenuStrip;
                     treeModel.Nodes.Add(modelItem);
-                    
+
                     // Add display list entries for the meshes within the model
                     if (gma[i] != null)
                     {
@@ -500,7 +501,7 @@ namespace GxModelViewer
                             modelItem.Nodes.Add(meshItem);
                         }
                     }
-                    
+
                     treeModel.SetCheckState(modelItem, CheckState.Checked);
                 }
             }
@@ -564,6 +565,9 @@ namespace GxModelViewer
                 lblMeshUnk8.Text = string.Format("0x{0:X8}", mesh.Unk8);
                 lblMeshUnkC.Text = string.Format("0x{0:X8}", mesh.UnkC);
                 lblMeshUnk10.Text = string.Format("0x{0:X4}", mesh.Unk10);
+                lblMeshUnk12.Text = string.Format("0x{0:X2}", Convert.ToByte(((mesh.PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                                                     ((mesh.SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                                                     ((mesh.TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0)));
                 lblMeshUnk14.Text = string.Format("0x{0:X4}", mesh.Unk14);
                 lblMeshPrimaryMaterialIdx.Text = mesh.PrimaryMaterialIdx.ToString();
                 lblMeshSecondaryMaterialIdx.Text = mesh.SecondaryMaterialIdx.ToString();
@@ -711,7 +715,8 @@ namespace GxModelViewer
             if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
                 return;
 
-            try {
+            try
+            {
                 LoadTplFile(ofdLoadTpl.FileName);
             }
             catch (Exception ex)
@@ -758,7 +763,7 @@ namespace GxModelViewer
             glControlModel.Invalidate();
 
             // Throw delayed until end to keep previous functionality (clear TPL on error)
-            if(exception != null)
+            if (exception != null)
             {
                 throw exception;
             }
@@ -902,9 +907,9 @@ namespace GxModelViewer
             }
             catch (Exception ex)
             {
-                 MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                 return;
+                MessageBox.Show("Error loading the OBJ file. " + ex.Message, "Error loading the OBJ file.",
+                       MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
@@ -926,7 +931,7 @@ namespace GxModelViewer
                     else
                     {
                         Console.WriteLine("Obj Import Warnings:");
-                        foreach(string warning in modelWarningLog)
+                        foreach (string warning in modelWarningLog)
                         {
                             Console.WriteLine("Import Warning: " + warning);
                         }
@@ -1019,7 +1024,7 @@ namespace GxModelViewer
             haveUnsavedTplChanges = true;
             UpdateTextureButtons();
             UpdateTextureDisplay();
-            
+
             glControlModel.MakeCurrent();
             ctx.SetTexture(idx, tpl[idx]);
             glControlModel.Invalidate();
@@ -1137,9 +1142,9 @@ namespace GxModelViewer
             int mipmapAmt = int.Parse(text);
             numMipmaps = mipmapAmt;
 
-            foreach(ToolStripMenuItem item in mipmapItems)
+            foreach (ToolStripMenuItem item in mipmapItems)
             {
-                if(item.Text == text)
+                if (item.Text == text)
                 {
                     item.Checked = true;
                 }
@@ -1171,7 +1176,7 @@ namespace GxModelViewer
 
         private void gmaExportTolStripMenuItem_Click(object sender, EventArgs e)
         {
-           
+
             // Select the clicked node
             TreeNode selected = treeModel.SelectedNode;
 
@@ -1284,37 +1289,37 @@ namespace GxModelViewer
             TextureReference textureData = (TextureReference)treeTextures.SelectedNode.Tag;
             TplTexture tex = tpl[textureData.TextureIdx];
 
-			// If selecting the whole texture, then export data about the first level, otherwise loop and extract all levels
-			int effTextureLevel = (textureData.TextureLevel != -1) ? textureData.TextureLevel : 0;
+            // If selecting the whole texture, then export data about the first level, otherwise loop and extract all levels
+            int effTextureLevel = (textureData.TextureLevel != -1) ? textureData.TextureLevel : 0;
 
-			sfdTextureExportPath.FileName = string.Format("{0}_{1}.png", textureData.TextureIdx, effTextureLevel);
+            sfdTextureExportPath.FileName = string.Format("{0}_{1}.png", textureData.TextureIdx, effTextureLevel);
 
-			if (sfdTextureExportPath.ShowDialog() != DialogResult.OK)
-				return;
+            if (sfdTextureExportPath.ShowDialog() != DialogResult.OK)
+                return;
 
-			try
-			{
-				if (textureData.TextureLevel != -1)
-				{
-					tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
-				}
-				else
-				{
-					for (effTextureLevel = 0; effTextureLevel < tpl[textureData.TextureIdx].LevelCount; effTextureLevel++)
-					{
-						sfdTextureExportPath.FileName = Regex.Replace(sfdTextureExportPath.FileName, @"\d{1,}(?=\....)", effTextureLevel.ToString());
-						tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
-					}
+            try
+            {
+                if (textureData.TextureLevel != -1)
+                {
+                    tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
+                }
+                else
+                {
+                    for (effTextureLevel = 0; effTextureLevel < tpl[textureData.TextureIdx].LevelCount; effTextureLevel++)
+                    {
+                        sfdTextureExportPath.FileName = Regex.Replace(sfdTextureExportPath.FileName, @"\d{1,}(?=\..{3,4}$)", effTextureLevel.ToString());
+                        tex.DecodeLevelToBitmap(effTextureLevel).Save(sfdTextureExportPath.FileName);
+                    }
 
-				}
-			}
+                }
+            }
 
-			catch (Exception ex)
-			{
-				MessageBox.Show("The texture could not be exported: " + ex.Message,
-					"Error exporting texture.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		
+            catch (Exception ex)
+            {
+                MessageBox.Show("The texture could not be exported: " + ex.Message,
+                    "Error exporting texture.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void btnImportTextureLevel_Click(object sender, EventArgs e)
@@ -1342,7 +1347,7 @@ namespace GxModelViewer
 
             if (textureData.TextureLevel == -1) // Replacing whole texture
             {
-				
+
                 // Ask the user to select the format to import
                 GxTextureFormatPickerDialog formatPickerDlg = new GxTextureFormatPickerDialog(
                     TplTexture.SupportedTextureFormats, tex.Format);
@@ -1350,22 +1355,22 @@ namespace GxModelViewer
                     return;
 
                 GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
-				try
-				{
-					// Redefine the entire texture from the bitmap
-					tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
-					TextureHasChanged(textureData.TextureIdx);
-					UpdateTextureTree();
-					treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
-					.Where(tn => ((TextureReference)tn.Tag).TextureIdx == textureData.TextureIdx).First();
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show("An error occured while importing the texture(s).\n" +
-									"If you are importing multiple mipmap levels, ensure\n",
-									"that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					return;
-				}
+                try
+                {
+                    // Redefine the entire texture from the bitmap
+                    tex.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
+                    TextureHasChanged(textureData.TextureIdx);
+                    UpdateTextureTree();
+                    treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
+                    .Where(tn => ((TextureReference)tn.Tag).TextureIdx == textureData.TextureIdx).First();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occured while importing the texture(s).\n" +
+                                    "If you are importing multiple mipmap levels, ensure\n",
+                                    "that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
 
             }
             else // Replacing single level
@@ -1414,7 +1419,7 @@ namespace GxModelViewer
             int modelIndex = gma.GetEntryIndex(parent.Text);
             Gcmf model = gma[modelIndex].ModelObject;
             GcmfMesh mesh = model.Meshes[meshIndex];
- 
+
             using (MeshFlagEditor meshEditor = new MeshFlagEditor(mesh))
             {
                 switch (meshEditor.ShowDialog())
@@ -1427,12 +1432,12 @@ namespace GxModelViewer
             }
         }
 
-		private void tlpTextureProperties_Paint(object sender, PaintEventArgs e)
-		{
+        private void tlpTextureProperties_Paint(object sender, PaintEventArgs e)
+        {
 
-		}
+        }
 
-		private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
+        private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Select the clicked node
             TreeNode selected = treeMaterials.SelectedNode;
@@ -1463,7 +1468,8 @@ namespace GxModelViewer
             }
             if (tpl != null)
             {
-                foreach(TplTexture texture in tpl){
+                foreach (TplTexture texture in tpl)
+                {
                     texture.LevelCount = level;
                 }
             }

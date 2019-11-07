@@ -74,6 +74,8 @@ namespace GxModelViewer
             this.lblModelNumTransformMatrices = new System.Windows.Forms.Label();
             this.glControlModel = new OpenTK.GLControl();
             this.tlpMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.lblMeshUnk12 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.lblMeshRenderFlagsText = new System.Windows.Forms.Label();
             this.lblMeshUnk4Text = new System.Windows.Forms.Label();
             this.lblMeshUnk8Text = new System.Windows.Forms.Label();
@@ -270,7 +272,7 @@ namespace GxModelViewer
             this.tsBtnLoadTpl.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnLoadTpl.Image")));
             this.tsBtnLoadTpl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnLoadTpl.Name = "tsBtnLoadTpl";
-            this.tsBtnLoadTpl.Size = new System.Drawing.Size(69, 22);
+            this.tsBtnLoadTpl.Size = new System.Drawing.Size(68, 22);
             this.tsBtnLoadTpl.Text = "Load TPL...";
             this.tsBtnLoadTpl.Click += new System.EventHandler(this.tsBtnLoadTpl_Click);
             // 
@@ -280,7 +282,7 @@ namespace GxModelViewer
             this.tsBtnSaveTpl.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnSaveTpl.Image")));
             this.tsBtnSaveTpl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnSaveTpl.Name = "tsBtnSaveTpl";
-            this.tsBtnSaveTpl.Size = new System.Drawing.Size(58, 22);
+            this.tsBtnSaveTpl.Size = new System.Drawing.Size(57, 22);
             this.tsBtnSaveTpl.Text = "Save TPL";
             this.tsBtnSaveTpl.Click += new System.EventHandler(this.tsBtnSaveTpl_Click);
             // 
@@ -290,7 +292,7 @@ namespace GxModelViewer
             this.tsBtnSaveTplAs.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnSaveTplAs.Image")));
             this.tsBtnSaveTplAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnSaveTplAs.Name = "tsBtnSaveTplAs";
-            this.tsBtnSaveTplAs.Size = new System.Drawing.Size(83, 22);
+            this.tsBtnSaveTplAs.Size = new System.Drawing.Size(82, 22);
             this.tsBtnSaveTplAs.Text = "Save TPL As...";
             this.tsBtnSaveTplAs.Click += new System.EventHandler(this.tsBtnSaveTplAs_Click);
             // 
@@ -341,7 +343,7 @@ namespace GxModelViewer
             this.tsBtnImportObjMtl.Image = ((System.Drawing.Image)(resources.GetObject("tsBtnImportObjMtl.Image")));
             this.tsBtnImportObjMtl.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnImportObjMtl.Name = "tsBtnImportObjMtl";
-            this.tsBtnImportObjMtl.Size = new System.Drawing.Size(108, 22);
+            this.tsBtnImportObjMtl.Size = new System.Drawing.Size(107, 22);
             this.tsBtnImportObjMtl.Text = "Import OBJ/MTL...";
             this.tsBtnImportObjMtl.Click += new System.EventHandler(this.tsBtnImportObjMtl_Click);
             // 
@@ -490,7 +492,7 @@ namespace GxModelViewer
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 452);
+            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 472);
             this.tlpMaterialMeshDisplay.TabIndex = 1;
             // 
             // tlpModelDisplay
@@ -511,7 +513,7 @@ namespace GxModelViewer
             this.tlpModelDisplay.Controls.Add(this.lblModelRadius, 1, 2);
             this.tlpModelDisplay.Controls.Add(this.lblModelTransformMatrixDefaultReferences, 1, 3);
             this.tlpModelDisplay.Controls.Add(this.lblModelNumTransformMatrices, 1, 4);
-            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 77);
+            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 83);
             this.tlpModelDisplay.Name = "tlpModelDisplay";
             this.tlpModelDisplay.RowCount = 5;
             this.tlpModelDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -565,7 +567,7 @@ namespace GxModelViewer
             this.lblModelTransformMatrixDefaultReferencesText.Name = "lblModelTransformMatrixDefaultReferencesText";
             this.lblModelTransformMatrixDefaultReferencesText.Size = new System.Drawing.Size(299, 20);
             this.lblModelTransformMatrixDefaultReferencesText.TabIndex = 3;
-            this.lblModelTransformMatrixDefaultReferencesText.Text = "Transform Matrix Default Idxs:";
+            this.lblModelTransformMatrixDefaultReferencesText.Text = "Transform Matrix Default Indices:";
             this.lblModelTransformMatrixDefaultReferencesText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblModelNumTransformMatricesText
@@ -631,7 +633,7 @@ namespace GxModelViewer
             this.glControlModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControlModel.Location = new System.Drawing.Point(3, 3);
             this.glControlModel.Name = "glControlModel";
-            this.glControlModel.Size = new System.Drawing.Size(610, 68);
+            this.glControlModel.Size = new System.Drawing.Size(610, 74);
             this.glControlModel.TabIndex = 0;
             this.glControlModel.VSync = false;
             this.glControlModel.Load += new System.EventHandler(this.glControlModel_Load);
@@ -649,35 +651,37 @@ namespace GxModelViewer
             this.tlpMeshDisplay.ColumnCount = 2;
             this.tlpMeshDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMeshDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk12, 1, 5);
+            this.tlpMeshDisplay.Controls.Add(this.label1, 0, 5);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshRenderFlagsText, 0, 0);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk4Text, 0, 1);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk8Text, 0, 2);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnkCText, 0, 3);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk10Text, 0, 4);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk14Text, 0, 5);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshPrimaryMaterialIdxText, 0, 6);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshSecondaryMaterialIdxText, 0, 7);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshTertiaryMaterialIdxText, 0, 8);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshTransformMatrixSpecificReferencesText, 0, 9);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshCenterText, 0, 10);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk3CText, 0, 11);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk40Text, 0, 12);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk40, 1, 12);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk3C, 1, 11);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshCenter, 1, 10);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshTransformMatrixSpecificReferences, 1, 9);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshTertiaryMaterialIdx, 1, 8);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshSecondaryMaterialIdx, 1, 7);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshPrimaryMaterialIdx, 1, 6);
-            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk14, 1, 5);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk14Text, 0, 6);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshPrimaryMaterialIdxText, 0, 7);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshSecondaryMaterialIdxText, 0, 8);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshTertiaryMaterialIdxText, 0, 9);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshTransformMatrixSpecificReferencesText, 0, 10);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshCenterText, 0, 11);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk3CText, 0, 12);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk40Text, 0, 13);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk40, 1, 13);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk3C, 1, 12);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshCenter, 1, 11);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshTransformMatrixSpecificReferences, 1, 10);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshTertiaryMaterialIdx, 1, 9);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshSecondaryMaterialIdx, 1, 8);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshPrimaryMaterialIdx, 1, 7);
+            this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk14, 1, 6);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk10, 1, 4);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnkC, 1, 3);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk8, 1, 2);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk4, 1, 1);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshRenderFlags, 1, 0);
-            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 183);
+            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 189);
             this.tlpMeshDisplay.Name = "tlpMeshDisplay";
-            this.tlpMeshDisplay.RowCount = 13;
+            this.tlpMeshDisplay.RowCount = 14;
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -691,8 +695,29 @@ namespace GxModelViewer
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMeshDisplay.Size = new System.Drawing.Size(610, 266);
+            this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMeshDisplay.Size = new System.Drawing.Size(610, 280);
             this.tlpMeshDisplay.TabIndex = 1;
+            // 
+            // lblMeshUnk12
+            // 
+            this.lblMeshUnk12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk12.Location = new System.Drawing.Point(308, 100);
+            this.lblMeshUnk12.Name = "lblMeshUnk12";
+            this.lblMeshUnk12.Size = new System.Drawing.Size(299, 20);
+            this.lblMeshUnk12.TabIndex = 29;
+            this.lblMeshUnk12.Text = "-";
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(299, 20);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "Material Count (0x12):";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshRenderFlagsText
             // 
@@ -713,7 +738,7 @@ namespace GxModelViewer
             this.lblMeshUnk4Text.Name = "lblMeshUnk4Text";
             this.lblMeshUnk4Text.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk4Text.TabIndex = 1;
-            this.lblMeshUnk4Text.Text = "Unk4:";
+            this.lblMeshUnk4Text.Text = "Vertex Shading A (0x04):";
             this.lblMeshUnk4Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk8Text
@@ -724,7 +749,7 @@ namespace GxModelViewer
             this.lblMeshUnk8Text.Name = "lblMeshUnk8Text";
             this.lblMeshUnk8Text.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk8Text.TabIndex = 2;
-            this.lblMeshUnk8Text.Text = "Unk8:";
+            this.lblMeshUnk8Text.Text = "Vertex Shading B (0x08):";
             this.lblMeshUnk8Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnkCText
@@ -735,7 +760,7 @@ namespace GxModelViewer
             this.lblMeshUnkCText.Name = "lblMeshUnkCText";
             this.lblMeshUnkCText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnkCText.TabIndex = 3;
-            this.lblMeshUnkCText.Text = "UnkC:";
+            this.lblMeshUnkCText.Text = "Specular Tint (0x0C):";
             this.lblMeshUnkCText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk10Text
@@ -746,69 +771,69 @@ namespace GxModelViewer
             this.lblMeshUnk10Text.Name = "lblMeshUnk10Text";
             this.lblMeshUnk10Text.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk10Text.TabIndex = 4;
-            this.lblMeshUnk10Text.Text = "Unk10:";
+            this.lblMeshUnk10Text.Text = "Transparency (0x10):";
             this.lblMeshUnk10Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk14Text
             // 
             this.lblMeshUnk14Text.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshUnk14Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshUnk14Text.Location = new System.Drawing.Point(3, 100);
+            this.lblMeshUnk14Text.Location = new System.Drawing.Point(3, 120);
             this.lblMeshUnk14Text.Name = "lblMeshUnk14Text";
             this.lblMeshUnk14Text.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk14Text.TabIndex = 5;
-            this.lblMeshUnk14Text.Text = "Unk14:";
+            this.lblMeshUnk14Text.Text = "Unknown (0x14):";
             this.lblMeshUnk14Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshPrimaryMaterialIdxText
             // 
             this.lblMeshPrimaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshPrimaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshPrimaryMaterialIdxText.Location = new System.Drawing.Point(3, 120);
+            this.lblMeshPrimaryMaterialIdxText.Location = new System.Drawing.Point(3, 140);
             this.lblMeshPrimaryMaterialIdxText.Name = "lblMeshPrimaryMaterialIdxText";
             this.lblMeshPrimaryMaterialIdxText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshPrimaryMaterialIdxText.TabIndex = 6;
-            this.lblMeshPrimaryMaterialIdxText.Text = "Primary Material Idx:";
+            this.lblMeshPrimaryMaterialIdxText.Text = "Primary Material Index (Dec) (0x16):";
             this.lblMeshPrimaryMaterialIdxText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshSecondaryMaterialIdxText
             // 
             this.lblMeshSecondaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshSecondaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshSecondaryMaterialIdxText.Location = new System.Drawing.Point(3, 140);
+            this.lblMeshSecondaryMaterialIdxText.Location = new System.Drawing.Point(3, 160);
             this.lblMeshSecondaryMaterialIdxText.Name = "lblMeshSecondaryMaterialIdxText";
             this.lblMeshSecondaryMaterialIdxText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshSecondaryMaterialIdxText.TabIndex = 7;
-            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Idx:";
+            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Index (Dec) (0x18):";
             this.lblMeshSecondaryMaterialIdxText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshTertiaryMaterialIdxText
             // 
             this.lblMeshTertiaryMaterialIdxText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshTertiaryMaterialIdxText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshTertiaryMaterialIdxText.Location = new System.Drawing.Point(3, 160);
+            this.lblMeshTertiaryMaterialIdxText.Location = new System.Drawing.Point(3, 180);
             this.lblMeshTertiaryMaterialIdxText.Name = "lblMeshTertiaryMaterialIdxText";
             this.lblMeshTertiaryMaterialIdxText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshTertiaryMaterialIdxText.TabIndex = 8;
-            this.lblMeshTertiaryMaterialIdxText.Text = "Tertiary Material Idx:";
+            this.lblMeshTertiaryMaterialIdxText.Text = "Tertiary Material Index (Dec) (0x1A):";
             this.lblMeshTertiaryMaterialIdxText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshTransformMatrixSpecificReferencesText
             // 
             this.lblMeshTransformMatrixSpecificReferencesText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshTransformMatrixSpecificReferencesText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshTransformMatrixSpecificReferencesText.Location = new System.Drawing.Point(3, 180);
+            this.lblMeshTransformMatrixSpecificReferencesText.Location = new System.Drawing.Point(3, 200);
             this.lblMeshTransformMatrixSpecificReferencesText.Name = "lblMeshTransformMatrixSpecificReferencesText";
             this.lblMeshTransformMatrixSpecificReferencesText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshTransformMatrixSpecificReferencesText.TabIndex = 10;
-            this.lblMeshTransformMatrixSpecificReferencesText.Text = "Transform Matrix Specific Idxs:";
+            this.lblMeshTransformMatrixSpecificReferencesText.Text = "Transform Matrix Specific Indices:";
             this.lblMeshTransformMatrixSpecificReferencesText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshCenterText
             // 
             this.lblMeshCenterText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshCenterText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshCenterText.Location = new System.Drawing.Point(3, 200);
+            this.lblMeshCenterText.Location = new System.Drawing.Point(3, 220);
             this.lblMeshCenterText.Name = "lblMeshCenterText";
             this.lblMeshCenterText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshCenterText.TabIndex = 11;
@@ -819,37 +844,37 @@ namespace GxModelViewer
             // 
             this.lblMeshUnk3CText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshUnk3CText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshUnk3CText.Location = new System.Drawing.Point(3, 220);
+            this.lblMeshUnk3CText.Location = new System.Drawing.Point(3, 240);
             this.lblMeshUnk3CText.Name = "lblMeshUnk3CText";
             this.lblMeshUnk3CText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk3CText.TabIndex = 12;
-            this.lblMeshUnk3CText.Text = "Unk3C:";
+            this.lblMeshUnk3CText.Text = "Unknown (0x3C):";
             this.lblMeshUnk3CText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk40Text
             // 
             this.lblMeshUnk40Text.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblMeshUnk40Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMeshUnk40Text.Location = new System.Drawing.Point(3, 240);
+            this.lblMeshUnk40Text.Location = new System.Drawing.Point(3, 260);
             this.lblMeshUnk40Text.Name = "lblMeshUnk40Text";
-            this.lblMeshUnk40Text.Size = new System.Drawing.Size(299, 26);
+            this.lblMeshUnk40Text.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk40Text.TabIndex = 13;
-            this.lblMeshUnk40Text.Text = "Unk40:";
+            this.lblMeshUnk40Text.Text = "Unknown (0x40):";
             this.lblMeshUnk40Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk40
             // 
             this.lblMeshUnk40.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshUnk40.Location = new System.Drawing.Point(308, 240);
+            this.lblMeshUnk40.Location = new System.Drawing.Point(308, 260);
             this.lblMeshUnk40.Name = "lblMeshUnk40";
-            this.lblMeshUnk40.Size = new System.Drawing.Size(299, 26);
+            this.lblMeshUnk40.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk40.TabIndex = 14;
             this.lblMeshUnk40.Text = "-";
             // 
             // lblMeshUnk3C
             // 
             this.lblMeshUnk3C.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshUnk3C.Location = new System.Drawing.Point(308, 220);
+            this.lblMeshUnk3C.Location = new System.Drawing.Point(308, 240);
             this.lblMeshUnk3C.Name = "lblMeshUnk3C";
             this.lblMeshUnk3C.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk3C.TabIndex = 15;
@@ -858,7 +883,7 @@ namespace GxModelViewer
             // lblMeshCenter
             // 
             this.lblMeshCenter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshCenter.Location = new System.Drawing.Point(308, 200);
+            this.lblMeshCenter.Location = new System.Drawing.Point(308, 220);
             this.lblMeshCenter.Name = "lblMeshCenter";
             this.lblMeshCenter.Size = new System.Drawing.Size(299, 20);
             this.lblMeshCenter.TabIndex = 16;
@@ -867,7 +892,7 @@ namespace GxModelViewer
             // lblMeshTransformMatrixSpecificReferences
             // 
             this.lblMeshTransformMatrixSpecificReferences.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshTransformMatrixSpecificReferences.Location = new System.Drawing.Point(308, 180);
+            this.lblMeshTransformMatrixSpecificReferences.Location = new System.Drawing.Point(308, 200);
             this.lblMeshTransformMatrixSpecificReferences.Name = "lblMeshTransformMatrixSpecificReferences";
             this.lblMeshTransformMatrixSpecificReferences.Size = new System.Drawing.Size(299, 20);
             this.lblMeshTransformMatrixSpecificReferences.TabIndex = 17;
@@ -876,7 +901,7 @@ namespace GxModelViewer
             // lblMeshTertiaryMaterialIdx
             // 
             this.lblMeshTertiaryMaterialIdx.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshTertiaryMaterialIdx.Location = new System.Drawing.Point(308, 160);
+            this.lblMeshTertiaryMaterialIdx.Location = new System.Drawing.Point(308, 180);
             this.lblMeshTertiaryMaterialIdx.Name = "lblMeshTertiaryMaterialIdx";
             this.lblMeshTertiaryMaterialIdx.Size = new System.Drawing.Size(299, 20);
             this.lblMeshTertiaryMaterialIdx.TabIndex = 19;
@@ -885,7 +910,7 @@ namespace GxModelViewer
             // lblMeshSecondaryMaterialIdx
             // 
             this.lblMeshSecondaryMaterialIdx.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshSecondaryMaterialIdx.Location = new System.Drawing.Point(308, 140);
+            this.lblMeshSecondaryMaterialIdx.Location = new System.Drawing.Point(308, 160);
             this.lblMeshSecondaryMaterialIdx.Name = "lblMeshSecondaryMaterialIdx";
             this.lblMeshSecondaryMaterialIdx.Size = new System.Drawing.Size(299, 20);
             this.lblMeshSecondaryMaterialIdx.TabIndex = 20;
@@ -894,7 +919,7 @@ namespace GxModelViewer
             // lblMeshPrimaryMaterialIdx
             // 
             this.lblMeshPrimaryMaterialIdx.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshPrimaryMaterialIdx.Location = new System.Drawing.Point(308, 120);
+            this.lblMeshPrimaryMaterialIdx.Location = new System.Drawing.Point(308, 140);
             this.lblMeshPrimaryMaterialIdx.Name = "lblMeshPrimaryMaterialIdx";
             this.lblMeshPrimaryMaterialIdx.Size = new System.Drawing.Size(299, 20);
             this.lblMeshPrimaryMaterialIdx.TabIndex = 21;
@@ -903,7 +928,7 @@ namespace GxModelViewer
             // lblMeshUnk14
             // 
             this.lblMeshUnk14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshUnk14.Location = new System.Drawing.Point(308, 100);
+            this.lblMeshUnk14.Location = new System.Drawing.Point(308, 120);
             this.lblMeshUnk14.Name = "lblMeshUnk14";
             this.lblMeshUnk14.Size = new System.Drawing.Size(299, 20);
             this.lblMeshUnk14.TabIndex = 22;
@@ -1640,5 +1665,7 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem editFlagsToolStripMenuItem2;
         private System.Windows.Forms.SaveFileDialog sfdModelExportPath;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
+        private System.Windows.Forms.Label lblMeshUnk12;
+        private System.Windows.Forms.Label label1;
     }
 }
