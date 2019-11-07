@@ -1,4 +1,5 @@
-﻿using LibGxFormat.Gma;
+﻿using GxModelViewer;
+using LibGxFormat.Gma;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,45 +35,71 @@ namespace GxModelViewer
         private const string UNKNOWN_3C = "UNKNOWN_3C";
         private const string UNKNOWN_40 = "UNKNOWN_40";
 
-        GcmfMesh mesh;
+        List<GcmfMesh> meshes;
 
         public MeshFlagEditor()
         {
             InitializeComponent();
         }
 
-        public MeshFlagEditor(GcmfMesh mesh)
+        public MeshFlagEditor(List<GcmfMesh> meshes)
         {
             InitializeComponent();
-            this.mesh = mesh;
+            this.meshes = meshes;
 
-            this.renderFlagsTextBox.Text = string.Format("{0:X8}", (uint)mesh.RenderFlags);
-            this.layerTextBox.Text = "" + (int)mesh.Layer;
-            this.unknown4TextBox.Text = String.Format("{0:X8}", mesh.Unk4);
-            this.unknown8TextBox.Text = String.Format("{0:X8}", mesh.Unk8);
-            this.unknownCTextBox.Text = String.Format("{0:X8}", mesh.UnkC);
-            this.unknown10TextBox.Text = String.Format("{0:X4}", mesh.Unk10);
-            //this.sectionFlagsTextBox.Text = String.Format("{0:X}", mesh.);
-            this.unknown14TextBox.Text = String.Format("{0:X4}", mesh.Unk14);
-            //this.vertexFlagsTextBox.Text = String.Format("{0:X}", mesh.);
-            this.unknown16TextBox.Text = String.Format("{0:X4}", mesh.PrimaryMaterialIdx);
-            this.unknown18TextBox.Text = String.Format("{0:X4}", mesh.SecondaryMaterialIdx);
-            this.unknown1ATextBox.Text = String.Format("{0:X4}", mesh.TertiaryMaterialIdx);
-            this.matrixId1TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[0];
-            this.matrixId2TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[1];
-            this.matrixId3TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[2];
-            this.matrixId4TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[3];
-            this.matrixId5TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[4];
-            this.matrixId6TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[5];
-            this.matrixId7TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[6];
-            this.matrixId8TextBox.Text = "" + mesh.TransformMatrixSpecificIdxsObj1[7];
+            this.renderFlagsTextBox.Text = string.Format("{0:X8}", (uint)meshes[0].RenderFlags);
+            this.layerTextBox.Text = "" + (int)meshes[0].Layer;
+            this.unknown4TextBox.Text = String.Format("{0:X8}", meshes[0].Unk4);
+            this.unknown8TextBox.Text = String.Format("{0:X8}", meshes[0].Unk8);
+            this.unknownCTextBox.Text = String.Format("{0:X8}", meshes[0].UnkC);
+            this.unknown10TextBox.Text = String.Format("{0:X4}", meshes[0].Unk10);
+            //this.sectionFlagsTextBox.Text = String.Format("{0:X}", meshes[0].);
+            this.unknown14TextBox.Text = String.Format("{0:X4}", meshes[0].Unk14);
+            this.unknown16TextBox.Text = String.Format("{0:X4}", meshes[0].PrimaryMaterialIdx);
+            this.unknown18TextBox.Text = String.Format("{0:X4}", meshes[0].SecondaryMaterialIdx);
+            this.unknown1ATextBox.Text = String.Format("{0:X4}", meshes[0].TertiaryMaterialIdx);
+            //this.vertexFlagsTextBox.Text = String.Format("{0:X}", meshes[0].);
+            this.matrixId1TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[0];
+            this.matrixId2TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[1];
+            this.matrixId3TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[2];
+            this.matrixId4TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[3];
+            this.matrixId5TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[4];
+            this.matrixId6TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[5];
+            this.matrixId7TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[6];
+            this.matrixId8TextBox.Text = "" + meshes[0].TransformMatrixSpecificIdxsObj1[7];
             // Second set of specific ids (To be implemented/normally don't exist)
-            this.boundingSphereCenterXTextBox.Text = "" + mesh.BoundingSphereCenter.X;
-            this.boundingSphereCenterYTextBox.Text = "" + mesh.BoundingSphereCenter.Y;
-            this.boundingSphereCenterZTextBox.Text = "" + mesh.BoundingSphereCenter.Z;
-            this.unknown3CTextBox.Text = "" +  mesh.Unk3C;
-            this.unknown40TextBox.Text = String.Format("{0:X8}", mesh.Unk40);
+            this.boundingSphereCenterXTextBox.Text = "" + meshes[0].BoundingSphereCenter.X;
+            this.boundingSphereCenterYTextBox.Text = "" + meshes[0].BoundingSphereCenter.Y;
+            this.boundingSphereCenterZTextBox.Text = "" + meshes[0].BoundingSphereCenter.Z;
+            this.unknown3CTextBox.Text = "" + meshes[0].Unk3C;
+            this.unknown40TextBox.Text = String.Format("{0:X8}", meshes[0].Unk40);
 
+            for (int i = 1; i < meshes.Count; i++)
+            {
+                if (meshes[i].RenderFlags != meshes[0].RenderFlags) this.renderFlagsTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Layer != meshes[0].Layer) this.layerTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Unk4 != meshes[0].Unk4) this.unknown4TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Unk8 != meshes[0].Unk8) this.unknown8TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].UnkC != meshes[0].UnkC) this.unknownCTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Unk10 != meshes[0].Unk10) this.unknown10TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Unk14 != meshes[0].Unk14) this.unknown14TextBox.Text = FlagHelper.ERROR_VALUE;
+
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[0] != meshes[0].TransformMatrixSpecificIdxsObj1[0]) this.matrixId1TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[1] != meshes[0].TransformMatrixSpecificIdxsObj1[1]) this.matrixId2TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[2] != meshes[0].TransformMatrixSpecificIdxsObj1[2]) this.matrixId3TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[3] != meshes[0].TransformMatrixSpecificIdxsObj1[3]) this.matrixId4TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[4] != meshes[0].TransformMatrixSpecificIdxsObj1[4]) this.matrixId5TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[5] != meshes[0].TransformMatrixSpecificIdxsObj1[5]) this.matrixId6TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[6] != meshes[0].TransformMatrixSpecificIdxsObj1[6]) this.matrixId7TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TransformMatrixSpecificIdxsObj1[7] != meshes[0].TransformMatrixSpecificIdxsObj1[7]) this.matrixId8TextBox.Text = FlagHelper.ERROR_VALUE;
+
+                if (meshes[i].BoundingSphereCenter.X != meshes[0].BoundingSphereCenter.X) this.boundingSphereCenterXTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].BoundingSphereCenter.Y != meshes[0].BoundingSphereCenter.Y) this.boundingSphereCenterYTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].BoundingSphereCenter.Z != meshes[0].BoundingSphereCenter.Z) this.boundingSphereCenterZTextBox.Text = FlagHelper.ERROR_VALUE;
+
+                if (meshes[i].Unk3C != meshes[0].Unk3C) this.unknown3CTextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].Unk40 != meshes[0].Unk40) this.unknown40TextBox.Text = FlagHelper.ERROR_VALUE;
+            }
         }
 
         private void okayButton_Click(object sender, EventArgs e)
@@ -101,88 +128,76 @@ namespace GxModelViewer
             ushort unk10, unk14, unk16, unk18, unk1A;
             uint renderFlags, unk4, unk8, unkC, unk40;
             uint layer;
+            bool unk10Valid, unk14Valid, unk16Valid, unk18Valid, unk1AValid, renderFlagsValid, unk4Valid, unk8Valid, unkCValid, unk40Valid, layerValid;
             float boundingSphereX, boundingSphereY, boundingSphereZ, unk3C;
-            if (!tryParseIntHex(this.renderFlagsTextBox.Text, out renderFlags)) throw new InvalidOperationException("Render Flags is not a valid 4 byte hex value");
-            if (!tryParseIntHex(this.layerTextBox.Text, out layer)) throw new InvalidOperationException("Layer is not a valid 4 byte hex value");
+            bool boundingSphereXValid, boundingSphereYValid, boundingSphereZValid, unk3CValid;
+
+            renderFlagsValid = FlagHelper.parseHexToInt32(this.renderFlagsTextBox.Text, out renderFlags, "Render Flags is not a valid 4 byte hex value");
+            layerValid = FlagHelper.parseHexToInt32(this.layerTextBox.Text, out layer, "Layer is not a valid 4 byte hex value");
             if (layer != 0 && layer != 1) throw new InvalidOperationException("Layer is not 0 or 1");
-            if (!tryParseIntHex(this.unknown4TextBox.Text, out unk4)) throw new InvalidOperationException("Unknown 0x04 is not a valid 4 byte hex value");
-            if (!tryParseIntHex(this.unknown8TextBox.Text, out unk8)) throw new InvalidOperationException("Unknown 0x08 is not a valid 4 byte hex value");
-            if (!tryParseIntHex(this.unknownCTextBox.Text, out unkC)) throw new InvalidOperationException("Unknown 0x0C is not a valid 4 byte hex value");
-            if (!tryParseShortHex(this.unknown10TextBox.Text, out unk10)) throw new InvalidOperationException("Unknown 0x10 is not a valid 2 byte hex value");
-            if (!tryParseShortHex(this.unknown14TextBox.Text, out unk14)) throw new InvalidOperationException("Unknown 0x14 is not a valid 2 byte hex value");
-            if (!tryParseShortHex(this.unknown16TextBox.Text, out unk16)) throw new InvalidOperationException("Primary Material Index 0x16 is not a valid 2 byte hex value");
-            if (!tryParseShortHex(this.unknown18TextBox.Text, out unk18)) throw new InvalidOperationException("Secondary Material Index 0x18 is not a valid 2 byte hex value");
-            if (!tryParseShortHex(this.unknown1ATextBox.Text, out unk1A)) throw new InvalidOperationException("Tertiary Material Index 0x1A is not a valid 2 byte hex value");
+            unk4Valid = FlagHelper.parseHexToInt32(this.unknown4TextBox.Text, out unk4, "Vertex Shading A 0x04 is not a valid 4 byte hex value");
+            unk8Valid = FlagHelper.parseHexToInt32(this.unknown8TextBox.Text, out unk8, "Vertex Shading B 0x08 is not a valid 4 byte hex value");
+            unkCValid = FlagHelper.parseHexToInt32(this.unknownCTextBox.Text, out unkC, "Specular Tint 0x0C is not a valid 4 byte hex value");
+            unk10Valid = FlagHelper.parseHexToShort(this.unknown10TextBox.Text, out unk10, "Transparency 0x10 is not a valid 2 byte hex value");
+            unk14Valid = FlagHelper.parseHexToShort(this.unknown14TextBox.Text, out unk14, "Unknown 0x14 is not a valid 2 byte hex value");
+            unk16Valid = FlagHelper.parseHexToShort(this.unknown16TextBox.Text, out unk16, "Primary Material Index 0x16 is not a valid 2 byte hex value");
+            unk18Valid = FlagHelper.parseHexToShort(this.unknown18TextBox.Text, out unk18, "Secondary Material Index 0x18 is not a valid 2 byte hex value");
+            unk1AValid = FlagHelper.parseHexToShort(this.unknown1ATextBox.Text, out unk1A, "Tertiary Material Index 0x1A is not a valid 2 byte hex value");
+        
             byte[] matrixSpecificIds = new byte[8];
-            if (!byte.TryParse(this.matrixId1TextBox.Text, out matrixSpecificIds[0])) throw new InvalidOperationException("Transformation Matrix Specific Id One is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId2TextBox.Text, out matrixSpecificIds[1])) throw new InvalidOperationException("Transformation Matrix Specific Id Two is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId3TextBox.Text, out matrixSpecificIds[2])) throw new InvalidOperationException("Transformation Matrix Specific Id Three is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId4TextBox.Text, out matrixSpecificIds[3])) throw new InvalidOperationException("Transformation Matrix Specific Id Four is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId5TextBox.Text, out matrixSpecificIds[4])) throw new InvalidOperationException("Transformation Matrix Specific Id Five is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId6TextBox.Text, out matrixSpecificIds[5])) throw new InvalidOperationException("Transformation Matrix Specific Id Six is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId7TextBox.Text, out matrixSpecificIds[6])) throw new InvalidOperationException("Transformation Matrix Specific Id Seven is not a valid byte value (0-255)");
-            if (!byte.TryParse(this.matrixId8TextBox.Text, out matrixSpecificIds[7])) throw new InvalidOperationException("Transformation Matrix Specific Id Eight is not a valid byte value (0-255)");
+            bool[] matrixSpecificIdsValid = new bool[8];
 
-            if (!float.TryParse(this.boundingSphereCenterXTextBox.Text, out boundingSphereX)) throw new InvalidOperationException("Bounding Sphere Center X is not a valid float value");
-            if (!float.TryParse(this.boundingSphereCenterYTextBox.Text, out boundingSphereY)) throw new InvalidOperationException("Bounding Sphere Center Y is not a valid float value");
-            if (!float.TryParse(this.boundingSphereCenterZTextBox.Text, out boundingSphereZ)) throw new InvalidOperationException("Bounding Sphere Center Z is not a valid float value");
+            matrixSpecificIdsValid[0] = FlagHelper.parseByte(this.matrixId1TextBox.Text, out matrixSpecificIds[0], "Transformation Matrix Specific Id One is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[1] = FlagHelper.parseByte(this.matrixId2TextBox.Text, out matrixSpecificIds[1], "Transformation Matrix Specific Id Two is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[2] = FlagHelper.parseByte(this.matrixId3TextBox.Text, out matrixSpecificIds[2], "Transformation Matrix Specific Id Three is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[3] = FlagHelper.parseByte(this.matrixId4TextBox.Text, out matrixSpecificIds[3], "Transformation Matrix Specific Id Four is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[4] = FlagHelper.parseByte(this.matrixId5TextBox.Text, out matrixSpecificIds[4], "Transformation Matrix Specific Id Five is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[5] = FlagHelper.parseByte(this.matrixId6TextBox.Text, out matrixSpecificIds[5], "Transformation Matrix Specific Id Six is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[6] = FlagHelper.parseByte(this.matrixId7TextBox.Text, out matrixSpecificIds[6], "Transformation Matrix Specific Id Seven is not a valid byte value (0-255)");
+            matrixSpecificIdsValid[7] = FlagHelper.parseByte(this.matrixId8TextBox.Text, out matrixSpecificIds[7], "Transformation Matrix Specific Id Eight is not a valid byte value (0-255)");
 
-            if (!float.TryParse(this.unknown3CTextBox.Text, out unk3C)) throw new InvalidOperationException("Unknown 3C is not a valid float value");
-            if (!tryParseIntHex(this.unknown40TextBox.Text, out unk40)) throw new InvalidOperationException("Unknown 40 is not a valid 4 byte hex value");
+            boundingSphereXValid = FlagHelper.parseFloat(this.boundingSphereCenterXTextBox.Text, out boundingSphereX, "Bounding Sphere Center X is not a valid float value");
+            boundingSphereYValid = FlagHelper.parseFloat(this.boundingSphereCenterYTextBox.Text, out boundingSphereY, "Bounding Sphere Center Y is not a valid float value");
+            boundingSphereZValid = FlagHelper.parseFloat(this.boundingSphereCenterZTextBox.Text, out boundingSphereZ, "Bounding Sphere Center Z is not a valid float value");
 
-            mesh.RenderFlags = (GcmfMesh.RenderFlag)renderFlags;
-            mesh.Layer = (GcmfMesh.MeshLayer)layer;
-            mesh.Unk4 = unk4;
-            mesh.Unk8 = unk8;
-            mesh.UnkC = unkC;
-            mesh.Unk10 = unk10;
-            mesh.Unk14 = unk14;
-            mesh.PrimaryMaterialIdx = unk16;
-            mesh.SecondaryMaterialIdx = unk18;
-            mesh.TertiaryMaterialIdx = unk1A;
-            mesh.calculatedUsedMaterialCount = Convert.ToByte(((unk16 != ushort.MaxValue) ? 1 : 0) +
-                                                     ((unk18 != ushort.MaxValue) ? 1 : 0) + 
-                                                     ((unk1A != ushort.MaxValue) ? 1 : 0));
-            Console.WriteLine(mesh.calculatedUsedMaterialCount);
+            unk3CValid = FlagHelper.parseFloat(this.unknown3CTextBox.Text, out unk3C, "Unknown 0x3C is not a valid float value");
+            unk40Valid = FlagHelper.parseHexToInt32(this.unknown40TextBox.Text, out unk40, "Unknown 0x40 is not a valid 4 byte hex value");
 
-            for (int i = 0; i < matrixSpecificIds.Length; i++)
+
+            foreach (GcmfMesh mesh in meshes)
             {
-                mesh.TransformMatrixSpecificIdxsObj1[i] = matrixSpecificIds[i];
+                if (renderFlagsValid) mesh.RenderFlags = (GcmfMesh.RenderFlag)renderFlags;
+                if (layerValid) mesh.Layer = (GcmfMesh.MeshLayer)layer;
+                if (unk4Valid) mesh.Unk4 = unk4;
+                if (unk8Valid) mesh.Unk8 = unk8;
+                if (unkCValid) mesh.UnkC = unkC;
+                if (unk10Valid) mesh.Unk10 = unk10;
+                if (unk14Valid) mesh.Unk14 = unk14;
+                if (unk16Valid) mesh.PrimaryMaterialIdx = unk16;
+                if (unk18Valid) mesh.SecondaryMaterialIdx = unk18;
+                if (unk1AValid) mesh.TertiaryMaterialIdx = unk1A;
+                mesh.calculatedUsedMaterialCount = Convert.ToByte(((unk16 != ushort.MaxValue) ? 1 : 0) +
+                        ((unk18 != ushort.MaxValue) ? 1 : 0) +
+                        ((unk1A != ushort.MaxValue) ? 1 : 0));
+
+                for (int i = 0; i < matrixSpecificIds.Length; i++)
+                {
+                    if (matrixSpecificIdsValid[i]) mesh.TransformMatrixSpecificIdxsObj1[i] = matrixSpecificIds[i];
+                }
+
+                float bSphereX, bSphereY, bSphereZ;
+                if (boundingSphereXValid) bSphereX = boundingSphereX;
+                else bSphereX = mesh.BoundingSphereCenter.X;
+                if (boundingSphereYValid) bSphereY = boundingSphereY;
+                else bSphereY = mesh.BoundingSphereCenter.Y;
+                if (boundingSphereZValid) bSphereZ = boundingSphereZ;
+                else bSphereZ = mesh.BoundingSphereCenter.Z;
+                mesh.BoundingSphereCenter = new OpenTK.Vector3(bSphereX, bSphereY, bSphereZ);
+
+                if(unk3CValid) mesh.Unk3C = unk3C;
+                if(unk40Valid) mesh.Unk40 = unk40;
             }
 
-            mesh.BoundingSphereCenter = new OpenTK.Vector3(boundingSphereX, boundingSphereY, boundingSphereZ);
-
-            mesh.Unk3C = unk3C;
-            mesh.Unk40 = unk40;
-
-        }
-
-        private bool tryParseShortHex(string hex, out ushort hexValue)
-        {
-            try
-            {
-                hexValue = Convert.ToUInt16(hex, 16);
-                return true;
-            }
-            catch(Exception ex)
-            {
-                hexValue = 0;
-                return false;
-            }
-        }
-
-        private bool tryParseIntHex(string hex, out uint hexValue)
-        {
-            try
-            {
-                hexValue = Convert.ToUInt32(hex, 16);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                hexValue = 0;
-                return false;
-            }
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -191,30 +206,33 @@ namespace GxModelViewer
             if (saveFlagsFileDialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            StringBuilder sb = new StringBuilder()
-                .Append(RENDER_FLAGS).Append(" ").Append(this.renderFlagsTextBox.Text).Append("\r\n")
-                .Append(LAYER).Append(" ").Append(this.layerTextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_4).Append(" ").Append(this.unknown4TextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_8).Append(" ").Append(this.unknown8TextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_C).Append(" ").Append(this.unknownCTextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_10).Append(" ").Append(this.unknown10TextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_14).Append(" ").Append(this.unknown14TextBox.Text).Append("\r\n")
-                .Append("UNKNOWN_16").Append(" ").Append(this.unknown16TextBox.Text).Append("\r\n")
-                .Append("UNKNOWN_18").Append(" ").Append(this.unknown18TextBox.Text).Append("\r\n")
-                .Append("UNKNOWN_1A").Append(" ").Append(this.unknown1ATextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_ONE).Append(" ").Append(this.matrixId1TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_TWO).Append(" ").Append(this.matrixId2TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_THREE).Append(" ").Append(this.matrixId3TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_FOUR).Append(" ").Append(this.matrixId4TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_FIVE).Append(" ").Append(this.matrixId5TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_SIX).Append(" ").Append(this.matrixId6TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_SEVEN).Append(" ").Append(this.matrixId7TextBox.Text).Append("\r\n")
-                .Append(MATRIX_SPECIFIC_IDS_EIGHT).Append(" ").Append(this.matrixId8TextBox.Text).Append("\r\n")
-                .Append(BOUNDING_SPHERE_CENTER_X).Append(" ").Append(this.boundingSphereCenterXTextBox.Text).Append("\r\n")
-                .Append(BOUNDING_SPHERE_CENTER_Y).Append(" ").Append(this.boundingSphereCenterYTextBox.Text).Append("\r\n")
-                .Append(BOUNDING_SPHERE_CENTER_Z).Append(" ").Append(this.boundingSphereCenterZTextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_3C).Append(" ").Append(this.unknown3CTextBox.Text).Append("\r\n")
-                .Append(UNKNOWN_40).Append(" ").Append(this.unknown40TextBox.Text);
+            StringBuilder sb = new StringBuilder();
+
+            if (this.renderFlagsTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(RENDER_FLAGS).Append(" ").Append(this.renderFlagsTextBox.Text).Append("\r\n");
+            if (this.layerTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(LAYER).Append(" ").Append(this.layerTextBox.Text).Append("\r\n");
+            if (this.unknown4TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_4).Append(" ").Append(this.unknown4TextBox.Text).Append("\r\n");
+            if (this.unknown8TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_8).Append(" ").Append(this.unknown8TextBox.Text).Append("\r\n");
+            if (this.unknownCTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_C).Append(" ").Append(this.unknownCTextBox.Text).Append("\r\n");
+            if (this.unknown10TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_10).Append(" ").Append(this.unknown10TextBox.Text).Append("\r\n");
+            if (this.unknown14TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_14).Append(" ").Append(this.unknown14TextBox.Text).Append("\r\n");
+            if (this.unknown16TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_16").Append(" ").Append(this.unknown16TextBox.Text).Append("\r\n");
+            if (this.unknown18TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_18").Append(" ").Append(this.unknown18TextBox.Text).Append("\r\n");
+            if (this.unknown1ATextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_1A").Append(" ").Append(this.unknown1ATextBox.Text).Append("\r\n");
+            if (this.matrixId1TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_ONE).Append(" ").Append(this.matrixId1TextBox.Text).Append("\r\n");
+            if (this.matrixId2TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_TWO).Append(" ").Append(this.matrixId2TextBox.Text).Append("\r\n");
+            if (this.matrixId3TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_THREE).Append(" ").Append(this.matrixId3TextBox.Text).Append("\r\n");
+            if (this.matrixId4TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_FOUR).Append(" ").Append(this.matrixId4TextBox.Text).Append("\r\n");
+            if (this.matrixId5TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_FIVE).Append(" ").Append(this.matrixId5TextBox.Text).Append("\r\n");
+            if (this.matrixId6TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_SIX).Append(" ").Append(this.matrixId6TextBox.Text).Append("\r\n");
+            if (this.matrixId7TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_SEVEN).Append(" ").Append(this.matrixId7TextBox.Text).Append("\r\n");
+            if (this.matrixId8TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_EIGHT).Append(" ").Append(this.matrixId8TextBox.Text).Append("\r\n");
+
+            if (this.boundingSphereCenterXTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_X).Append(" ").Append(this.boundingSphereCenterXTextBox.Text).Append("\r\n");
+            if (this.boundingSphereCenterYTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Y).Append(" ").Append(this.boundingSphereCenterYTextBox.Text).Append("\r\n");
+            if (this.boundingSphereCenterZTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(BOUNDING_SPHERE_CENTER_Z).Append(" ").Append(this.boundingSphereCenterZTextBox.Text).Append("\r\n");
+
+            if (this.unknown3CTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_3C).Append(" ").Append(this.unknown3CTextBox.Text).Append("\r\n");
+            if (this.unknown40TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_40).Append(" ").Append(this.unknown40TextBox.Text).Append("\r\n");
 
             System.IO.File.WriteAllText(saveFlagsFileDialog.FileName, sb.ToString());
         }
@@ -318,10 +336,9 @@ namespace GxModelViewer
 
                 if (flagWarningLog.Count != 0)
                 {
-                    // TODO
-                    //ObjMtlWarningLogDialog warningDlg = new ObjMtlWarningLogDialog(flagWarningLog);
-                    //if (warningDlg.ShowDialog() != DialogResult.Yes)
-                    //    return;
+                    FlagsWarningLogDialog warningDlg = new FlagsWarningLogDialog(flagWarningLog, "Mesh Flag Import Warnings", "The following warnings were issued while importing the mesh flags:");
+                    if (warningDlg.ShowDialog() != DialogResult.Yes)
+                        return;
                 }
             }
             catch (Exception ex)

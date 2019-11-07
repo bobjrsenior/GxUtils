@@ -11,10 +11,7 @@ using System.Windows.Forms;
 namespace GxModelViewer
 {
     /// <summary>
-    /// Dialog used to show a list of warnings to the user after loading a .OBJ/.MTL file,
-    /// asking him if he wishes to continue.
-    /// Sets DialogResult to Yes/No according to the answer of the user.
-    /// Note that DialogResult may be set to Cancel if the user closes the dialog box with the close button.
+    /// Dialog used to show a list of warnings to the user after loading flags.
     /// </summary>
     public partial class ObjMtlWarningLogDialog : Form
     {

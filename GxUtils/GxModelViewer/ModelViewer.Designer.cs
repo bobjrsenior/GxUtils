@@ -74,8 +74,6 @@ namespace GxModelViewer
             this.lblModelNumTransformMatrices = new System.Windows.Forms.Label();
             this.glControlModel = new OpenTK.GLControl();
             this.tlpMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
-            this.lblMeshUnk12 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblMeshRenderFlagsText = new System.Windows.Forms.Label();
             this.lblMeshUnk4Text = new System.Windows.Forms.Label();
             this.lblMeshUnk8Text = new System.Windows.Forms.Label();
@@ -104,7 +102,7 @@ namespace GxModelViewer
             this.lblMeshRenderFlags = new System.Windows.Forms.Label();
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeMaterials = new System.Windows.Forms.TreeView();
+            this.treeMaterials = new TreeViewMS.TreeViewMS();
             this.tlpMaterialDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpMaterialProperties = new System.Windows.Forms.TableLayoutPanel();
             this.lblMaterialFlagsText = new System.Windows.Forms.Label();
@@ -154,6 +152,8 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblMeshUnk12 = new System.Windows.Forms.Label();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -471,6 +471,7 @@ namespace GxModelViewer
             this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeModel.Location = new System.Drawing.Point(3, 3);
             this.treeModel.Name = "treeModel";
+            this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
             this.treeModel.Size = new System.Drawing.Size(301, 370);
             this.treeModel.TabIndex = 0;
             this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
@@ -492,7 +493,7 @@ namespace GxModelViewer
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 472);
+            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 452);
             this.tlpMaterialMeshDisplay.TabIndex = 1;
             // 
             // tlpModelDisplay
@@ -513,7 +514,7 @@ namespace GxModelViewer
             this.tlpModelDisplay.Controls.Add(this.lblModelRadius, 1, 2);
             this.tlpModelDisplay.Controls.Add(this.lblModelTransformMatrixDefaultReferences, 1, 3);
             this.tlpModelDisplay.Controls.Add(this.lblModelNumTransformMatrices, 1, 4);
-            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 83);
+            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 63);
             this.tlpModelDisplay.Name = "tlpModelDisplay";
             this.tlpModelDisplay.RowCount = 5;
             this.tlpModelDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -567,7 +568,7 @@ namespace GxModelViewer
             this.lblModelTransformMatrixDefaultReferencesText.Name = "lblModelTransformMatrixDefaultReferencesText";
             this.lblModelTransformMatrixDefaultReferencesText.Size = new System.Drawing.Size(299, 20);
             this.lblModelTransformMatrixDefaultReferencesText.TabIndex = 3;
-            this.lblModelTransformMatrixDefaultReferencesText.Text = "Transform Matrix Default Indices:";
+            this.lblModelTransformMatrixDefaultReferencesText.Text = "Transform Matrix Default Idxs:";
             this.lblModelTransformMatrixDefaultReferencesText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblModelNumTransformMatricesText
@@ -633,7 +634,7 @@ namespace GxModelViewer
             this.glControlModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControlModel.Location = new System.Drawing.Point(3, 3);
             this.glControlModel.Name = "glControlModel";
-            this.glControlModel.Size = new System.Drawing.Size(610, 74);
+            this.glControlModel.Size = new System.Drawing.Size(610, 54);
             this.glControlModel.TabIndex = 0;
             this.glControlModel.VSync = false;
             this.glControlModel.Load += new System.EventHandler(this.glControlModel_Load);
@@ -679,7 +680,7 @@ namespace GxModelViewer
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk8, 1, 2);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk4, 1, 1);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshRenderFlags, 1, 0);
-            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 189);
+            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 169);
             this.tlpMeshDisplay.Name = "tlpMeshDisplay";
             this.tlpMeshDisplay.RowCount = 14;
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -696,28 +697,10 @@ namespace GxModelViewer
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpMeshDisplay.Size = new System.Drawing.Size(610, 280);
             this.tlpMeshDisplay.TabIndex = 1;
-            // 
-            // lblMeshUnk12
-            // 
-            this.lblMeshUnk12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMeshUnk12.Location = new System.Drawing.Point(308, 100);
-            this.lblMeshUnk12.Name = "lblMeshUnk12";
-            this.lblMeshUnk12.Size = new System.Drawing.Size(299, 20);
-            this.lblMeshUnk12.TabIndex = 29;
-            this.lblMeshUnk12.Text = "-";
-            // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(299, 20);
-            this.label1.TabIndex = 28;
-            this.label1.Text = "Material Count (0x12):";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshRenderFlagsText
             // 
@@ -804,7 +787,7 @@ namespace GxModelViewer
             this.lblMeshSecondaryMaterialIdxText.Name = "lblMeshSecondaryMaterialIdxText";
             this.lblMeshSecondaryMaterialIdxText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshSecondaryMaterialIdxText.TabIndex = 7;
-            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Index (Dec) (0x18):";
+            this.lblMeshSecondaryMaterialIdxText.Text = "Secondary Material Index (0x18):";
             this.lblMeshSecondaryMaterialIdxText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshTertiaryMaterialIdxText
@@ -1012,6 +995,7 @@ namespace GxModelViewer
             this.treeMaterials.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMaterials.Location = new System.Drawing.Point(0, 0);
             this.treeMaterials.Name = "treeMaterials";
+            this.treeMaterials.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeMaterials.SelectedNodes")));
             this.treeMaterials.Size = new System.Drawing.Size(306, 490);
             this.treeMaterials.TabIndex = 0;
             this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
@@ -1491,6 +1475,26 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 100);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(299, 20);
+            this.label1.TabIndex = 29;
+            this.label1.Text = "Material Count (0x12):";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMeshUnk12
+            // 
+            this.lblMeshUnk12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMeshUnk12.Location = new System.Drawing.Point(308, 100);
+            this.lblMeshUnk12.Name = "lblMeshUnk12";
+            this.lblMeshUnk12.Size = new System.Drawing.Size(299, 20);
+            this.lblMeshUnk12.TabIndex = 30;
+            this.lblMeshUnk12.Text = "-";
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1576,7 +1580,7 @@ namespace GxModelViewer
         private System.Windows.Forms.SaveFileDialog sfdSaveTpl;
         private System.Windows.Forms.ContextMenuStrip ctxMenuModelOptions;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowTextures;
-        private System.Windows.Forms.TreeView treeMaterials;
+        private TreeViewMS.TreeViewMS treeMaterials;
         private System.Windows.Forms.Button btnImportTextureLevel;
         private System.Windows.Forms.Button btnExportTextureLevel;
         private System.Windows.Forms.OpenFileDialog ofdTextureImportPath;
