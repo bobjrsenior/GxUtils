@@ -96,37 +96,42 @@
             // renderFlagsTextBox
             // 
             this.renderFlagsTextBox.Location = new System.Drawing.Point(200, 3);
+            this.renderFlagsTextBox.MaxLength = 8;
             this.renderFlagsTextBox.Name = "renderFlagsTextBox";
             this.renderFlagsTextBox.Size = new System.Drawing.Size(100, 20);
-            this.renderFlagsTextBox.TabIndex = 1;
+            this.renderFlagsTextBox.TabIndex = 0;
             // 
             // unknown4TextBox
             // 
             this.unknown4TextBox.Location = new System.Drawing.Point(200, 55);
+            this.unknown4TextBox.MaxLength = 8;
             this.unknown4TextBox.Name = "unknown4TextBox";
             this.unknown4TextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown4TextBox.TabIndex = 4;
+            this.unknown4TextBox.TabIndex = 2;
             // 
             // unknown8TextBox
             // 
             this.unknown8TextBox.Location = new System.Drawing.Point(200, 81);
+            this.unknown8TextBox.MaxLength = 8;
             this.unknown8TextBox.Name = "unknown8TextBox";
             this.unknown8TextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown8TextBox.TabIndex = 7;
+            this.unknown8TextBox.TabIndex = 3;
             // 
             // unknownCTextBox
             // 
             this.unknownCTextBox.Location = new System.Drawing.Point(200, 107);
+            this.unknownCTextBox.MaxLength = 8;
             this.unknownCTextBox.Name = "unknownCTextBox";
             this.unknownCTextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknownCTextBox.TabIndex = 10;
+            this.unknownCTextBox.TabIndex = 4;
             // 
             // unknown14TextBox
             // 
             this.unknown14TextBox.Location = new System.Drawing.Point(200, 159);
+            this.unknown14TextBox.MaxLength = 4;
             this.unknown14TextBox.Name = "unknown14TextBox";
             this.unknown14TextBox.Size = new System.Drawing.Size(50, 20);
-            this.unknown14TextBox.TabIndex = 16;
+            this.unknown14TextBox.TabIndex = 6;
             // 
             // boundingSphereCenterXTextBox
             // 
@@ -134,7 +139,7 @@
             this.boundingSphereCenterXTextBox.Location = new System.Drawing.Point(174, 4);
             this.boundingSphereCenterXTextBox.Name = "boundingSphereCenterXTextBox";
             this.boundingSphereCenterXTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterXTextBox.TabIndex = 22;
+            this.boundingSphereCenterXTextBox.TabIndex = 48;
             // 
             // boundingSphereCenterYTextBox
             // 
@@ -142,7 +147,7 @@
             this.boundingSphereCenterYTextBox.Location = new System.Drawing.Point(280, 4);
             this.boundingSphereCenterYTextBox.Name = "boundingSphereCenterYTextBox";
             this.boundingSphereCenterYTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterYTextBox.TabIndex = 24;
+            this.boundingSphereCenterYTextBox.TabIndex = 49;
             // 
             // boundingSphereCenterZTextBox
             // 
@@ -150,21 +155,21 @@
             this.boundingSphereCenterZTextBox.Location = new System.Drawing.Point(386, 4);
             this.boundingSphereCenterZTextBox.Name = "boundingSphereCenterZTextBox";
             this.boundingSphereCenterZTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterZTextBox.TabIndex = 26;
+            this.boundingSphereCenterZTextBox.TabIndex = 50;
             // 
             // unknown3CTextBox
             // 
             this.unknown3CTextBox.Location = new System.Drawing.Point(131, 3);
             this.unknown3CTextBox.Name = "unknown3CTextBox";
             this.unknown3CTextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown3CTextBox.TabIndex = 29;
+            this.unknown3CTextBox.TabIndex = 51;
             // 
             // unknown40TextBox
             // 
             this.unknown40TextBox.Location = new System.Drawing.Point(131, 29);
             this.unknown40TextBox.Name = "unknown40TextBox";
             this.unknown40TextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown40TextBox.TabIndex = 32;
+            this.unknown40TextBox.TabIndex = 52;
             // 
             // okayButton
             // 
@@ -189,9 +194,10 @@
             // unknown10TextBox
             // 
             this.unknown10TextBox.Location = new System.Drawing.Point(200, 133);
+            this.unknown10TextBox.MaxLength = 4;
             this.unknown10TextBox.Name = "unknown10TextBox";
             this.unknown10TextBox.Size = new System.Drawing.Size(50, 20);
-            this.unknown10TextBox.TabIndex = 37;
+            this.unknown10TextBox.TabIndex = 5;
             // 
             // matrixId8TextBox
             // 
@@ -252,9 +258,10 @@
             // layerTextBox
             // 
             this.layerTextBox.Location = new System.Drawing.Point(200, 29);
+            this.layerTextBox.MaxLength = 8;
             this.layerTextBox.Name = "layerTextBox";
             this.layerTextBox.Size = new System.Drawing.Size(50, 20);
-            this.layerTextBox.TabIndex = 49;
+            this.layerTextBox.TabIndex = 1;
             // 
             // saveButton
             // 

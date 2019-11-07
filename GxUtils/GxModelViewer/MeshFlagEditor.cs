@@ -135,14 +135,14 @@ namespace GxModelViewer
             renderFlagsValid = FlagHelper.parseHexToInt32(this.renderFlagsTextBox.Text, out renderFlags, "Render Flags is not a valid 4 byte hex value");
             layerValid = FlagHelper.parseHexToInt32(this.layerTextBox.Text, out layer, "Layer is not a valid 4 byte hex value");
             if (layer != 0 && layer != 1) throw new InvalidOperationException("Layer is not 0 or 1");
-            unk4Valid = FlagHelper.parseHexToInt32(this.unknown4TextBox.Text, out unk4, "Unknown 4 is not a valid 4 byte hex value");
-            unk8Valid = FlagHelper.parseHexToInt32(this.unknown8TextBox.Text, out unk8, "Unknown 8 is not a valid 4 byte hex value");
-            unkCValid = FlagHelper.parseHexToInt32(this.unknownCTextBox.Text, out unkC, "Unknown C is not a valid 4 byte hex value");
-            unk10Valid = FlagHelper.parseHexToShort(this.unknown10TextBox.Text, out unk10, "Unknown 10 is not a valid 2 byte hex value");
-            unk14Valid = FlagHelper.parseHexToShort(this.unknown14TextBox.Text, out unk14, "Unknown 14 is not a valid 2 byte hex value");
-            unk16Valid = FlagHelper.parseHexToShort(this.unknown16TextBox.Text, out unk16, "Unknown 16 is not a valid 2 byte hex value");
-            unk18Valid = FlagHelper.parseHexToShort(this.unknown18TextBox.Text, out unk18, "Unknown 18 is not a valid 2 byte hex value");
-            unk1AValid = FlagHelper.parseHexToShort(this.unknown1ATextBox.Text, out unk1A, "Unknown 1A is not a valid 2 byte hex value");
+            unk4Valid = FlagHelper.parseHexToInt32(this.unknown4TextBox.Text, out unk4, "Vertex Shading A 0x04 is not a valid 4 byte hex value");
+            unk8Valid = FlagHelper.parseHexToInt32(this.unknown8TextBox.Text, out unk8, "Vertex Shading B 0x08 is not a valid 4 byte hex value");
+            unkCValid = FlagHelper.parseHexToInt32(this.unknownCTextBox.Text, out unkC, "Specular Tint 0x0C is not a valid 4 byte hex value");
+            unk10Valid = FlagHelper.parseHexToShort(this.unknown10TextBox.Text, out unk10, "Transparency 0x10 is not a valid 2 byte hex value");
+            unk14Valid = FlagHelper.parseHexToShort(this.unknown14TextBox.Text, out unk14, "Unknown 0x14 is not a valid 2 byte hex value");
+            unk16Valid = FlagHelper.parseHexToShort(this.unknown16TextBox.Text, out unk16, "Primary Material Index 0x16 is not a valid 2 byte hex value");
+            unk18Valid = FlagHelper.parseHexToShort(this.unknown18TextBox.Text, out unk18, "Secondary Material Index 0x18 is not a valid 2 byte hex value");
+            unk1AValid = FlagHelper.parseHexToShort(this.unknown1ATextBox.Text, out unk1A, "Tertiary Material Index 0x1A is not a valid 2 byte hex value");
         
             byte[] matrixSpecificIds = new byte[8];
             bool[] matrixSpecificIdsValid = new bool[8];
@@ -160,8 +160,8 @@ namespace GxModelViewer
             boundingSphereYValid = FlagHelper.parseFloat(this.boundingSphereCenterYTextBox.Text, out boundingSphereY, "Bounding Sphere Center Y is not a valid float value");
             boundingSphereZValid = FlagHelper.parseFloat(this.boundingSphereCenterZTextBox.Text, out boundingSphereZ, "Bounding Sphere Center Z is not a valid float value");
 
-            unk3CValid = FlagHelper.parseFloat(this.unknown3CTextBox.Text, out unk3C, "Unknown 3C is not a valid float value");
-            unk40Valid = FlagHelper.parseHexToInt32(this.unknown40TextBox.Text, out unk40, "Unknown 40 is not a valid 4 byte hex value");
+            unk3CValid = FlagHelper.parseFloat(this.unknown3CTextBox.Text, out unk3C, "Unknown 0x3C is not a valid float value");
+            unk40Valid = FlagHelper.parseHexToInt32(this.unknown40TextBox.Text, out unk40, "Unknown 0x40 is not a valid 4 byte hex value");
 
 
             foreach (GcmfMesh mesh in meshes)
@@ -215,7 +215,9 @@ namespace GxModelViewer
             if (this.unknownCTextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_C).Append(" ").Append(this.unknownCTextBox.Text).Append("\r\n");
             if (this.unknown10TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_10).Append(" ").Append(this.unknown10TextBox.Text).Append("\r\n");
             if (this.unknown14TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(UNKNOWN_14).Append(" ").Append(this.unknown14TextBox.Text).Append("\r\n");
-
+            if (this.unknown16TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_16").Append(" ").Append(this.unknown16TextBox.Text).Append("\r\n");
+            if (this.unknown18TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_18").Append(" ").Append(this.unknown18TextBox.Text).Append("\r\n");
+            if (this.unknown1ATextBox.Text != FlagHelper.ERROR_VALUE) sb.Append("UNKNOWN_1A").Append(" ").Append(this.unknown1ATextBox.Text).Append("\r\n");
             if (this.matrixId1TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_ONE).Append(" ").Append(this.matrixId1TextBox.Text).Append("\r\n");
             if (this.matrixId2TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_TWO).Append(" ").Append(this.matrixId2TextBox.Text).Append("\r\n");
             if (this.matrixId3TextBox.Text != FlagHelper.ERROR_VALUE) sb.Append(MATRIX_SPECIFIC_IDS_THREE).Append(" ").Append(this.matrixId3TextBox.Text).Append("\r\n");
@@ -272,6 +274,15 @@ namespace GxModelViewer
                                 break;
                             case UNKNOWN_14:
                                 this.unknown14TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_16":
+                                this.unknown16TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_18":
+                                this.unknown18TextBox.Text = line[1];
+                                break;
+                            case "UNKNOWN_1A":
+                                this.unknown1ATextBox.Text = line[1];
                                 break;
                             case MATRIX_SPECIFIC_IDS_ONE:
                                 this.matrixId1TextBox.Text = line[1];

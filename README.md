@@ -1,7 +1,24 @@
 # GxModelViewer - A F-Zero GX model viewer and editor
+## Multiple mipmap level import/export
+This version of GX Model Viewer supports the export/import of multiple mipmap levels at a time. 
+
+To import multiple levels of mipmaps, first, place all of the mipmap levels into the same folder. They
+do not have to be isolated from other image files. Ensure that the last two characters of the filename
+are " 0" or "_0". Select the texture in the Textures tab (Texture 1, Texture 2, etc), and press the Import
+button. Make sure you do not have any specific mipmap level selected. Select the file, then select the file 
+format. All of the files should be imported as the respective mipmap levels. If you have any issues, make
+sure tha the files are properly named, and in the correct order.
+
+If you do not wish to import mipmap levels, and would rather have GX Model Viewer generate them, import the
+texture as you normally would. Just ensure that the filename does not end in " 0" or "_0", or only one mipmap level
+will be imported.
+
+To export multiple levels of mipmaps, simply select the texture in the Textures tab (Texture 1, Texture 2, etc),
+and press the Export button. Choose a location for level 0 of the texture. All of the mipmap levels will be
+exported to the specified folder.
 
 ## Command line support
-GXModel viewer supports command line usage. It isn't as feature complete as the UI, but it
+GX Model Viewer supports command line usage. It isn't as feature complete as the UI, but it
 has what most people need.
 
 The command line can be used with just command line flags or in interactive mode. Interative

@@ -561,6 +561,9 @@ namespace GxModelViewer
                 lblMeshUnk8.Text = string.Format("0x{0:X8}", mesh.Unk8);
                 lblMeshUnkC.Text = string.Format("0x{0:X8}", mesh.UnkC);
                 lblMeshUnk10.Text = string.Format("0x{0:X4}", mesh.Unk10);
+                lblMeshUnk12.Text = string.Format("0x{0:X2}", Convert.ToByte(((mesh.PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                                     ((mesh.SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                                     ((mesh.TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0)));
                 lblMeshUnk14.Text = string.Format("0x{0:X4}", mesh.Unk14);
                 lblMeshPrimaryMaterialIdx.Text = mesh.PrimaryMaterialIdx.ToString();
                 lblMeshSecondaryMaterialIdx.Text = mesh.SecondaryMaterialIdx.ToString();
