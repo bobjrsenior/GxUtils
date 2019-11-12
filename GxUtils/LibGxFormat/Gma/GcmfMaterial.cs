@@ -34,7 +34,7 @@ namespace LibGxFormat.Gma
 
         public GcmfMaterial()
         {
-            Flags = 0;
+            Flags = 0x7D4;
             TextureIdx = ushort.MaxValue;
             Unk6 = 0;
             AnisotropyLevel = 0;

@@ -27,6 +27,7 @@ namespace GxModelViewer
             InitializeComponent();
         }
 
+
         public MaterialFlagEditor(List<GcmfMaterial> materials)
         {
             InitializeComponent();

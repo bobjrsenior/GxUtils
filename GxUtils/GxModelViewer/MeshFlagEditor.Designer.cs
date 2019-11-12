@@ -96,11 +96,11 @@
             // 
             // renderFlagsTextBox
             // 
-            this.renderFlagsTextBox.Location = new System.Drawing.Point(200, 3);
+            this.renderFlagsTextBox.Location = new System.Drawing.Point(200, 29);
             this.renderFlagsTextBox.MaxLength = 8;
             this.renderFlagsTextBox.Name = "renderFlagsTextBox";
             this.renderFlagsTextBox.Size = new System.Drawing.Size(100, 20);
-            this.renderFlagsTextBox.TabIndex = 0;
+            this.renderFlagsTextBox.TabIndex = 1;
             // 
             // unknown4TextBox
             // 
@@ -140,7 +140,7 @@
             this.boundingSphereCenterXTextBox.Location = new System.Drawing.Point(174, 4);
             this.boundingSphereCenterXTextBox.Name = "boundingSphereCenterXTextBox";
             this.boundingSphereCenterXTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterXTextBox.TabIndex = 48;
+            this.boundingSphereCenterXTextBox.TabIndex = 66;
             // 
             // boundingSphereCenterYTextBox
             // 
@@ -148,7 +148,7 @@
             this.boundingSphereCenterYTextBox.Location = new System.Drawing.Point(280, 4);
             this.boundingSphereCenterYTextBox.Name = "boundingSphereCenterYTextBox";
             this.boundingSphereCenterYTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterYTextBox.TabIndex = 49;
+            this.boundingSphereCenterYTextBox.TabIndex = 67;
             // 
             // boundingSphereCenterZTextBox
             // 
@@ -156,21 +156,21 @@
             this.boundingSphereCenterZTextBox.Location = new System.Drawing.Point(386, 4);
             this.boundingSphereCenterZTextBox.Name = "boundingSphereCenterZTextBox";
             this.boundingSphereCenterZTextBox.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereCenterZTextBox.TabIndex = 50;
+            this.boundingSphereCenterZTextBox.TabIndex = 68;
             // 
             // unknown3CTextBox
             // 
             this.unknown3CTextBox.Location = new System.Drawing.Point(131, 3);
             this.unknown3CTextBox.Name = "unknown3CTextBox";
             this.unknown3CTextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown3CTextBox.TabIndex = 51;
+            this.unknown3CTextBox.TabIndex = 63;
             // 
             // unknown40TextBox
             // 
             this.unknown40TextBox.Location = new System.Drawing.Point(131, 29);
             this.unknown40TextBox.Name = "unknown40TextBox";
             this.unknown40TextBox.Size = new System.Drawing.Size(100, 20);
-            this.unknown40TextBox.TabIndex = 52;
+            this.unknown40TextBox.TabIndex = 64;
             // 
             // okayButton
             // 
@@ -258,11 +258,11 @@
             // 
             // layerTextBox
             // 
-            this.layerTextBox.Location = new System.Drawing.Point(200, 29);
-            this.layerTextBox.MaxLength = 8;
+            this.layerTextBox.Location = new System.Drawing.Point(200, 3);
+            this.layerTextBox.MaxLength = 1;
             this.layerTextBox.Name = "layerTextBox";
             this.layerTextBox.Size = new System.Drawing.Size(50, 20);
-            this.layerTextBox.TabIndex = 1;
+            this.layerTextBox.TabIndex = 0;
             // 
             // saveButton
             // 
@@ -415,10 +415,8 @@
             this.tableLayoutPanel1.Controls.Add(this.label34, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.label35, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.label36, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label37, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label38, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.layerTextBox, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.label39, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.layerTextBox, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.label40, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.label41, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.label42, 0, 5);
@@ -432,11 +430,13 @@
             this.tableLayoutPanel1.Controls.Add(this.unknown10TextBox, 2, 5);
             this.tableLayoutPanel1.Controls.Add(this.unknown16TextBox, 2, 9);
             this.tableLayoutPanel1.Controls.Add(this.unknown1ATextBox, 2, 11);
-            this.tableLayoutPanel1.Controls.Add(this.renderFlagsTextBox, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.unknown4TextBox, 2, 2);
             this.tableLayoutPanel1.Controls.Add(this.unknown8TextBox, 2, 3);
             this.tableLayoutPanel1.Controls.Add(this.unknownCTextBox, 2, 4);
             this.tableLayoutPanel1.Controls.Add(this.unknown14TextBox, 2, 8);
+            this.tableLayoutPanel1.Controls.Add(this.renderFlagsTextBox, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label37, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label38, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 12;
@@ -539,17 +539,17 @@
             // 
             this.label37.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 6);
+            this.label37.Location = new System.Drawing.Point(3, 32);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(70, 13);
+            this.label37.Size = new System.Drawing.Size(102, 13);
             this.label37.TabIndex = 0;
-            this.label37.Text = "Render Flags";
+            this.label37.Text = "Render Flags (0x00)";
             // 
             // label38
             // 
             this.label38.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(3, 32);
+            this.label38.Location = new System.Drawing.Point(3, 6);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(33, 13);
             this.label38.TabIndex = 48;
@@ -561,9 +561,9 @@
             this.label39.AutoSize = true;
             this.label39.Location = new System.Drawing.Point(3, 58);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(115, 13);
+            this.label39.Size = new System.Drawing.Size(121, 13);
             this.label39.TabIndex = 3;
-            this.label39.Text = "Vertex Shading A 0x04";
+            this.label39.Text = "Vertex Shading A (0x04)";
             // 
             // label40
             // 
@@ -571,9 +571,9 @@
             this.label40.AutoSize = true;
             this.label40.Location = new System.Drawing.Point(3, 84);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(115, 13);
+            this.label40.Size = new System.Drawing.Size(121, 13);
             this.label40.TabIndex = 6;
-            this.label40.Text = "Vertex Shading B 0x08";
+            this.label40.Text = "Vertex Shading B (0x08)";
             // 
             // label41
             // 
@@ -581,9 +581,9 @@
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(3, 110);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(97, 13);
+            this.label41.Size = new System.Drawing.Size(103, 13);
             this.label41.TabIndex = 9;
-            this.label41.Text = "Specular Tint 0x0C";
+            this.label41.Text = "Specular Tint (0x0C)";
             // 
             // label42
             // 
@@ -591,9 +591,9 @@
             this.label42.AutoSize = true;
             this.label42.Location = new System.Drawing.Point(3, 136);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(98, 13);
+            this.label42.Size = new System.Drawing.Size(104, 13);
             this.label42.TabIndex = 36;
-            this.label42.Text = "Transparency 0x10";
+            this.label42.Text = "Transparency (0x10)";
             // 
             // label43
             // 
@@ -611,9 +611,9 @@
             this.label44.AutoSize = true;
             this.label44.Location = new System.Drawing.Point(3, 240);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(138, 13);
+            this.label44.Size = new System.Drawing.Size(144, 13);
             this.label44.TabIndex = 52;
-            this.label44.Text = "Tertiary Material Index 0x1A";
+            this.label44.Text = "Tertiary Material Index (0x1A)";
             // 
             // label45
             // 
@@ -631,9 +631,9 @@
             this.label46.AutoSize = true;
             this.label46.Location = new System.Drawing.Point(3, 214);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(153, 13);
+            this.label46.Size = new System.Drawing.Size(159, 13);
             this.label46.TabIndex = 51;
-            this.label46.Text = "Secondary Material Index 0x18";
+            this.label46.Text = "Secondary Material Index (0x18)";
             // 
             // label47
             // 
@@ -641,9 +641,9 @@
             this.label47.AutoSize = true;
             this.label47.Location = new System.Drawing.Point(3, 188);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(136, 13);
+            this.label47.Size = new System.Drawing.Size(142, 13);
             this.label47.TabIndex = 50;
-            this.label47.Text = "Primary Material Index 0x16";
+            this.label47.Text = "Primary Material Index (0x16)";
             // 
             // label48
             // 
@@ -651,9 +651,9 @@
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(3, 162);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(79, 13);
+            this.label48.Size = new System.Drawing.Size(85, 13);
             this.label48.TabIndex = 15;
-            this.label48.Text = "Unknown 0x14";
+            this.label48.Text = "Unknown (0x14)";
             // 
             // unknown18TextBox
             // 
@@ -695,18 +695,17 @@
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(490, 28);
-            this.tableLayoutPanel3.TabIndex = 65;
+            this.tableLayoutPanel3.TabIndex = 63;
             // 
             // reloadCheckBox
             // 
             this.reloadCheckBox.AutoSize = true;
             this.reloadCheckBox.Location = new System.Drawing.Point(304, 402);
             this.reloadCheckBox.Name = "reloadCheckBox";
-            this.reloadCheckBox.Size = new System.Drawing.Size(194, 17);
+            this.reloadCheckBox.Size = new System.Drawing.Size(191, 17);
             this.reloadCheckBox.TabIndex = 66;
-            this.reloadCheckBox.Text = "Reload Model Viewer after Applying";
+            this.reloadCheckBox.Text = "Reload model viewer after applying";
             this.reloadCheckBox.UseVisualStyleBackColor = true;
-            
             // 
             // MeshFlagEditor
             // 
@@ -723,6 +722,7 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okayButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "MeshFlagEditor";
             this.Text = "Mesh Flag Editor";
             this.tableLayoutPanel4.ResumeLayout(false);

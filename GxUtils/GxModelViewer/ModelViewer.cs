@@ -566,9 +566,9 @@ namespace GxModelViewer
                                      ((mesh.SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
                                      ((mesh.TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0)));
                 lblMeshUnk14.Text = string.Format("0x{0:X4}", mesh.Unk14);
-                lblMeshPrimaryMaterialIdx.Text = mesh.PrimaryMaterialIdx.ToString();
-                lblMeshSecondaryMaterialIdx.Text = mesh.SecondaryMaterialIdx.ToString();
-                lblMeshTertiaryMaterialIdx.Text = mesh.TertiaryMaterialIdx.ToString();
+                lblMeshPrimaryMaterialIdx.Text = string.Format("{0:X}", mesh.PrimaryMaterialIdx);
+                lblMeshSecondaryMaterialIdx.Text = string.Format("{0:X}", mesh.SecondaryMaterialIdx);
+                lblMeshTertiaryMaterialIdx.Text = string.Format("{0:X}", mesh.TertiaryMaterialIdx);
                 lblMeshTransformMatrixSpecificReferences.Text = string.Join(",",
                     Array.ConvertAll(mesh.TransformMatrixSpecificIdxsObj1, b => string.Format("0x{0:X2}", b)));
                 lblMeshCenter.Text = mesh.BoundingSphereCenter.ToString();
@@ -615,7 +615,7 @@ namespace GxModelViewer
             Gcmf model = gma[modelIdx].ModelObject;
             for (int i = 0; i < model.Materials.Count; i++)
             {
-                TreeNode materialItem = new TreeNode(string.Format("Material {0}", i));
+                TreeNode materialItem = new TreeNode(string.Format("Material {0:X}", i));
                 materialItem.Tag = new ModelMaterialReference(modelIdx, i);
                 materialItem.ContextMenuStrip = materialMenuStrip;
                 treeMaterials.Nodes.Add(materialItem);
@@ -624,18 +624,24 @@ namespace GxModelViewer
 
         private void UpdateMaterialDisplay()
         {
-            // If no model or material is selected, make the fields blank
+            
             GcmfMaterial material = GetSelectedMaterial();
+
+            // If no model is selected, do not allow the definition of a new material
+            defineNewToolStripMenuItem.Enabled = (gma != null && GetSelectedModelIdx() != -1);
+            defineNewFromTextureToolStripMenuItem.Enabled = (gma != null && tpl != null && GetSelectedModelIdx() != -1);
+
+            // If no model or material is selected, make the fields blank.
             if (material == null)
             {
                 pbMaterialTextureImage.Image = null;
-                tlpMaterialProperties.Visible = false;
+                tlpMaterialProperties.Visible = false;               
                 return;
             }
 
             tlpMaterialProperties.Visible = true;
             lblMaterialFlags.Text = string.Format("0x{0:X8}", material.Flags);
-            lblMaterialTextureIndex.Text = string.Format("{0}", material.TextureIdx);
+            lblMaterialTextureIndex.Text = string.Format("{0:X}", material.TextureIdx);
             lblMaterialUnk6.Text = string.Format("0x{0:X2}", material.Unk6);
             lblMaterialAnisotropyLevel.Text = string.Format("0x{0:X2}", material.AnisotropyLevel);
             lblMaterialUnkC.Text = string.Format("0x{0:X4}", material.UnkC);
@@ -759,6 +765,9 @@ namespace GxModelViewer
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
+
+            // Update material list
+            UpdateMaterialDisplay();
 
             // Throw delayed until end to keep previous functionality (clear TPL on error)
             if (exception != null)
@@ -1320,6 +1329,7 @@ namespace GxModelViewer
 
         }
 
+ 
         private void btnImportTextureLevel_Click(object sender, EventArgs e)
         {
             // Extract the TextureReference structure to get the selected texture
@@ -1450,6 +1460,96 @@ namespace GxModelViewer
                         break;
                 }
             }
+        }
+
+        private void defineNewMaterial(int inputTextureIdx = 0)
+        {
+            GcmfMaterial newMaterial = new GcmfMaterial();
+            newMaterial.TextureIdx = (ushort)(inputTextureIdx);
+            gma[GetSelectedModelIdx()].ModelObject.Materials.Add(newMaterial);
+            List<GcmfMaterial> materialAsList = new List<GcmfMaterial>();
+            materialAsList.Add(newMaterial);
+
+            using (MaterialFlagEditor materialEditor = new MaterialFlagEditor(materialAsList))
+            {
+                switch (materialEditor.ShowDialog())
+
+                {
+                    case DialogResult.OK:
+                        UpdateMaterialList();
+                        treeMaterials.SelectedNode = treeMaterials.Nodes[gma[GetSelectedModelIdx()].ModelObject.Materials.Count - 1];
+                        UpdateMaterialDisplay();
+                        break;
+                }
+            }
+        }
+        private void defineNewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            defineNewMaterial();
+        }
+
+        private void materialMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {   
+            // Do not allow for the editing of flags if no material is selected
+            editFlagsToolStripMenuItem2.Enabled = (treeMaterials.SelectedNodes.Count != 0);
+        }
+
+        private int defineNewTextureFromBitmap()
+        {
+            Bitmap bmp;
+            if (ofdTextureImportPath.ShowDialog() != DialogResult.OK)
+                return -1;
+            try
+            {
+                bmp = new Bitmap(ofdTextureImportPath.FileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error loading image.",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return -1;
+            }
+
+            // Ask the user to select the format to import
+            GxTextureFormatPickerDialog formatPickerDlg = new GxTextureFormatPickerDialog(TplTexture.SupportedTextureFormats, GxTextureFormat.CMPR);
+            if (formatPickerDlg.ShowDialog() != DialogResult.OK)
+            {
+                return -1;
+            }
+
+            GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
+
+            TplTexture newTexture = new TplTexture(newFmt, intFormat, numMipmaps, bmp);
+            tpl.Add(newTexture);
+            int newId = tpl.Count - 1;
+            try
+            {
+                // Define the entire texture from the bitmap
+                newTexture.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
+                TextureHasChanged(newId);
+                UpdateTextureTree();
+                treeTextures.SelectedNode = treeTextures.Nodes[newId];
+                //treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
+                //.Where(tn => ((TextureReference)tn.Tag).TextureIdx == newId).First();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occured while importing the texture(s).\n" +
+                                "If you are importing multiple mipmap levels, ensure\n",
+                                "that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return -1;
+            }
+            return newId;
+        }
+
+        private void defineNewToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            defineNewTextureFromBitmap();
+        }
+
+        private void defineNewFromTextureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            defineNewMaterial(defineNewTextureFromBitmap());
         }
 
         private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)

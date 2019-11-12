@@ -154,6 +154,10 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.defineNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textureMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.defineNewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.defineNewFromTextureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -187,6 +191,7 @@ namespace GxModelViewer
             this.meshMenuStrip.SuspendLayout();
             this.materialMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            this.textureMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -487,13 +492,13 @@ namespace GxModelViewer
             this.tlpMaterialMeshDisplay.Controls.Add(this.tlpModelDisplay, 0, 1);
             this.tlpMaterialMeshDisplay.Controls.Add(this.glControlModel, 0, 0);
             this.tlpMaterialMeshDisplay.Controls.Add(this.tlpMeshDisplay, 0, 2);
-            this.tlpMaterialMeshDisplay.Location = new System.Drawing.Point(2, 0);
+            this.tlpMaterialMeshDisplay.Location = new System.Drawing.Point(2, 3);
             this.tlpMaterialMeshDisplay.Name = "tlpMaterialMeshDisplay";
             this.tlpMaterialMeshDisplay.RowCount = 3;
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 452);
+            this.tlpMaterialMeshDisplay.Size = new System.Drawing.Size(616, 487);
             this.tlpMaterialMeshDisplay.TabIndex = 1;
             // 
             // tlpModelDisplay
@@ -514,7 +519,7 @@ namespace GxModelViewer
             this.tlpModelDisplay.Controls.Add(this.lblModelRadius, 1, 2);
             this.tlpModelDisplay.Controls.Add(this.lblModelTransformMatrixDefaultReferences, 1, 3);
             this.tlpModelDisplay.Controls.Add(this.lblModelNumTransformMatrices, 1, 4);
-            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 63);
+            this.tlpModelDisplay.Location = new System.Drawing.Point(3, 98);
             this.tlpModelDisplay.Name = "tlpModelDisplay";
             this.tlpModelDisplay.RowCount = 5;
             this.tlpModelDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -634,7 +639,7 @@ namespace GxModelViewer
             this.glControlModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.glControlModel.Location = new System.Drawing.Point(3, 3);
             this.glControlModel.Name = "glControlModel";
-            this.glControlModel.Size = new System.Drawing.Size(610, 54);
+            this.glControlModel.Size = new System.Drawing.Size(610, 89);
             this.glControlModel.TabIndex = 0;
             this.glControlModel.VSync = false;
             this.glControlModel.Load += new System.EventHandler(this.glControlModel_Load);
@@ -680,7 +685,7 @@ namespace GxModelViewer
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk8, 1, 2);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshUnk4, 1, 1);
             this.tlpMeshDisplay.Controls.Add(this.lblMeshRenderFlags, 1, 0);
-            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 169);
+            this.tlpMeshDisplay.Location = new System.Drawing.Point(3, 204);
             this.tlpMeshDisplay.Name = "tlpMeshDisplay";
             this.tlpMeshDisplay.RowCount = 14;
             this.tlpMeshDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
@@ -730,7 +735,7 @@ namespace GxModelViewer
             this.lblMeshRenderFlagsText.Name = "lblMeshRenderFlagsText";
             this.lblMeshRenderFlagsText.Size = new System.Drawing.Size(299, 20);
             this.lblMeshRenderFlagsText.TabIndex = 0;
-            this.lblMeshRenderFlagsText.Text = "Render Flags:";
+            this.lblMeshRenderFlagsText.Text = "Render Flags (0x00):";
             this.lblMeshRenderFlagsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMeshUnk4Text
@@ -1012,6 +1017,7 @@ namespace GxModelViewer
             // 
             // treeMaterials
             // 
+            this.treeMaterials.ContextMenuStrip = this.materialMenuStrip;
             this.treeMaterials.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMaterials.Location = new System.Drawing.Point(0, 0);
             this.treeMaterials.Name = "treeMaterials";
@@ -1031,8 +1037,9 @@ namespace GxModelViewer
             this.tlpMaterialDisplay.Controls.Add(this.pbMaterialTextureImage, 0, 0);
             this.tlpMaterialDisplay.Location = new System.Drawing.Point(3, 3);
             this.tlpMaterialDisplay.Name = "tlpMaterialDisplay";
-            this.tlpMaterialDisplay.RowCount = 2;
+            this.tlpMaterialDisplay.RowCount = 3;
             this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpMaterialDisplay.Size = new System.Drawing.Size(607, 484);
             this.tlpMaterialDisplay.TabIndex = 1;
@@ -1077,7 +1084,7 @@ namespace GxModelViewer
             this.lblMaterialFlagsText.Name = "lblMaterialFlagsText";
             this.lblMaterialFlagsText.Size = new System.Drawing.Size(294, 20);
             this.lblMaterialFlagsText.TabIndex = 0;
-            this.lblMaterialFlagsText.Text = "Material Flags:";
+            this.lblMaterialFlagsText.Text = "Material Flags (0x00):";
             this.lblMaterialFlagsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialTextureIndexText
@@ -1088,7 +1095,7 @@ namespace GxModelViewer
             this.lblMaterialTextureIndexText.Name = "lblMaterialTextureIndexText";
             this.lblMaterialTextureIndexText.Size = new System.Drawing.Size(294, 20);
             this.lblMaterialTextureIndexText.TabIndex = 1;
-            this.lblMaterialTextureIndexText.Text = "Texture Index:";
+            this.lblMaterialTextureIndexText.Text = "Texture Index (0x04):";
             this.lblMaterialTextureIndexText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialUnk6Text
@@ -1099,7 +1106,7 @@ namespace GxModelViewer
             this.lblMaterialUnk6Text.Name = "lblMaterialUnk6Text";
             this.lblMaterialUnk6Text.Size = new System.Drawing.Size(294, 20);
             this.lblMaterialUnk6Text.TabIndex = 2;
-            this.lblMaterialUnk6Text.Text = "Unk6:";
+            this.lblMaterialUnk6Text.Text = "Unknown (0x06):";
             this.lblMaterialUnk6Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialAnisotropyLevelText
@@ -1110,7 +1117,7 @@ namespace GxModelViewer
             this.lblMaterialAnisotropyLevelText.Name = "lblMaterialAnisotropyLevelText";
             this.lblMaterialAnisotropyLevelText.Size = new System.Drawing.Size(294, 20);
             this.lblMaterialAnisotropyLevelText.TabIndex = 3;
-            this.lblMaterialAnisotropyLevelText.Text = "Anisotropy Level:";
+            this.lblMaterialAnisotropyLevelText.Text = "Anisotropy Level (0x07):";
             this.lblMaterialAnisotropyLevelText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialUnkCText
@@ -1121,7 +1128,7 @@ namespace GxModelViewer
             this.lblMaterialUnkCText.Name = "lblMaterialUnkCText";
             this.lblMaterialUnkCText.Size = new System.Drawing.Size(294, 20);
             this.lblMaterialUnkCText.TabIndex = 4;
-            this.lblMaterialUnkCText.Text = "UnkC:";
+            this.lblMaterialUnkCText.Text = "Unknown (0x0C):";
             this.lblMaterialUnkCText.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialUnk10Text
@@ -1132,7 +1139,7 @@ namespace GxModelViewer
             this.lblMaterialUnk10Text.Name = "lblMaterialUnk10Text";
             this.lblMaterialUnk10Text.Size = new System.Drawing.Size(294, 22);
             this.lblMaterialUnk10Text.TabIndex = 5;
-            this.lblMaterialUnk10Text.Text = "Unk10:";
+            this.lblMaterialUnk10Text.Text = "Unknown (0x10):";
             this.lblMaterialUnk10Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblMaterialFlags
@@ -1228,6 +1235,7 @@ namespace GxModelViewer
             // 
             // treeTextures
             // 
+            this.treeTextures.ContextMenuStrip = this.textureMenuStrip;
             this.treeTextures.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeTextures.Location = new System.Drawing.Point(0, 0);
             this.treeTextures.Name = "treeTextures";
@@ -1461,27 +1469,30 @@ namespace GxModelViewer
             this.meshMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editFlagsToolStripMenuItem1});
             this.meshMenuStrip.Name = "meshMenuStrip";
-            this.meshMenuStrip.Size = new System.Drawing.Size(125, 26);
+            this.meshMenuStrip.Size = new System.Drawing.Size(134, 26);
             // 
             // editFlagsToolStripMenuItem1
             // 
             this.editFlagsToolStripMenuItem1.Name = "editFlagsToolStripMenuItem1";
-            this.editFlagsToolStripMenuItem1.Size = new System.Drawing.Size(124, 22);
-            this.editFlagsToolStripMenuItem1.Text = "Edit Flags";
+            this.editFlagsToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
+            this.editFlagsToolStripMenuItem1.Text = "Edit Flags...";
             this.editFlagsToolStripMenuItem1.Click += new System.EventHandler(this.editMeshFlagstoolStripMenuItem_Click);
             // 
             // materialMenuStrip
             // 
             this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem,
+            this.defineNewFromTextureToolStripMenuItem,
             this.editFlagsToolStripMenuItem2});
             this.materialMenuStrip.Name = "materialMenuStrip";
-            this.materialMenuStrip.Size = new System.Drawing.Size(125, 26);
+            this.materialMenuStrip.Size = new System.Drawing.Size(215, 70);
+            this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
             // 
             // editFlagsToolStripMenuItem2
             // 
             this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
-            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(124, 22);
-            this.editFlagsToolStripMenuItem2.Text = "Edit Flags";
+            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(144, 22);
+            this.editFlagsToolStripMenuItem2.Text = "Edit Flags...";
             this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
             // 
             // sfdModelExportPath
@@ -1495,6 +1506,34 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // defineNewToolStripMenuItem
+            // 
+            this.defineNewToolStripMenuItem.Name = "defineNewToolStripMenuItem";
+            this.defineNewToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.defineNewToolStripMenuItem.Text = "Define New...";
+            this.defineNewToolStripMenuItem.Click += new System.EventHandler(this.defineNewToolStripMenuItem_Click);
+            // 
+            // textureMenuStrip
+            // 
+            this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem1});
+            this.textureMenuStrip.Name = "textureMenuStrip";
+            this.textureMenuStrip.Size = new System.Drawing.Size(145, 26);
+            // 
+            // defineNewToolStripMenuItem1
+            // 
+            this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
+            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.defineNewToolStripMenuItem1.Text = "Define New...";
+            this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
+            // 
+            // defineNewFromTextureToolStripMenuItem
+            // 
+            this.defineNewFromTextureToolStripMenuItem.Name = "defineNewFromTextureToolStripMenuItem";
+            this.defineNewFromTextureToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.defineNewFromTextureToolStripMenuItem.Text = "Define New from Texture...";
+            this.defineNewFromTextureToolStripMenuItem.Click += new System.EventHandler(this.defineNewFromTextureToolStripMenuItem_Click);
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1503,6 +1542,7 @@ namespace GxModelViewer
             this.Controls.Add(this.tabControlModelsTextures);
             this.Controls.Add(this.toolStripActions);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ModelViewer";
             this.Text = "GxModelViewer";
@@ -1542,6 +1582,7 @@ namespace GxModelViewer
             this.meshMenuStrip.ResumeLayout(false);
             this.materialMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.textureMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1671,5 +1712,9 @@ namespace GxModelViewer
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.Label lblMeshUnk12;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem defineNewToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip textureMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem defineNewToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem defineNewFromTextureToolStripMenuItem;
     }
 }

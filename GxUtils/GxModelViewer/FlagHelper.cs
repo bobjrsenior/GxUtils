@@ -8,7 +8,7 @@ namespace GxModelViewer
 {
     static class FlagHelper
     {
-        public static string ERROR_VALUE = "CONF";
+        public static string ERROR_VALUE = "CONFLICT";
 
         /// <summary>
         /// A wrapper over float.parseFloat. This method is similar except
