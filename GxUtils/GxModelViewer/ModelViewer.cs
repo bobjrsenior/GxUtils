@@ -871,6 +871,8 @@ namespace GxModelViewer
 
         private void UpdateTextureTree()
         {
+            // Do not allow new definition of textures if no TPL is loaded
+            defineNewToolStripMenuItem1.Enabled = (tpl != null);
             treeTextures.Nodes.Clear();
             if (tpl != null)
             {
@@ -1438,7 +1440,7 @@ namespace GxModelViewer
                 {
                     TreeNode parent = node.Parent;
                     int meshIndex = node.Index;
-                    int modelIndex = gma.GetEntryIndex(parent.Text);
+                    int modelIndex = gma.GetEntryIndex(parent.Text);                   
                     Gcmf model = gma[modelIndex].ModelObject;
                     meshes.Add(model.Meshes[meshIndex]);
                 }
@@ -1550,6 +1552,16 @@ namespace GxModelViewer
         private void defineNewFromTextureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             defineNewMaterial(defineNewTextureFromBitmap());
+        }
+
+        private void treeModel_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            gma[e.Node.Index].Name = e.Label;
+        }
+
+        private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treeModel.SelectedNode.BeginEdit();
         }
 
         private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)

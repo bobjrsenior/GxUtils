@@ -105,6 +105,10 @@ namespace GxModelViewer
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeMaterials = new TreeViewMS.TreeViewMS();
+            this.materialMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.defineNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defineNewFromTextureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpMaterialDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpMaterialProperties = new System.Windows.Forms.TableLayoutPanel();
             this.lblMaterialFlagsText = new System.Windows.Forms.Label();
@@ -123,6 +127,8 @@ namespace GxModelViewer
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.treeTextures = new System.Windows.Forms.TreeView();
+            this.textureMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.defineNewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpTextureDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpTextureProperties = new System.Windows.Forms.TableLayoutPanel();
             this.lblTextureDimensionsText = new System.Windows.Forms.Label();
@@ -150,14 +156,9 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editFlagsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.defineNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textureMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.defineNewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.defineNewFromTextureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -175,6 +176,7 @@ namespace GxModelViewer
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.materialMenuStrip.SuspendLayout();
             this.tlpMaterialDisplay.SuspendLayout();
             this.tlpMaterialProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
@@ -183,15 +185,14 @@ namespace GxModelViewer
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.textureMenuStrip.SuspendLayout();
             this.tlpTextureDisplay.SuspendLayout();
             this.tlpTextureProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.gmaContextMenuStrip.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
-            this.materialMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
-            this.textureMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -474,12 +475,14 @@ namespace GxModelViewer
             // treeModel
             // 
             this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeModel.LabelEdit = true;
             this.treeModel.Location = new System.Drawing.Point(3, 3);
             this.treeModel.Name = "treeModel";
             this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
             this.treeModel.Size = new System.Drawing.Size(301, 370);
             this.treeModel.TabIndex = 0;
             this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
+            this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
             this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
             // 
             // tlpMaterialMeshDisplay
@@ -1026,6 +1029,37 @@ namespace GxModelViewer
             this.treeMaterials.TabIndex = 0;
             this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
             // 
+            // materialMenuStrip
+            // 
+            this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem,
+            this.defineNewFromTextureToolStripMenuItem,
+            this.editFlagsToolStripMenuItem2});
+            this.materialMenuStrip.Name = "materialMenuStrip";
+            this.materialMenuStrip.Size = new System.Drawing.Size(215, 70);
+            this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
+            // 
+            // defineNewToolStripMenuItem
+            // 
+            this.defineNewToolStripMenuItem.Name = "defineNewToolStripMenuItem";
+            this.defineNewToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.defineNewToolStripMenuItem.Text = "Define New...";
+            this.defineNewToolStripMenuItem.Click += new System.EventHandler(this.defineNewToolStripMenuItem_Click);
+            // 
+            // defineNewFromTextureToolStripMenuItem
+            // 
+            this.defineNewFromTextureToolStripMenuItem.Name = "defineNewFromTextureToolStripMenuItem";
+            this.defineNewFromTextureToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.defineNewFromTextureToolStripMenuItem.Text = "Define New from Texture...";
+            this.defineNewFromTextureToolStripMenuItem.Click += new System.EventHandler(this.defineNewFromTextureToolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem2
+            // 
+            this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
+            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(214, 22);
+            this.editFlagsToolStripMenuItem2.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
+            // 
             // tlpMaterialDisplay
             // 
             this.tlpMaterialDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1243,6 +1277,20 @@ namespace GxModelViewer
             this.treeTextures.TabIndex = 0;
             this.treeTextures.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeTextures_AfterSelect);
             // 
+            // textureMenuStrip
+            // 
+            this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem1});
+            this.textureMenuStrip.Name = "textureMenuStrip";
+            this.textureMenuStrip.Size = new System.Drawing.Size(145, 26);
+            // 
+            // defineNewToolStripMenuItem1
+            // 
+            this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
+            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.defineNewToolStripMenuItem1.Text = "Define New...";
+            this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
+            // 
             // tlpTextureDisplay
             // 
             this.tlpTextureDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1432,9 +1480,10 @@ namespace GxModelViewer
             this.gmaImporttoolStripMenuItem,
             this.importPreserveFLagsToolStripMenuItem,
             this.gmaExportTolStripMenuItem,
-            this.editFlagsToolStripMenuItem});
+            this.editFlagsToolStripMenuItem,
+            this.renameToolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 92);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 136);
             // 
             // gmaImporttoolStripMenuItem
             // 
@@ -1478,23 +1527,6 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem1.Text = "Edit Flags...";
             this.editFlagsToolStripMenuItem1.Click += new System.EventHandler(this.editMeshFlagstoolStripMenuItem_Click);
             // 
-            // materialMenuStrip
-            // 
-            this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defineNewToolStripMenuItem,
-            this.defineNewFromTextureToolStripMenuItem,
-            this.editFlagsToolStripMenuItem2});
-            this.materialMenuStrip.Name = "materialMenuStrip";
-            this.materialMenuStrip.Size = new System.Drawing.Size(215, 70);
-            this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
-            // 
-            // editFlagsToolStripMenuItem2
-            // 
-            this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
-            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(144, 22);
-            this.editFlagsToolStripMenuItem2.Text = "Edit Flags...";
-            this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
-            // 
             // sfdModelExportPath
             // 
             this.sfdModelExportPath.DefaultExt = "obj";
@@ -1506,33 +1538,12 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
-            // defineNewToolStripMenuItem
+            // renameToolStripMenuItem
             // 
-            this.defineNewToolStripMenuItem.Name = "defineNewToolStripMenuItem";
-            this.defineNewToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
-            this.defineNewToolStripMenuItem.Text = "Define New...";
-            this.defineNewToolStripMenuItem.Click += new System.EventHandler(this.defineNewToolStripMenuItem_Click);
-            // 
-            // textureMenuStrip
-            // 
-            this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defineNewToolStripMenuItem1});
-            this.textureMenuStrip.Name = "textureMenuStrip";
-            this.textureMenuStrip.Size = new System.Drawing.Size(145, 26);
-            // 
-            // defineNewToolStripMenuItem1
-            // 
-            this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
-            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.defineNewToolStripMenuItem1.Text = "Define New...";
-            this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
-            // 
-            // defineNewFromTextureToolStripMenuItem
-            // 
-            this.defineNewFromTextureToolStripMenuItem.Name = "defineNewFromTextureToolStripMenuItem";
-            this.defineNewFromTextureToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.defineNewFromTextureToolStripMenuItem.Text = "Define New from Texture...";
-            this.defineNewFromTextureToolStripMenuItem.Click += new System.EventHandler(this.defineNewFromTextureToolStripMenuItem_Click);
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1565,6 +1576,7 @@ namespace GxModelViewer
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.materialMenuStrip.ResumeLayout(false);
             this.tlpMaterialDisplay.ResumeLayout(false);
             this.tlpMaterialProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
@@ -1573,6 +1585,7 @@ namespace GxModelViewer
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.textureMenuStrip.ResumeLayout(false);
             this.tlpTextureDisplay.ResumeLayout(false);
             this.tlpTextureProperties.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
@@ -1580,9 +1593,7 @@ namespace GxModelViewer
             this.menuStrip1.PerformLayout();
             this.gmaContextMenuStrip.ResumeLayout(false);
             this.meshMenuStrip.ResumeLayout(false);
-            this.materialMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
-            this.textureMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1716,5 +1727,6 @@ namespace GxModelViewer
         private System.Windows.Forms.ContextMenuStrip textureMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem defineNewToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem defineNewFromTextureToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
     }
 }
