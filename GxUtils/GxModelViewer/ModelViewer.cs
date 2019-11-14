@@ -418,6 +418,14 @@ namespace GxModelViewer
             {
                 throw exception;
             }
+
+            // Update context menu
+            gmaExportTolStripMenuItem.Enabled = true;
+            gmaImporttoolStripMenuItem.Enabled = true;
+            importPreserveFLagsToolStripMenuItem.Enabled = true;
+            editFlagsToolStripMenuItem.Enabled = true;
+            renameToolStripMenuItem.Enabled = true;
+            removeToolStripMenuItem.Enabled = true;
         }
 
         private void tsBtnSaveGma_Click(object sender, EventArgs e)
@@ -498,7 +506,6 @@ namespace GxModelViewer
                             modelItem.Nodes.Add(meshItem);
                         }
                     }
-
                     treeModel.SetCheckState(modelItem, CheckState.Checked);
                 }
             }
@@ -1597,6 +1604,111 @@ namespace GxModelViewer
         private void treeModel_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.AllowedEffect;
+        }
+
+
+        private void removeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeModel.SelectedNode != null)
+            {
+                gma.RemoveAt(treeModel.SelectedNode.Index);                            
+                treeModel.SelectedNodes.Clear();
+                UpdateModelDisplay();
+                UpdateModelButtons();
+                UpdateModelTree();
+                reloadOnNextRedraw = true;
+            }
+            else
+            {
+                MessageBox.Show("No model selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void importGMATPLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofdLoadGma.ShowDialog() != DialogResult.OK)
+                return;
+            if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
+                return;
+            try
+            {
+                using (Stream gmaStream = File.OpenRead(ofdLoadGma.FileName))
+                {
+                    Gma importedGma = new Gma(gmaStream, GetSelectedGame());
+                    foreach (GmaEntry newGmaEntry in importedGma) {
+                        foreach (GcmfMaterial newGcmfMat in newGmaEntry.ModelObject.Materials) {
+                                // Accounts for the offset of importing new textures to the existing TPL
+                                newGcmfMat.TextureIdx += (ushort)tpl.Count;
+                        }                       
+                        gma.Add(newGmaEntry);
+                    }                   
+                }
+
+                using (Stream tplStream = File.OpenRead(ofdLoadTpl.FileName))
+                {
+                    Tpl importedTpl = new Tpl(tplStream, GetSelectedGame());
+                    foreach (TplTexture newTplTexture in importedTpl)
+                    {
+                        tpl.Add(newTplTexture);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error importing a new GMA/TPL.", "Ërror", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            UpdateModelButtons();
+            UpdateModelTree();
+            UpdateModelDisplay();
+            UpdateTextureTree();
+
+            reloadOnNextRedraw = true;
+            glControlModel.Invalidate();
+        }
+
+        private void exportAsGMATPLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (sfdSaveGma.ShowDialog() != DialogResult.OK)
+                return;
+            if (sfdSaveTpl.ShowDialog() != DialogResult.OK)
+                return;
+
+            Gma gmaToBeSaved = new Gma();
+            Tpl tplToBeSaved = new Tpl();
+            List<TreeNode> selectedNodes = treeModel.SelectedNodes;
+            List<int> textureIds = new List<int>();
+            try
+            {
+                foreach (TreeNode node in selectedNodes)
+                {
+                    gmaToBeSaved.Add(gma[node.Index]);
+                    
+                    foreach (GcmfMaterial materialToBeSaved in gma[node.Index].ModelObject.Materials)
+                    {                        
+                        textureIds.Add(materialToBeSaved.TextureIdx);
+                        // Resets the index of the saved materials in accorance with their texture ID
+                        materialToBeSaved.TextureIdx = (ushort)(textureIds.Count()-1);
+                    }
+                }
+
+                foreach (int textureIdToBeAdded in textureIds)
+                {
+                    tplToBeSaved.Add(tpl[textureIdToBeAdded]);
+                }
+
+                using (Stream gmaStream = File.OpenWrite(sfdSaveGma.FileName))
+                {
+                    gmaToBeSaved.Save(gmaStream, GetSelectedGame());
+                }
+
+                using (Stream tplStream = File.OpenWrite(sfdSaveTpl.FileName))
+                {
+                    tplToBeSaved.Save(tplStream, GetSelectedGame());
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show("Error exporting as a GMA/TPL.", "Ërror", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)

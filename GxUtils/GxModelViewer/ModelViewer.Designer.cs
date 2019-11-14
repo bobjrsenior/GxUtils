@@ -60,6 +60,15 @@ namespace GxModelViewer
             this.btnModelShowLayer2 = new System.Windows.Forms.Button();
             this.btnModelShowAll = new System.Windows.Forms.Button();
             this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
+            this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.importGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAsGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
@@ -149,12 +158,6 @@ namespace GxModelViewer
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
@@ -168,6 +171,7 @@ namespace GxModelViewer
             this.splitContainerModels.Panel2.SuspendLayout();
             this.splitContainerModels.SuspendLayout();
             this.tableLayoutPanelModelSelect.SuspendLayout();
+            this.gmaContextMenuStrip.SuspendLayout();
             this.tlpMaterialMeshDisplay.SuspendLayout();
             this.tlpModelDisplay.SuspendLayout();
             this.tlpMeshDisplay.SuspendLayout();
@@ -190,7 +194,6 @@ namespace GxModelViewer
             this.tlpTextureProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.menuStrip1.SuspendLayout();
-            this.gmaContextMenuStrip.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
@@ -489,6 +492,76 @@ namespace GxModelViewer
             this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
             this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
             this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
+            // 
+            // gmaContextMenuStrip
+            // 
+            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importGMATPLToolStripMenuItem,
+            this.exportAsGMATPLToolStripMenuItem,
+            this.gmaExportTolStripMenuItem,
+            this.gmaImporttoolStripMenuItem,
+            this.importPreserveFLagsToolStripMenuItem,
+            this.editFlagsToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.removeToolStripMenuItem});
+            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(259, 202);
+            // 
+            // importGMATPLToolStripMenuItem
+            // 
+            this.importGMATPLToolStripMenuItem.Name = "importGMATPLToolStripMenuItem";
+            this.importGMATPLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.importGMATPLToolStripMenuItem.Text = "Import GMA/TPL...";
+            this.importGMATPLToolStripMenuItem.Click += new System.EventHandler(this.importGMATPLToolStripMenuItem_Click);
+            // 
+            // exportAsGMATPLToolStripMenuItem
+            // 
+            this.exportAsGMATPLToolStripMenuItem.Name = "exportAsGMATPLToolStripMenuItem";
+            this.exportAsGMATPLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.exportAsGMATPLToolStripMenuItem.Text = "Export as GMA/TPL...";
+            this.exportAsGMATPLToolStripMenuItem.Click += new System.EventHandler(this.exportAsGMATPLToolStripMenuItem_Click);
+            // 
+            // gmaExportTolStripMenuItem
+            // 
+            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.gmaExportTolStripMenuItem.Text = "Export as OBJ/MTL...";
+            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
+            // 
+            // gmaImporttoolStripMenuItem
+            // 
+            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.gmaImporttoolStripMenuItem.Text = "Replace with OBJ...";
+            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
+            // 
+            // importPreserveFLagsToolStripMenuItem
+            // 
+            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
+            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ (Preserve Flags)...";
+            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem
+            // 
+            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
+            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.editFlagsToolStripMenuItem.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1479,52 +1552,6 @@ namespace GxModelViewer
             this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
             // 
-            // gmaContextMenuStrip
-            // 
-            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gmaImporttoolStripMenuItem,
-            this.importPreserveFLagsToolStripMenuItem,
-            this.gmaExportTolStripMenuItem,
-            this.editFlagsToolStripMenuItem,
-            this.renameToolStripMenuItem});
-            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 114);
-            // 
-            // gmaImporttoolStripMenuItem
-            // 
-            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
-            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.gmaImporttoolStripMenuItem.Text = "Import";
-            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
-            // 
-            // importPreserveFLagsToolStripMenuItem
-            // 
-            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
-            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.importPreserveFLagsToolStripMenuItem.Text = "Import (Preserve FLags)";
-            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
-            // 
-            // gmaExportTolStripMenuItem
-            // 
-            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
-            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.gmaExportTolStripMenuItem.Text = "Export";
-            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
-            // 
-            // editFlagsToolStripMenuItem
-            // 
-            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
-            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.editFlagsToolStripMenuItem.Text = "Edit Flags";
-            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
-            // 
             // meshMenuStrip
             // 
             this.meshMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1573,6 +1600,7 @@ namespace GxModelViewer
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).EndInit();
             this.splitContainerModels.ResumeLayout(false);
             this.tableLayoutPanelModelSelect.ResumeLayout(false);
+            this.gmaContextMenuStrip.ResumeLayout(false);
             this.tlpMaterialMeshDisplay.ResumeLayout(false);
             this.tlpModelDisplay.ResumeLayout(false);
             this.tlpMeshDisplay.ResumeLayout(false);
@@ -1596,7 +1624,6 @@ namespace GxModelViewer
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.gmaContextMenuStrip.ResumeLayout(false);
             this.meshMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
             this.ResumeLayout(false);
@@ -1733,5 +1760,8 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem defineNewToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem defineNewFromTextureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importGMATPLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportAsGMATPLToolStripMenuItem;
     }
 }
