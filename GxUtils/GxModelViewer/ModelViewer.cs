@@ -102,7 +102,7 @@ namespace GxModelViewer
         /// <summary>Menu items specifying the possible number of mipmaps</summary>
         ToolStripMenuItem[] mipmapItems = new ToolStripMenuItem[10];
 
-        GxInterpolationFormat intFormat = GxInterpolationFormat.NearestNeighbor;
+        GxInterpolationFormat intFormat = GxInterpolationFormat.HighQualityBicubic;
         ToolStripMenuItem[] mipMapIntItems;
 
         public ModelViewer()

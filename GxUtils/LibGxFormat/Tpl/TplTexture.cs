@@ -765,16 +765,41 @@ namespace LibGxFormat.Tpl
             {
                 return DownscaleBitmapNearestNeighbor(level, bmp);
             }
+            else if (intFormat == GxInterpolationFormat.HighQualityBicubic)
+            {
+                return DownscaleBitmapBicubic(level, bmp);
+            }
             else
             {
                 return new Bitmap(bmp, width >> level, height >> level);
             }
         }
+        /// <summary>
+        /// Downscales a bitmap image using high-quality bicubic interpolation.
+        /// </summary>
+        /// <param name="level">The bitmap level for downscaling</param>
+        /// <param name="bmp">The bitmap to downscale</param>
+        /// <returns></returns>
+        internal Bitmap DownscaleBitmapBicubic(int level, Bitmap bmp)
+        {
+            int newWidth = width >> level;
+            int newHeight = height >> level;
+
+            Bitmap newBmp = new Bitmap(newWidth, newHeight, bmp.PixelFormat);
+
+            using (Graphics downscaleImage = Graphics.FromImage(newBmp)) {
+                downscaleImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                downscaleImage.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                downscaleImage.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                downscaleImage.DrawImage(bmp, 0, 0, newWidth, newHeight);
+            }
+            return newBmp;
+        }
 
         /// <summary>
         /// Downscales a bitmap image with the top-left interpolation algorithm
         /// </summary>
-        /// <param name="level">The bitmap level fr downscaling</param>
+        /// <param name="level">The bitmap level for downscaling</param>
         /// <param name="bmp">The bitmap to downscale</param>
         /// <returns>The downscaled bitmap</returns>
         internal Bitmap DownscaleBitmapNearestNeighbor(int level, Bitmap bmp)
