@@ -624,7 +624,7 @@ namespace GxModelViewer
 
         private void UpdateMaterialDisplay()
         {
-            
+
             GcmfMaterial material = GetSelectedMaterial();
 
             // If no model is selected, do not allow the definition of a new material
@@ -635,7 +635,7 @@ namespace GxModelViewer
             if (material == null)
             {
                 pbMaterialTextureImage.Image = null;
-                tlpMaterialProperties.Visible = false;               
+                tlpMaterialProperties.Visible = false;
                 return;
             }
 
@@ -1331,7 +1331,7 @@ namespace GxModelViewer
 
         }
 
- 
+
         private void btnImportTextureLevel_Click(object sender, EventArgs e)
         {
             // Extract the TextureReference structure to get the selected texture
@@ -1440,7 +1440,7 @@ namespace GxModelViewer
                 {
                     TreeNode parent = node.Parent;
                     int meshIndex = node.Index;
-                    int modelIndex = gma.GetEntryIndex(parent.Text);                   
+                    int modelIndex = gma.GetEntryIndex(parent.Text);
                     Gcmf model = gma[modelIndex].ModelObject;
                     meshes.Add(model.Meshes[meshIndex]);
                 }
@@ -1456,7 +1456,7 @@ namespace GxModelViewer
                         break;
                     case DialogResult.Yes:
                         UpdateModelDisplay();
-                        UpdateModelTree();  
+                        UpdateModelTree();
                         reloadOnNextRedraw = true;
                         glControlModel.Invalidate();
                         break;
@@ -1491,7 +1491,7 @@ namespace GxModelViewer
         }
 
         private void materialMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {   
+        {
             // Do not allow for the editing of flags if no material is selected
             editFlagsToolStripMenuItem2.Enabled = (treeMaterials.SelectedNodes.Count != 0);
         }
@@ -1562,6 +1562,41 @@ namespace GxModelViewer
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             treeModel.SelectedNode.BeginEdit();
+        }
+
+        private void treeModel_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+
+        private void treeModel_DragDrop(object sender, DragEventArgs e)
+        {
+            TreeNode destinationNode = treeModel.GetNodeAt(treeModel.PointToClient(new Point(e.X, e.Y)));
+            TreeNode sourceNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+
+            if (sourceNode.Parent == null && destinationNode.Parent == null)
+            {
+                GmaEntry entryToBeMoved = new GmaEntry(gma[sourceNode.Index].Name, gma[sourceNode.Index].ModelObject);
+                gma.RemoveAt(sourceNode.Index);
+                gma.Insert(destinationNode.Index, entryToBeMoved);
+                UpdateModelTree();
+            }
+
+            else
+            {
+                e.Effect = DragDropEffects.None;
+                MessageBox.Show("Not currently supported", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void treeModel_DragOver(object sender, DragEventArgs e)
+        {
+            treeModel.SelectedNode = treeModel.GetNodeAt(treeModel.PointToClient(new Point(e.X, e.Y)));
+        }
+
+        private void treeModel_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
         }
 
         private void editMaterialFlagstoolStripMenuItem_Click(object sender, EventArgs e)

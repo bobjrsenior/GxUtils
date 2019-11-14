@@ -14,4 +14,8 @@ GxUtils/LibGxTexture/bin
 GxUtils/LibGxTexture/obj
 GxUtils/TreeViewMS/bin
 GxUtils/TreeViewMS/obj
-GxUtils\.vs\*
+GxUtils/.vs/*
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/db.lock
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/storage.ide
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/storage.ide-shm
+GxUtils/.vs/GxUtils/v16/Server/sqlite3/storage.ide-wal

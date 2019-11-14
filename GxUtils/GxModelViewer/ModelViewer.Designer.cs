@@ -154,11 +154,11 @@ namespace GxModelViewer
             this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -474,6 +474,7 @@ namespace GxModelViewer
             // 
             // treeModel
             // 
+            this.treeModel.AllowDrop = true;
             this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeModel.LabelEdit = true;
             this.treeModel.Location = new System.Drawing.Point(3, 3);
@@ -483,7 +484,11 @@ namespace GxModelViewer
             this.treeModel.TabIndex = 0;
             this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
             this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
+            this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
             this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
+            this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
+            this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
+            this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1483,7 +1488,7 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem,
             this.renameToolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 136);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(199, 114);
             // 
             // gmaImporttoolStripMenuItem
             // 
@@ -1513,6 +1518,13 @@ namespace GxModelViewer
             this.editFlagsToolStripMenuItem.Text = "Edit Flags";
             this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
             // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
             // meshMenuStrip
             // 
             this.meshMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1537,13 +1549,6 @@ namespace GxModelViewer
             // 
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
