@@ -60,15 +60,6 @@ namespace GxModelViewer
             this.btnModelShowLayer2 = new System.Windows.Forms.Button();
             this.btnModelShowAll = new System.Windows.Forms.Button();
             this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
-            this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.importGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportAsGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
@@ -138,6 +129,9 @@ namespace GxModelViewer
             this.treeTextures = new System.Windows.Forms.TreeView();
             this.textureMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.defineNewToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.deletenoMaterialAdjustmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeUnusedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tlpTextureDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpTextureProperties = new System.Windows.Forms.TableLayoutPanel();
             this.lblTextureDimensionsText = new System.Windows.Forms.Label();
@@ -145,8 +139,19 @@ namespace GxModelViewer
             this.btnImportTextureLevel = new System.Windows.Forms.Button();
             this.lblTextureDimensions = new System.Windows.Forms.Label();
             this.lblTextureFormatText = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.lblTextureFormat = new System.Windows.Forms.Label();
+            this.lblTextureUsedBy = new System.Windows.Forms.Label();
             this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
+            this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.importGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportAsGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ofdLoadGma = new System.Windows.Forms.OpenFileDialog();
             this.ofdLoadTpl = new System.Windows.Forms.OpenFileDialog();
             this.sfdSaveTpl = new System.Windows.Forms.SaveFileDialog();
@@ -158,10 +163,12 @@ namespace GxModelViewer
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
+            this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -171,7 +178,6 @@ namespace GxModelViewer
             this.splitContainerModels.Panel2.SuspendLayout();
             this.splitContainerModels.SuspendLayout();
             this.tableLayoutPanelModelSelect.SuspendLayout();
-            this.gmaContextMenuStrip.SuspendLayout();
             this.tlpMaterialMeshDisplay.SuspendLayout();
             this.tlpModelDisplay.SuspendLayout();
             this.tlpMeshDisplay.SuspendLayout();
@@ -193,6 +199,7 @@ namespace GxModelViewer
             this.tlpTextureDisplay.SuspendLayout();
             this.tlpTextureProperties.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
+            this.gmaContextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
@@ -492,76 +499,6 @@ namespace GxModelViewer
             this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
             this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
             this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
-            // 
-            // gmaContextMenuStrip
-            // 
-            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importGMATPLToolStripMenuItem,
-            this.exportAsGMATPLToolStripMenuItem,
-            this.gmaExportTolStripMenuItem,
-            this.gmaImporttoolStripMenuItem,
-            this.importPreserveFLagsToolStripMenuItem,
-            this.editFlagsToolStripMenuItem,
-            this.renameToolStripMenuItem,
-            this.removeToolStripMenuItem});
-            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(259, 202);
-            // 
-            // importGMATPLToolStripMenuItem
-            // 
-            this.importGMATPLToolStripMenuItem.Name = "importGMATPLToolStripMenuItem";
-            this.importGMATPLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.importGMATPLToolStripMenuItem.Text = "Import GMA/TPL...";
-            this.importGMATPLToolStripMenuItem.Click += new System.EventHandler(this.importGMATPLToolStripMenuItem_Click);
-            // 
-            // exportAsGMATPLToolStripMenuItem
-            // 
-            this.exportAsGMATPLToolStripMenuItem.Name = "exportAsGMATPLToolStripMenuItem";
-            this.exportAsGMATPLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.exportAsGMATPLToolStripMenuItem.Text = "Export as GMA/TPL...";
-            this.exportAsGMATPLToolStripMenuItem.Click += new System.EventHandler(this.exportAsGMATPLToolStripMenuItem_Click);
-            // 
-            // gmaExportTolStripMenuItem
-            // 
-            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
-            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.gmaExportTolStripMenuItem.Text = "Export as OBJ/MTL...";
-            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
-            // 
-            // gmaImporttoolStripMenuItem
-            // 
-            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
-            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.gmaImporttoolStripMenuItem.Text = "Replace with OBJ...";
-            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
-            // 
-            // importPreserveFLagsToolStripMenuItem
-            // 
-            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
-            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ (Preserve Flags)...";
-            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
-            // 
-            // editFlagsToolStripMenuItem
-            // 
-            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
-            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.editFlagsToolStripMenuItem.Text = "Edit Flags...";
-            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.removeToolStripMenuItem.Text = "Remove";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1358,16 +1295,40 @@ namespace GxModelViewer
             // textureMenuStrip
             // 
             this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defineNewToolStripMenuItem1});
+            this.defineNewToolStripMenuItem1,
+            this.removeToolStripMenuItem1,
+            this.deletenoMaterialAdjustmentToolStripMenuItem,
+            this.removeUnusedToolStripMenuItem});
             this.textureMenuStrip.Name = "textureMenuStrip";
-            this.textureMenuStrip.Size = new System.Drawing.Size(145, 26);
+            this.textureMenuStrip.Size = new System.Drawing.Size(242, 92);
             // 
             // defineNewToolStripMenuItem1
             // 
             this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
-            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(241, 22);
             this.defineNewToolStripMenuItem1.Text = "Define New...";
             this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
+            // 
+            // removeToolStripMenuItem1
+            // 
+            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(241, 22);
+            this.removeToolStripMenuItem1.Text = "Delete";
+            this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
+            // 
+            // deletenoMaterialAdjustmentToolStripMenuItem
+            // 
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Name = "deletenoMaterialAdjustmentToolStripMenuItem";
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Text = "Delete (no material adjustment)";
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Click += new System.EventHandler(this.deletenoMaterialAdjustmentToolStripMenuItem_Click);
+            // 
+            // removeUnusedToolStripMenuItem
+            // 
+            this.removeUnusedToolStripMenuItem.Name = "removeUnusedToolStripMenuItem";
+            this.removeUnusedToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.removeUnusedToolStripMenuItem.Text = "Delete All Unused";
+            this.removeUnusedToolStripMenuItem.Click += new System.EventHandler(this.removeUnusedToolStripMenuItem_Click);
             // 
             // tlpTextureDisplay
             // 
@@ -1395,18 +1356,21 @@ namespace GxModelViewer
             this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpTextureProperties.Controls.Add(this.lblTextureDimensionsText, 0, 0);
-            this.tlpTextureProperties.Controls.Add(this.btnExportTextureLevel, 0, 2);
-            this.tlpTextureProperties.Controls.Add(this.btnImportTextureLevel, 1, 2);
+            this.tlpTextureProperties.Controls.Add(this.btnExportTextureLevel, 0, 3);
+            this.tlpTextureProperties.Controls.Add(this.btnImportTextureLevel, 1, 3);
             this.tlpTextureProperties.Controls.Add(this.lblTextureDimensions, 1, 0);
             this.tlpTextureProperties.Controls.Add(this.lblTextureFormatText, 0, 1);
+            this.tlpTextureProperties.Controls.Add(this.label2, 0, 2);
             this.tlpTextureProperties.Controls.Add(this.lblTextureFormat, 1, 1);
-            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 401);
+            this.tlpTextureProperties.Controls.Add(this.lblTextureUsedBy, 1, 2);
+            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 381);
             this.tlpTextureProperties.Name = "tlpTextureProperties";
-            this.tlpTextureProperties.RowCount = 3;
+            this.tlpTextureProperties.RowCount = 4;
             this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11F));
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTextureProperties.Size = new System.Drawing.Size(602, 80);
+            this.tlpTextureProperties.Size = new System.Drawing.Size(602, 100);
             this.tlpTextureProperties.TabIndex = 3;
             // 
             // lblTextureDimensionsText
@@ -1423,7 +1387,7 @@ namespace GxModelViewer
             // btnExportTextureLevel
             // 
             this.btnExportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExportTextureLevel.Location = new System.Drawing.Point(3, 43);
+            this.btnExportTextureLevel.Location = new System.Drawing.Point(3, 63);
             this.btnExportTextureLevel.Name = "btnExportTextureLevel";
             this.btnExportTextureLevel.Size = new System.Drawing.Size(295, 34);
             this.btnExportTextureLevel.TabIndex = 1;
@@ -1434,7 +1398,7 @@ namespace GxModelViewer
             // btnImportTextureLevel
             // 
             this.btnImportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnImportTextureLevel.Location = new System.Drawing.Point(304, 43);
+            this.btnImportTextureLevel.Location = new System.Drawing.Point(304, 63);
             this.btnImportTextureLevel.Name = "btnImportTextureLevel";
             this.btnImportTextureLevel.Size = new System.Drawing.Size(295, 34);
             this.btnImportTextureLevel.TabIndex = 2;
@@ -1457,28 +1421,121 @@ namespace GxModelViewer
             this.lblTextureFormatText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTextureFormatText.Location = new System.Drawing.Point(3, 20);
             this.lblTextureFormatText.Name = "lblTextureFormatText";
-            this.lblTextureFormatText.Size = new System.Drawing.Size(295, 20);
+            this.lblTextureFormatText.Size = new System.Drawing.Size(295, 11);
             this.lblTextureFormatText.TabIndex = 2;
             this.lblTextureFormatText.Text = "Format:";
             this.lblTextureFormatText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(241, 39);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Used by:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblTextureFormat
             // 
             this.lblTextureFormat.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTextureFormat.Location = new System.Drawing.Point(304, 20);
             this.lblTextureFormat.Name = "lblTextureFormat";
-            this.lblTextureFormat.Size = new System.Drawing.Size(295, 20);
+            this.lblTextureFormat.Size = new System.Drawing.Size(295, 11);
             this.lblTextureFormat.TabIndex = 3;
             this.lblTextureFormat.Text = "-";
+            // 
+            // lblTextureUsedBy
+            // 
+            this.lblTextureUsedBy.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblTextureUsedBy.AutoEllipsis = true;
+            this.lblTextureUsedBy.AutoSize = true;
+            this.lblTextureUsedBy.Location = new System.Drawing.Point(304, 39);
+            this.lblTextureUsedBy.Name = "lblTextureUsedBy";
+            this.lblTextureUsedBy.Size = new System.Drawing.Size(10, 13);
+            this.lblTextureUsedBy.TabIndex = 5;
+            this.lblTextureUsedBy.Text = "-";
             // 
             // pbTextureImage
             // 
             this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
             this.pbTextureImage.Name = "pbTextureImage";
-            this.pbTextureImage.Size = new System.Drawing.Size(602, 392);
+            this.pbTextureImage.Size = new System.Drawing.Size(602, 372);
             this.pbTextureImage.TabIndex = 4;
             this.pbTextureImage.TabStop = false;
+            // 
+            // gmaContextMenuStrip
+            // 
+            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importGMATPLToolStripMenuItem,
+            this.exportAsGMATPLToolStripMenuItem,
+            this.gmaExportTolStripMenuItem,
+            this.gmaImporttoolStripMenuItem,
+            this.importPreserveFLagsToolStripMenuItem,
+            this.editFlagsToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.removeToolStripMenuItem});
+            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(262, 180);
+            // 
+            // importGMATPLToolStripMenuItem
+            // 
+            this.importGMATPLToolStripMenuItem.Name = "importGMATPLToolStripMenuItem";
+            this.importGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.importGMATPLToolStripMenuItem.Text = "Import GMA/TPL...";
+            this.importGMATPLToolStripMenuItem.Click += new System.EventHandler(this.importGMATPLToolStripMenuItem_Click);
+            // 
+            // exportAsGMATPLToolStripMenuItem
+            // 
+            this.exportAsGMATPLToolStripMenuItem.Name = "exportAsGMATPLToolStripMenuItem";
+            this.exportAsGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.exportAsGMATPLToolStripMenuItem.Text = "Export as GMA/TPL...";
+            this.exportAsGMATPLToolStripMenuItem.Click += new System.EventHandler(this.exportAsGMATPLToolStripMenuItem_Click);
+            // 
+            // gmaExportTolStripMenuItem
+            // 
+            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.gmaExportTolStripMenuItem.Text = "Export as OBJ/MTL...";
+            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
+            // 
+            // gmaImporttoolStripMenuItem
+            // 
+            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.gmaImporttoolStripMenuItem.Text = "Replace with OBJ...";
+            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
+            // 
+            // importPreserveFLagsToolStripMenuItem
+            // 
+            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
+            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ...  (Preserve Flags)";
+            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem
+            // 
+            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
+            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.editFlagsToolStripMenuItem.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.removeToolStripMenuItem.Text = "Delete";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // ofdLoadGma
             // 
@@ -1535,7 +1592,8 @@ namespace GxModelViewer
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.numMipmapsToolStripMenuItem,
-            this.mipmapInterpolationToolStripMenuItem});
+            this.mipmapInterpolationToolStripMenuItem,
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -1543,14 +1601,22 @@ namespace GxModelViewer
             // numMipmapsToolStripMenuItem
             // 
             this.numMipmapsToolStripMenuItem.Name = "numMipmapsToolStripMenuItem";
-            this.numMipmapsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.numMipmapsToolStripMenuItem.Text = "Max Num Mipmaps";
+            this.numMipmapsToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.numMipmapsToolStripMenuItem.Text = "Max Number of Mipmaps";
             // 
             // mipmapInterpolationToolStripMenuItem
             // 
             this.mipmapInterpolationToolStripMenuItem.Name = "mipmapInterpolationToolStripMenuItem";
-            this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
             this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
+            // 
+            // deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem
+            // 
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckOnClick = true;
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Name = "deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem";
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Text = "Delete Textures Left Unused on Model Deletion";
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckedChanged += new System.EventHandler(this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged);
             // 
             // meshMenuStrip
             // 
@@ -1600,7 +1666,6 @@ namespace GxModelViewer
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).EndInit();
             this.splitContainerModels.ResumeLayout(false);
             this.tableLayoutPanelModelSelect.ResumeLayout(false);
-            this.gmaContextMenuStrip.ResumeLayout(false);
             this.tlpMaterialMeshDisplay.ResumeLayout(false);
             this.tlpModelDisplay.ResumeLayout(false);
             this.tlpMeshDisplay.ResumeLayout(false);
@@ -1621,7 +1686,9 @@ namespace GxModelViewer
             this.textureMenuStrip.ResumeLayout(false);
             this.tlpTextureDisplay.ResumeLayout(false);
             this.tlpTextureProperties.ResumeLayout(false);
+            this.tlpTextureProperties.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
+            this.gmaContextMenuStrip.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.meshMenuStrip.ResumeLayout(false);
@@ -1763,5 +1830,12 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importGMATPLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportAsGMATPLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem removeUnusedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deletenoMaterialAdjustmentToolStripMenuItem;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label lblTextureUsedBy;
+        private System.Windows.Forms.ToolTip toolTipTextureUsedBy;
     }
 }

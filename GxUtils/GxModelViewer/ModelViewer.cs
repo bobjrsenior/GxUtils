@@ -80,6 +80,7 @@ namespace GxModelViewer
         /// <summary>Manager for the textures and display lists associated with the .GMA/.TPL files.</summary>
         OpenGlModelContext ctx = new OpenGlModelContext();
 
+        bool deleteUnusedTexturesAuto = false;
         /// <summary>
         /// A tree containing the objects defined in the currently loaded GMA file.
         /// The first level of tree children contains a node for each GCMF model in the GMA file,
@@ -409,6 +410,9 @@ namespace GxModelViewer
             UpdateMaterialList();
             UpdateMaterialDisplay();
 
+            // Update texture tab
+            UpdateTextureDisplay();
+
             // Update model viewer
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
@@ -426,6 +430,10 @@ namespace GxModelViewer
             editFlagsToolStripMenuItem.Enabled = true;
             renameToolStripMenuItem.Enabled = true;
             removeToolStripMenuItem.Enabled = true;
+            removeToolStripMenuItem1.Enabled = true;
+            removeUnusedToolStripMenuItem.Enabled = true;
+
+            if (tpl != null) UpdateTexturesUsedBy();
         }
 
         private void tsBtnSaveGma_Click(object sender, EventArgs e)
@@ -513,15 +521,16 @@ namespace GxModelViewer
 
         private void UpdateModelButtons()
         {
-            tsBtnSaveGma.Enabled = (gma != null && haveUnsavedGmaChanges);
-            tsBtnSaveGmaAs.Enabled = (gma != null);
+            bool gmaNotNull = (gma != null);
+            tsBtnSaveGma.Enabled = (gmaNotNull && haveUnsavedGmaChanges);
+            tsBtnSaveGmaAs.Enabled = (gmaNotNull);
 
-            tsBtnExportObjMtl.Enabled = (gma != null);
+            tsBtnExportObjMtl.Enabled = (gmaNotNull);
 
-            btnModelShowAll.Enabled = (gma != null);
-            btnModelShowLayer1.Enabled = (gma != null);
-            btnModelShowLayer2.Enabled = (gma != null);
-            btnModelHideAll.Enabled = (gma != null);
+            btnModelShowAll.Enabled = (gmaNotNull);
+            btnModelShowLayer1.Enabled = (gmaNotNull);
+            btnModelShowLayer2.Enabled = (gmaNotNull);
+            btnModelHideAll.Enabled = (gmaNotNull);
         }
 
         private void UpdateModelDisplay()
@@ -781,6 +790,9 @@ namespace GxModelViewer
             {
                 throw exception;
             }
+
+            // Updates list of models used by which textures
+            UpdateTexturesUsedBy();
         }
 
         private void tsBtnSaveTpl_Click(object sender, EventArgs e)
@@ -857,6 +869,7 @@ namespace GxModelViewer
                 tlpTextureProperties.Visible = true;
                 lblTextureDimensions.Text = "-";
                 lblTextureFormat.Text = "-";
+                lblTextureUsedBy.Text = "-";
                 btnExportTextureLevel.Enabled = false;
                 //btnImportTextureLevel.Enabled = false;
 
@@ -872,6 +885,16 @@ namespace GxModelViewer
             lblTextureDimensions.Text = string.Format("{0} x {1}",
                 tex.WidthOfLevel(effTextureLevel), tex.HeightOfLevel(effTextureLevel));
             lblTextureFormat.Text = string.Format("{0} ({1})", tex.Format, EnumUtils.GetEnumDescription(tex.Format));
+            lblTextureUsedBy.Text = string.Join(", ", tex.usedByModels.Select(x => x.Name));
+            if (tex.usedByModels == null || tex.usedByModels.Count == 0)
+            {
+                lblTextureUsedBy.Text = "Unused";
+            }
+            if (gma == null)
+            {
+                lblTextureUsedBy.Text = "N/A";
+            }
+            toolTipTextureUsedBy.SetToolTip(lblTextureUsedBy, lblTextureUsedBy.Text);
             btnExportTextureLevel.Enabled = true;
             btnImportTextureLevel.Enabled = true;
         }
@@ -879,7 +902,14 @@ namespace GxModelViewer
         private void UpdateTextureTree()
         {
             // Do not allow new definition of textures if no TPL is loaded
-            defineNewToolStripMenuItem1.Enabled = (tpl != null);
+            bool tplNotNull = (tpl != null);
+            bool gmaNotNull = (gma != null);
+
+            defineNewToolStripMenuItem1.Enabled = (tplNotNull);
+            removeToolStripMenuItem1.Enabled = (tplNotNull) && (gmaNotNull);
+            removeUnusedToolStripMenuItem.Enabled = (tplNotNull) && (gmaNotNull);
+            deletenoMaterialAdjustmentToolStripMenuItem.Enabled = (tplNotNull);
+
             treeTextures.Nodes.Clear();
             if (tpl != null)
             {
@@ -902,6 +932,8 @@ namespace GxModelViewer
                     }
                 }
             }
+
+
         }
 
         private void UpdateTextureButtons()
@@ -976,10 +1008,12 @@ namespace GxModelViewer
             UpdateMaterialList();
             UpdateMaterialDisplay();
 
+            
             // Update texture list
             UpdateTextureTree();
             UpdateTextureButtons();
             UpdateTextureDisplay();
+            UpdateTexturesUsedBy();
 
             // Update model viewer
             reloadOnNextRedraw = true;
@@ -1487,7 +1521,9 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateMaterialList();
                         treeMaterials.SelectedNode = treeMaterials.Nodes[gma[GetSelectedModelIdx()].ModelObject.Materials.Count - 1];
-                        UpdateMaterialDisplay();
+                        UpdateMaterialDisplay();                        
+                        UpdateTexturesUsedBy();
+                        reloadOnNextRedraw = true;
                         break;
                 }
             }
@@ -1563,7 +1599,11 @@ namespace GxModelViewer
 
         private void treeModel_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            gma[e.Node.Index].Name = e.Label;
+            if (e.Label != null)
+            {
+                gma[e.Node.Index].Name = e.Label;
+                return;
+            }
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1592,7 +1632,7 @@ namespace GxModelViewer
             else
             {
                 e.Effect = DragDropEffects.None;
-                MessageBox.Show("Not currently supported", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Re-ordering individual meshes or moving meshes between models is currently not supported.", "", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
@@ -1611,11 +1651,15 @@ namespace GxModelViewer
         {
             if (treeModel.SelectedNode != null)
             {
-                gma.RemoveAt(treeModel.SelectedNode.Index);                            
+                gma.RemoveAt(treeModel.SelectedNode.Index);
                 treeModel.SelectedNodes.Clear();
                 UpdateModelDisplay();
                 UpdateModelButtons();
                 UpdateModelTree();
+                if (deleteUnusedTexturesAuto)
+                {
+                    DeleteUnusedTextures();
+                }
                 reloadOnNextRedraw = true;
             }
             else
@@ -1635,13 +1679,15 @@ namespace GxModelViewer
                 using (Stream gmaStream = File.OpenRead(ofdLoadGma.FileName))
                 {
                     Gma importedGma = new Gma(gmaStream, GetSelectedGame());
-                    foreach (GmaEntry newGmaEntry in importedGma) {
-                        foreach (GcmfMaterial newGcmfMat in newGmaEntry.ModelObject.Materials) {
-                                // Accounts for the offset of importing new textures to the existing TPL
-                                newGcmfMat.TextureIdx += (ushort)tpl.Count;
-                        }                       
+                    foreach (GmaEntry newGmaEntry in importedGma)
+                    {
+                        foreach (GcmfMaterial newGcmfMat in newGmaEntry.ModelObject.Materials)
+                        {
+                            // Accounts for the offset of importing new textures to the existing TPL
+                            newGcmfMat.TextureIdx += (ushort)tpl.Count;
+                        }
                         gma.Add(newGmaEntry);
-                    }                   
+                    }
                 }
 
                 using (Stream tplStream = File.OpenRead(ofdLoadTpl.FileName))
@@ -1651,7 +1697,7 @@ namespace GxModelViewer
                     {
                         tpl.Add(newTplTexture);
                     }
-                }
+                }                
             }
             catch (Exception ex)
             {
@@ -1661,6 +1707,7 @@ namespace GxModelViewer
             UpdateModelTree();
             UpdateModelDisplay();
             UpdateTextureTree();
+            UpdateTexturesUsedBy();
 
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
@@ -1682,12 +1729,12 @@ namespace GxModelViewer
                 foreach (TreeNode node in selectedNodes)
                 {
                     gmaToBeSaved.Add(gma[node.Index]);
-                    
+
                     foreach (GcmfMaterial materialToBeSaved in gma[node.Index].ModelObject.Materials)
-                    {                        
+                    {
                         textureIds.Add(materialToBeSaved.TextureIdx);
                         // Resets the index of the saved materials in accorance with their texture ID
-                        materialToBeSaved.TextureIdx = (ushort)(textureIds.Count()-1);
+                        materialToBeSaved.TextureIdx = (ushort)(textureIds.Count() - 1);
                     }
                 }
 
@@ -1706,8 +1753,21 @@ namespace GxModelViewer
                     tplToBeSaved.Save(tplStream, GetSelectedGame());
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error exporting as a GMA/TPL.", "Ërror", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void removeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (treeTextures.SelectedNode != null)
+            {
+                DeleteTextureAt(treeTextures.SelectedNode.Index);
+            }
+            else
+            {
+                MessageBox.Show("No texture selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -1727,6 +1787,7 @@ namespace GxModelViewer
                 {
                     case DialogResult.OK:
                         UpdateMaterialDisplay();
+                        UpdateTexturesUsedBy();
                         break;
                 }
             }
@@ -1753,6 +1814,97 @@ namespace GxModelViewer
             else
             {
                 throw new InvalidOperationException("A TPL must be loaded to call this method.");
+            }
+        }
+
+        private void removeUnusedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteUnusedTextures();
+            UpdateTextureTree();
+            UpdateTextureButtons();
+            UpdateTextureDisplay();
+        }
+
+        /// <summary>
+        /// Determines which models use a texture for all textures in the TPL.
+        /// </summary>
+        public void UpdateTexturesUsedBy()
+        {
+            if (gma != null && tpl != null)
+            {
+                // Clears list of models used by textures so it is updated accurately when textures are removed
+                foreach (TplTexture tex in tpl)
+                {
+                    tex.usedByModels.Clear();
+                }
+                foreach (GmaEntry entry in gma)
+                {
+                    foreach (GcmfMaterial material in entry.ModelObject.Materials)
+                    {                       
+                        
+                        if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
+                        {
+                            Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
+                            tpl[material.TextureIdx].usedByModels.Add(entry);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void deletenoMaterialAdjustmentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteTextureAt(treeTextures.SelectedNode.Index, false);
+        }
+
+        private void deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            deleteUnusedTexturesAuto = deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Checked;
+        }
+
+        /// <summary>
+        /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
+        /// </summary>
+        /// <param name="textureId">ID of the texture to remove</param>
+        /// <param name="update">Whether or not to correct the texture indices of materials</param>
+        public void DeleteTextureAt(int textureId, bool update = true)
+        {
+            tpl.RemoveAt(textureId);
+            
+            if (update)
+            {
+                foreach (GmaEntry model in gma)
+                {
+                    foreach (GcmfMaterial mat in model.ModelObject.Materials)
+                    {
+                        if (mat.TextureIdx > textureId)
+                        {
+                            mat.TextureIdx--;
+                        }
+                    }
+                }
+            }
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+            UpdateTextureButtons();
+            reloadOnNextRedraw = true;
+        }
+
+        /// <summary>
+        /// Removes textures that do not have any associated models
+        /// </summary>
+        public void DeleteUnusedTextures()
+        {
+            // Probably a crappy way of doing this, and it's slow with lots of textures, but it works and has no issues with duplicate textures
+            // Adding a method to delete a texture using a TplTexture as an argument might allow this to not be inefficient
+            UpdateTexturesUsedBy();
+            for (int texId = 0; texId < tpl.Count; texId++)
+            {
+                if (tpl[texId].usedByModels == null || tpl[texId].usedByModels.Count == 0)
+                {
+                    DeleteTextureAt(texId);
+                    texId = -1;                   
+                }
             }
         }
     }

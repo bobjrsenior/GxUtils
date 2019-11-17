@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using MiscUtil.IO;
 using LibGxFormat.ModelRenderer;
 using LibGxTexture;
+using LibGxFormat.Gma;
 
 /* The CMPR bug - Read this if you want to modify loading, saving or mipmapping.
  * ------------
@@ -91,6 +92,12 @@ namespace LibGxFormat.Tpl
         /// which we save here in order to resave the original files perfectly.
         /// </summary>
         int formatRaw;
+
+        /// <summary>
+        /// Holds a list of models that use this texture.
+        /// </summary>
+
+        public List<GmaEntry> usedByModels = new List<GmaEntry>{};
 
         /// <summary>
         /// Get the value of the format field for a texture with no levels defined.
