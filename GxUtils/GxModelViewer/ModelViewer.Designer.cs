@@ -493,12 +493,14 @@ namespace GxModelViewer
             this.treeModel.Size = new System.Drawing.Size(301, 370);
             this.treeModel.TabIndex = 0;
             this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
+            this.treeModel.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_BeforeLabelEdit);
             this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
             this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
             this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
             this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
             this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
             this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
+            this.treeModel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeModel_MouseDown);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1043,6 +1045,7 @@ namespace GxModelViewer
             this.treeMaterials.Size = new System.Drawing.Size(306, 490);
             this.treeMaterials.TabIndex = 0;
             this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
+            this.treeMaterials.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeMaterials_MouseDown);
             // 
             // materialMenuStrip
             // 
@@ -1291,6 +1294,7 @@ namespace GxModelViewer
             this.treeTextures.Size = new System.Drawing.Size(306, 490);
             this.treeTextures.TabIndex = 0;
             this.treeTextures.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeTextures_AfterSelect);
+            this.treeTextures.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeTextures_MouseDown);
             // 
             // textureMenuStrip
             // 

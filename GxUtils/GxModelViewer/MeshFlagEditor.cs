@@ -99,6 +99,10 @@ namespace GxModelViewer
 
                 if (meshes[i].Unk3C != meshes[0].Unk3C) this.unknown3CTextBox.Text = FlagHelper.ERROR_VALUE;
                 if (meshes[i].Unk40 != meshes[0].Unk40) this.unknown40TextBox.Text = FlagHelper.ERROR_VALUE;
+
+                if (meshes[i].PrimaryMaterialIdx != meshes[0].PrimaryMaterialIdx) this.unknown16TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].SecondaryMaterialIdx != meshes[0].SecondaryMaterialIdx) this.unknown18TextBox.Text = FlagHelper.ERROR_VALUE;
+                if (meshes[i].TertiaryMaterialIdx != meshes[0].TertiaryMaterialIdx) this.unknown1ATextBox.Text = FlagHelper.ERROR_VALUE;
             }
         }
 
@@ -348,6 +352,5 @@ namespace GxModelViewer
                 return;
             }
         }
-
     }
 }

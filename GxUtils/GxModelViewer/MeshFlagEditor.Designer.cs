@@ -71,8 +71,6 @@
             this.label34 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label38 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
@@ -86,6 +84,8 @@
             this.unknown18TextBox = new System.Windows.Forms.TextBox();
             this.unknown16TextBox = new System.Windows.Forms.TextBox();
             this.unknown1ATextBox = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.reloadCheckBox = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel4.SuspendLayout();
@@ -535,26 +535,6 @@
             this.label36.TabIndex = 58;
             this.label36.Text = "0x";
             // 
-            // label37
-            // 
-            this.label37.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 32);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(102, 13);
-            this.label37.TabIndex = 0;
-            this.label37.Text = "Render Flags (0x00)";
-            // 
-            // label38
-            // 
-            this.label38.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(3, 6);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(33, 13);
-            this.label38.TabIndex = 48;
-            this.label38.Text = "Layer";
-            // 
             // label39
             // 
             this.label39.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -678,6 +658,26 @@
             this.unknown1ATextBox.Name = "unknown1ATextBox";
             this.unknown1ATextBox.Size = new System.Drawing.Size(50, 20);
             this.unknown1ATextBox.TabIndex = 9;
+            // 
+            // label37
+            // 
+            this.label37.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(3, 32);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(102, 13);
+            this.label37.TabIndex = 0;
+            this.label37.Text = "Render Flags (0x00)";
+            // 
+            // label38
+            // 
+            this.label38.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(3, 6);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(33, 13);
+            this.label38.TabIndex = 48;
+            this.label38.Text = "Layer";
             // 
             // tableLayoutPanel3
             // 

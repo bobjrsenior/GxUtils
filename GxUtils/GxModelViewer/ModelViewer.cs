@@ -106,6 +106,9 @@ namespace GxModelViewer
         GxInterpolationFormat intFormat = GxInterpolationFormat.HighQualityBicubic;
         ToolStripMenuItem[] mipMapIntItems;
 
+        /// <summary> Whether or not the current selection can be renamed. </summary>
+        bool canRenameCurrentSelection = false;
+
         public ModelViewer()
         {
             InitializeComponent();
@@ -1602,12 +1605,14 @@ namespace GxModelViewer
             if (e.Label != null)
             {
                 gma[e.Node.Index].Name = e.Label;
+                canRenameCurrentSelection = false;
                 return;
             }
         }
 
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            canRenameCurrentSelection = true;
             treeModel.SelectedNode.BeginEdit();
         }
 
@@ -1708,7 +1713,11 @@ namespace GxModelViewer
             UpdateModelDisplay();
             UpdateTextureTree();
             UpdateTexturesUsedBy();
-
+            UpdateMaterialDisplay();
+            UpdateMaterialList();
+            
+            haveUnsavedGmaChanges = true;
+            haveUnsavedTplChanges = true;
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
         }
@@ -1764,6 +1773,11 @@ namespace GxModelViewer
             if (treeTextures.SelectedNode != null)
             {
                 DeleteTextureAt(treeTextures.SelectedNode.Index);
+                UpdateTextureTree();
+                UpdateTextureDisplay();
+                UpdateTextureButtons();
+                reloadOnNextRedraw = true;
+                haveUnsavedTplChanges = true;
             }
             else
             {
@@ -1788,6 +1802,7 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateMaterialDisplay();
                         UpdateTexturesUsedBy();
+                        haveUnsavedGmaChanges = true;
                         break;
                 }
             }
@@ -1823,6 +1838,7 @@ namespace GxModelViewer
             UpdateTextureTree();
             UpdateTextureButtons();
             UpdateTextureDisplay();
+            haveUnsavedTplChanges = true;
         }
 
         /// <summary>
@@ -1839,13 +1855,16 @@ namespace GxModelViewer
                 }
                 foreach (GmaEntry entry in gma)
                 {
-                    foreach (GcmfMaterial material in entry.ModelObject.Materials)
-                    {                       
-                        
-                        if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
+                    if (entry != null)
+                    {
+                        foreach (GcmfMaterial material in entry.ModelObject.Materials)
                         {
-                            Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
-                            tpl[material.TextureIdx].usedByModels.Add(entry);
+
+                            if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
+                            {
+                                Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
+                                tpl[material.TextureIdx].usedByModels.Add(entry);
+                            }
                         }
                     }
                 }
@@ -1855,11 +1874,47 @@ namespace GxModelViewer
         private void deletenoMaterialAdjustmentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteTextureAt(treeTextures.SelectedNode.Index, false);
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+            UpdateTextureButtons();
+            reloadOnNextRedraw = true;
+            haveUnsavedTplChanges = true;
         }
 
         private void deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             deleteUnusedTexturesAuto = deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Checked;
+        }
+
+        private void treeModel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Control.ModifierKeys != Keys.Shift) {
+                treeModel.SelectedNode = treeModel.GetNodeAt(e.X, e.Y);
+            }
+        }
+
+        private void treeMaterials_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Control.ModifierKeys != Keys.Shift)
+            {
+                treeMaterials.SelectedNode = treeMaterials.GetNodeAt(e.X, e.Y);
+            }
+        }
+
+        private void treeTextures_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Control.ModifierKeys != Keys.Shift)
+            {
+                treeModel.SelectedNode = treeModel.GetNodeAt(e.X, e.Y);
+            }
+        }
+
+        private void treeModel_BeforeLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            if (!canRenameCurrentSelection)
+            {
+                e.CancelEdit = true;
+            }
         }
 
         /// <summary>
@@ -1873,21 +1928,20 @@ namespace GxModelViewer
             
             if (update)
             {
-                foreach (GmaEntry model in gma)
+                foreach (GmaEntry entry in gma)
                 {
-                    foreach (GcmfMaterial mat in model.ModelObject.Materials)
+                    if (entry != null)
                     {
-                        if (mat.TextureIdx > textureId)
+                        foreach (GcmfMaterial mat in entry.ModelObject.Materials)
                         {
-                            mat.TextureIdx--;
+                            if (mat.TextureIdx > textureId)
+                            {
+                                mat.TextureIdx--;
+                            }
                         }
                     }
                 }
             }
-            UpdateTextureTree();
-            UpdateTextureDisplay();
-            UpdateTextureButtons();
-            reloadOnNextRedraw = true;
         }
 
         /// <summary>
