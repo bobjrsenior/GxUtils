@@ -88,10 +88,19 @@
             this.label38 = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.reloadCheckBox = new System.Windows.Forms.CheckBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.primaryXCoordScale = new System.Windows.Forms.TextBox();
+            this.secondaryXCoordScale = new System.Windows.Forms.TextBox();
+            this.primaryYCoordScale = new System.Windows.Forms.TextBox();
+            this.secondaryYCoordScale = new System.Windows.Forms.TextBox();
+            this.createCoordsButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // renderFlagsTextBox
@@ -174,7 +183,7 @@
             // 
             // okayButton
             // 
-            this.okayButton.Location = new System.Drawing.Point(346, 429);
+            this.okayButton.Location = new System.Drawing.Point(352, 493);
             this.okayButton.Name = "okayButton";
             this.okayButton.Size = new System.Drawing.Size(75, 23);
             this.okayButton.TabIndex = 34;
@@ -184,7 +193,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(427, 428);
+            this.cancelButton.Location = new System.Drawing.Point(433, 493);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 35;
@@ -266,7 +275,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(17, 429);
+            this.saveButton.Location = new System.Drawing.Point(12, 493);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(75, 23);
             this.saveButton.TabIndex = 51;
@@ -276,7 +285,7 @@
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(98, 429);
+            this.loadButton.Location = new System.Drawing.Point(93, 493);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(75, 23);
             this.loadButton.TabIndex = 52;
@@ -700,18 +709,102 @@
             // reloadCheckBox
             // 
             this.reloadCheckBox.AutoSize = true;
-            this.reloadCheckBox.Location = new System.Drawing.Point(304, 402);
+            this.reloadCheckBox.Location = new System.Drawing.Point(325, 470);
             this.reloadCheckBox.Name = "reloadCheckBox";
             this.reloadCheckBox.Size = new System.Drawing.Size(191, 17);
             this.reloadCheckBox.TabIndex = 66;
             this.reloadCheckBox.Text = "Reload model viewer after applying";
             this.reloadCheckBox.UseVisualStyleBackColor = true;
             // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 3;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel5.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.primaryXCoordScale, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.secondaryXCoordScale, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.primaryYCoordScale, 2, 0);
+            this.tableLayoutPanel5.Controls.Add(this.secondaryYCoordScale, 2, 1);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(12, 429);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(300, 52);
+            this.tableLayoutPanel5.TabIndex = 68;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(166, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Primary Tex. Coord. Scaling (X, Y)";
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(183, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Secondary Tex. Coord. Scaling (X, Y)";
+            // 
+            // primaryXCoordScale
+            // 
+            this.primaryXCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.primaryXCoordScale.Location = new System.Drawing.Point(192, 3);
+            this.primaryXCoordScale.Name = "primaryXCoordScale";
+            this.primaryXCoordScale.Size = new System.Drawing.Size(50, 20);
+            this.primaryXCoordScale.TabIndex = 2;
+            // 
+            // secondaryXCoordScale
+            // 
+            this.secondaryXCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.secondaryXCoordScale.Location = new System.Drawing.Point(192, 29);
+            this.secondaryXCoordScale.Name = "secondaryXCoordScale";
+            this.secondaryXCoordScale.Size = new System.Drawing.Size(50, 20);
+            this.secondaryXCoordScale.TabIndex = 3;
+            // 
+            // primaryYCoordScale
+            // 
+            this.primaryYCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.primaryYCoordScale.Location = new System.Drawing.Point(248, 3);
+            this.primaryYCoordScale.Name = "primaryYCoordScale";
+            this.primaryYCoordScale.Size = new System.Drawing.Size(50, 20);
+            this.primaryYCoordScale.TabIndex = 4;
+            // 
+            // secondaryYCoordScale
+            // 
+            this.secondaryYCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.secondaryYCoordScale.Location = new System.Drawing.Point(248, 29);
+            this.secondaryYCoordScale.Name = "secondaryYCoordScale";
+            this.secondaryYCoordScale.Size = new System.Drawing.Size(50, 20);
+            this.secondaryYCoordScale.TabIndex = 5;
+            // 
+            // createCoordsButton
+            // 
+            this.createCoordsButton.Location = new System.Drawing.Point(174, 493);
+            this.createCoordsButton.Name = "createCoordsButton";
+            this.createCoordsButton.Size = new System.Drawing.Size(172, 23);
+            this.createCoordsButton.TabIndex = 69;
+            this.createCoordsButton.Text = "Create Secondary Coordinates";
+            this.createCoordsButton.UseVisualStyleBackColor = true;
+            this.createCoordsButton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MeshFlagEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(520, 463);
+            this.ClientSize = new System.Drawing.Size(520, 526);
+            this.Controls.Add(this.createCoordsButton);
+            this.Controls.Add(this.tableLayoutPanel5);
             this.Controls.Add(this.reloadCheckBox);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel4);
@@ -733,6 +826,8 @@
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -799,5 +894,13 @@
         private System.Windows.Forms.TextBox unknown1ATextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.CheckBox reloadCheckBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox primaryXCoordScale;
+        private System.Windows.Forms.TextBox secondaryXCoordScale;
+        private System.Windows.Forms.TextBox primaryYCoordScale;
+        private System.Windows.Forms.TextBox secondaryYCoordScale;
+        private System.Windows.Forms.Button createCoordsButton;
     }
 }

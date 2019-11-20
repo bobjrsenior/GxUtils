@@ -1917,6 +1917,15 @@ namespace GxModelViewer
             }
         }
 
+        private void reloadViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            reloadOnNextRedraw = true;
+            angleX = 0.0f;
+            angleY = 0.0f;
+            zoomFactor = 1.0f;
+            glControlModel.Invalidate();
+        }
+
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
         /// </summary>

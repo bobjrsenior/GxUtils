@@ -169,6 +169,7 @@ namespace GxModelViewer
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
+            this.reloadViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -209,22 +210,23 @@ namespace GxModelViewer
             // 
             this.ctxMenuModelOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemResetViewer,
+            this.reloadViewerToolStripMenuItem,
             this.toolStripSeparator4,
             this.toolStripMenuItemShowTextures});
             this.ctxMenuModelOptions.Name = "ctxMenuModelOptions";
-            this.ctxMenuModelOptions.Size = new System.Drawing.Size(150, 54);
+            this.ctxMenuModelOptions.Size = new System.Drawing.Size(181, 98);
             // 
             // toolStripMenuItemResetViewer
             // 
             this.toolStripMenuItemResetViewer.Name = "toolStripMenuItemResetViewer";
-            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(149, 22);
+            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemResetViewer.Text = "Reset Viewer";
             this.toolStripMenuItemResetViewer.Click += new System.EventHandler(this.toolStripMenuItemResetViewer_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(146, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripMenuItemShowTextures
             // 
@@ -232,7 +234,7 @@ namespace GxModelViewer
             this.toolStripMenuItemShowTextures.CheckOnClick = true;
             this.toolStripMenuItemShowTextures.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemShowTextures.Name = "toolStripMenuItemShowTextures";
-            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(149, 22);
+            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItemShowTextures.Text = "Show Textures";
             this.toolStripMenuItemShowTextures.Click += new System.EventHandler(this.toolStripMenuItemShowTextures_Click);
             // 
@@ -1647,6 +1649,13 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // reloadViewerToolStripMenuItem
+            // 
+            this.reloadViewerToolStripMenuItem.Name = "reloadViewerToolStripMenuItem";
+            this.reloadViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadViewerToolStripMenuItem.Text = "Reload Viewer";
+            this.reloadViewerToolStripMenuItem.Click += new System.EventHandler(this.reloadViewerToolStripMenuItem_Click);
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1841,5 +1850,6 @@ namespace GxModelViewer
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblTextureUsedBy;
         private System.Windows.Forms.ToolTip toolTipTextureUsedBy;
+        private System.Windows.Forms.ToolStripMenuItem reloadViewerToolStripMenuItem;
     }
 }

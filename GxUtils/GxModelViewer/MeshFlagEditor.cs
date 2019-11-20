@@ -34,7 +34,7 @@ namespace GxModelViewer
         private const string BOUNDING_SPHERE_CENTER_Z = "BOUNDING_SPHERE_CENTER_Z";
         private const string UNKNOWN_3C = "UNKNOWN_3C";
         private const string UNKNOWN_40 = "UNKNOWN_40";
-
+        private const float defaultVal = 1;
         List<GcmfMesh> meshes;
 
         public MeshFlagEditor()
@@ -73,6 +73,10 @@ namespace GxModelViewer
             this.boundingSphereCenterZTextBox.Text = "" + meshes[0].BoundingSphereCenter.Z;
             this.unknown3CTextBox.Text = "" + meshes[0].Unk3C;
             this.unknown40TextBox.Text = String.Format("{0:X8}", meshes[0].Unk40);
+            this.primaryXCoordScale.Text = "" + defaultVal;
+            this.primaryYCoordScale.Text = "" + defaultVal;
+            this.secondaryXCoordScale.Text = "" + defaultVal;
+            this.secondaryYCoordScale.Text = "" + defaultVal;
 
             for (int i = 1; i < meshes.Count; i++)
             {
@@ -133,8 +137,8 @@ namespace GxModelViewer
             uint renderFlags, unk4, unk8, unkC, unk40;
             uint layer;
             bool unk10Valid, unk14Valid, unk16Valid, unk18Valid, unk1AValid, renderFlagsValid, unk4Valid, unk8Valid, unkCValid, unk40Valid, layerValid;
-            float boundingSphereX, boundingSphereY, boundingSphereZ, unk3C;
-            bool boundingSphereXValid, boundingSphereYValid, boundingSphereZValid, unk3CValid;
+            float boundingSphereX, boundingSphereY, boundingSphereZ, unk3C, primaryXCoordScale, primaryYCoordScale, secondaryXCoordScale, secondaryYCoordScale;
+            bool boundingSphereXValid, boundingSphereYValid, boundingSphereZValid, unk3CValid, primXValid, primYValid, secXValid, secYValid;
 
             renderFlagsValid = FlagHelper.parseHexToInt32(this.renderFlagsTextBox.Text, out renderFlags, "Render Flags is not a valid 4 byte hex value");
             layerValid = FlagHelper.parseHexToInt32(this.layerTextBox.Text, out layer, "Layer is not a valid 4 byte hex value");
@@ -166,7 +170,10 @@ namespace GxModelViewer
 
             unk3CValid = FlagHelper.parseFloat(this.unknown3CTextBox.Text, out unk3C, "Unknown 0x3C is not a valid float value");
             unk40Valid = FlagHelper.parseHexToInt32(this.unknown40TextBox.Text, out unk40, "Unknown 0x40 is not a valid 4 byte hex value");
-
+            primXValid = FlagHelper.parseFloat(this.primaryXCoordScale.Text, out primaryXCoordScale, "Primary X coordinate scale is not a valid float value");
+            primYValid = FlagHelper.parseFloat(this.primaryYCoordScale.Text, out primaryYCoordScale, "Primary Y coordinate scale is not a valid float value");
+            secXValid = FlagHelper.parseFloat(this.secondaryXCoordScale.Text, out secondaryXCoordScale, "Secondary X coordinate scale is not a valid float value");
+            secYValid = FlagHelper.parseFloat(this.secondaryYCoordScale.Text, out secondaryYCoordScale, "Secondary Y coordinate scale is not a valid float value");
 
             foreach (GcmfMesh mesh in meshes)
             {
@@ -200,6 +207,39 @@ namespace GxModelViewer
 
                 if (unk3CValid) mesh.Unk3C = unk3C;
                 if (unk40Valid) mesh.Unk40 = unk40;
+
+                if ((primXValid) && (primYValid) && !(primaryXCoordScale == 1 && primaryYCoordScale == 1))
+                {
+                    OpenTK.Vector2 primaryScaleFactor = new OpenTK.Vector2(primaryXCoordScale, primaryYCoordScale);
+                    foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCcw)
+                    {
+                        foreach (GcmfVertex vert in strip)
+                        {
+                            vert.PrimaryTexCoord = OpenTK.Vector2.Divide((OpenTK.Vector2)vert.PrimaryTexCoord, primaryScaleFactor);
+                        }
+                    }
+                }
+
+                if ((secXValid) && (secYValid) && !(secondaryXCoordScale == 1 && secondaryYCoordScale == 1))
+                {
+                    try
+                    {
+                        OpenTK.Vector2 secondaryScaleFactor = new OpenTK.Vector2(secondaryXCoordScale, secondaryYCoordScale);
+                        foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCcw)
+                        {
+                            foreach (GcmfVertex vert in strip)
+                            {
+                                vert.SecondaryTexCoord = OpenTK.Vector2.Divide((OpenTK.Vector2)vert.SecondaryTexCoord, secondaryScaleFactor);
+                            }
+                        }
+                    }
+
+                    catch (InvalidOperationException ex)
+                    {
+                        MessageBox.Show("This mesh does not have any secondary texture coordinates to scale. No scaling was applied.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
             }
 
         }
@@ -350,6 +390,19 @@ namespace GxModelViewer
                 MessageBox.Show("Error loading the Flags file. " + ex.Message, "Error loading the Flags file.",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            foreach (GcmfMesh mesh in meshes)
+            {
+                foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCcw)
+                {
+                    foreach (GcmfVertex vert in strip)
+                    {
+                        vert.SecondaryTexCoord = vert.PrimaryTexCoord;
+                    }
+                }
             }
         }
     }

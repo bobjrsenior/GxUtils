@@ -86,13 +86,13 @@ namespace LibGxFormat.Gma
           
             }
 
-    public GcmfTriangleStripGroup Obj1StripsCcw { get; private set; }
-        public GcmfTriangleStripGroup Obj1StripsCw { get; private set; }
+        public GcmfTriangleStripGroup Obj1StripsCcw { get; set; }
+        public GcmfTriangleStripGroup Obj1StripsCw { get; set; }
 
         public byte[] TransformMatrixSpecificIdxsObj2 { get; set; }
 
-        public GcmfTriangleStripGroup Obj2StripsCcw { get; private set; }
-        public GcmfTriangleStripGroup Obj2StripsCw { get; private set; }
+        public GcmfTriangleStripGroup Obj2StripsCcw { get; set; }
+        public GcmfTriangleStripGroup Obj2StripsCw { get; set; }
 
         public GcmfMesh()
         {
