@@ -109,6 +109,10 @@ namespace GxModelViewer
         /// <summary> Whether or not the current selection can be renamed. </summary>
         bool canRenameCurrentSelection = false;
 
+        /// <summary>
+        /// Whether or not the current TPL was imported as a headerless TPL.</summary>
+        bool currentTplHeaderless = false;
+
         public ModelViewer()
         {
             InitializeComponent();
@@ -727,6 +731,7 @@ namespace GxModelViewer
 
         private void tsBtnLoadTpl_Click(object sender, EventArgs e)
         {
+            bool pressingShift = (Control.ModifierKeys == Keys.Shift);
             if (!CheckSaveUnsavedChanges())
                 return;
 
@@ -736,11 +741,15 @@ namespace GxModelViewer
 
             // Ask the user for a TPL file
             if (ofdLoadTpl.ShowDialog() != DialogResult.OK)
+            {
+                UpdateTextureButtons();
                 return;
+            }
 
             try
-            {
-                LoadTplFile(ofdLoadTpl.FileName);
+            {               
+                LoadTplFile(ofdLoadTpl.FileName, pressingShift);
+                tsBtnLoadTpl.Text = "Load TPL...";
             }
             catch (Exception ex)
             {
@@ -748,7 +757,7 @@ namespace GxModelViewer
             }
         }
 
-        public void LoadTplFile(string newTplPath)
+        public void LoadTplFile(string newTplPath, bool pressingShift = false)
         {
             Exception exception = null;
             // Try to load the TPL file
@@ -758,7 +767,34 @@ namespace GxModelViewer
                 {
                     using (Stream tplStream = File.OpenRead(newTplPath))
                     {
-                        tpl = new Tpl(tplStream, GetSelectedGame());
+                        // Checks if the TPL does not have a standard header
+                        // This check does not always work, specifically if the TPL starts with a transparent image
+                        // So, we allow the pressing of Shift to force this to occur
+                        if ((tplStream.ReadByte() != 0 && GetSelectedGame() == GxGame.SuperMonkeyBall) || pressingShift)
+                        {
+                            // Gets the file size, to get the number of textures in the file
+                            int fileSize = (int)new System.IO.FileInfo(newTplPath).Length;                            
+                            AddTextureHeader addTextureHeader = new AddTextureHeader(TplTexture.SupportedTextureFormats, GxTextureFormat.RGB5A3, newTplPath, fileSize);
+                            addTextureHeader.ShowDialog();
+                            if (addTextureHeader.DialogResult == DialogResult.OK)
+                            {
+                                GeneratedTextureHeader? newHeader = addTextureHeader.getTextureHeader();
+                                tplStream.Position = 0;
+                                tpl = new Tpl(tplStream, GetSelectedGame(), newHeader);
+                                currentTplHeaderless = true;
+
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {                          
+                            tplStream.Position = 0;
+                            tpl = new Tpl(tplStream, GetSelectedGame());
+                            currentTplHeaderless = false;
+                        }
                         tplPath = newTplPath;
                     }
                 }
@@ -800,33 +836,53 @@ namespace GxModelViewer
 
         private void tsBtnSaveTpl_Click(object sender, EventArgs e)
         {
-            SaveTplFile();
+            SaveTplFile(currentTplHeaderless || (Control.ModifierKeys == Keys.Shift));
+            UpdateTextureButtons();
         }
 
         private void tsBtnSaveTplAs_Click(object sender, EventArgs e)
         {
+            bool shiftPressed = (Control.ModifierKeys == Keys.Shift);
             if (sfdSaveTpl.ShowDialog() != DialogResult.OK)
+            {
+                UpdateTextureButtons();
                 return;
-
+            }
             tplPath = sfdSaveTpl.FileName;
-            SaveTplFile();
+            SaveTplFile(currentTplHeaderless || shiftPressed);
+            UpdateTextureButtons();
         }
 
-        private bool SaveTplFile()
+        private void tplButtonTextHeaderless()
+        {
+            tsBtnLoadTpl.Text = "Load TPL...";
+            if (currentTplHeaderless) {               
+                tsBtnSaveTpl.Text = "Save Headerless TPL...";
+                tsBtnSaveTplAs.Text = "Save Headerless TPL As...";
+            }
+            else {
+                tsBtnSaveTpl.Text = "Save TPL...";
+                tsBtnSaveTplAs.Text = "Save TPL As...";
+            }
+        }
+
+            private bool SaveTplFile(bool noHeader = false)
         {
             // If there isn't currently any path set (e.g. we've just imported a model),
             // we have to request one to the user
             if (tplPath == null)
             {
                 if (sfdSaveTpl.ShowDialog() != DialogResult.OK)
+                {
+                    UpdateTextureButtons();
                     return false;
-
+                }
                 tplPath = sfdSaveTpl.FileName;
             }
 
             using (Stream tplStream = File.OpenWrite(tplPath))
             {
-                tpl.Save(tplStream, GetSelectedGame());
+                tpl.Save(tplStream, GetSelectedGame(), noHeader);
             }
 
             haveUnsavedTplChanges = false;
@@ -943,6 +999,7 @@ namespace GxModelViewer
         {
             tsBtnSaveTpl.Enabled = (tpl != null && haveUnsavedTplChanges);
             tsBtnSaveTplAs.Enabled = (tpl != null);
+            tplButtonTextHeaderless();
         }
 
         private void tsBtnImportObjMtl_Click(object sender, EventArgs e)
@@ -1925,6 +1982,44 @@ namespace GxModelViewer
             zoomFactor = 1.0f;
             glControlModel.Invalidate();
         }
+
+        private void ModelViewer_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ShiftKey)
+            {
+                tsBtnLoadTpl.Text = "Load Headerless TPL...";
+                if (!currentTplHeaderless)
+                {
+                    tsBtnSaveTpl.Text = "Save Headerless TPL...";
+                    tsBtnSaveTplAs.Text = "Save Headerless TPL As...";
+                }
+                else
+                {
+                    tsBtnSaveTpl.Text = "Save TPL...";
+                    tsBtnSaveTplAs.Text = "Save TPL As...";                    
+                }
+            }
+
+        }
+
+        private void ModelViewer_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ShiftKey)
+            {
+                tsBtnLoadTpl.Text = "Load TPL...";
+                if (currentTplHeaderless)
+                {
+                    tsBtnSaveTpl.Text = "Save Headerless TPL...";
+                    tsBtnSaveTplAs.Text = "Save Headerless TPL As...";
+                }
+                else
+                {
+                    tsBtnSaveTpl.Text = "Save TPL...";
+                    tsBtnSaveTplAs.Text = "Save TPL As...";
+                }
+            }
+        }
+
 
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture

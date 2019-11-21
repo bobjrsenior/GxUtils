@@ -73,6 +73,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddTextureHeader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTextureHeader.Designer.cs">
+      <DependentUpon>AddTextureHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="FlagHelper.cs" />
     <Compile Include="MaterialFlagEditor.cs">
       <SubType>Form</SubType>
@@ -120,6 +126,9 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddTextureHeader.resx">
+      <DependentUpon>AddTextureHeader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GxTextureFormatPickerDialog.resx">
       <DependentUpon>GxTextureFormatPickerDialog.cs</DependentUpon>
     </EmbeddedResource>

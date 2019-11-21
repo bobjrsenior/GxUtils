@@ -34,6 +34,7 @@ namespace GxModelViewer
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelViewer));
             this.ctxMenuModelOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemResetViewer = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemShowTextures = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripActions = new System.Windows.Forms.ToolStrip();
@@ -169,7 +170,6 @@ namespace GxModelViewer
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
-            this.reloadViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -214,19 +214,26 @@ namespace GxModelViewer
             this.toolStripSeparator4,
             this.toolStripMenuItemShowTextures});
             this.ctxMenuModelOptions.Name = "ctxMenuModelOptions";
-            this.ctxMenuModelOptions.Size = new System.Drawing.Size(181, 98);
+            this.ctxMenuModelOptions.Size = new System.Drawing.Size(150, 76);
             // 
             // toolStripMenuItemResetViewer
             // 
             this.toolStripMenuItemResetViewer.Name = "toolStripMenuItemResetViewer";
-            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemResetViewer.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemResetViewer.Text = "Reset Viewer";
             this.toolStripMenuItemResetViewer.Click += new System.EventHandler(this.toolStripMenuItemResetViewer_Click);
+            // 
+            // reloadViewerToolStripMenuItem
+            // 
+            this.reloadViewerToolStripMenuItem.Name = "reloadViewerToolStripMenuItem";
+            this.reloadViewerToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.reloadViewerToolStripMenuItem.Text = "Reload Viewer";
+            this.reloadViewerToolStripMenuItem.Click += new System.EventHandler(this.reloadViewerToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(146, 6);
             // 
             // toolStripMenuItemShowTextures
             // 
@@ -234,7 +241,7 @@ namespace GxModelViewer
             this.toolStripMenuItemShowTextures.CheckOnClick = true;
             this.toolStripMenuItemShowTextures.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemShowTextures.Name = "toolStripMenuItemShowTextures";
-            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemShowTextures.Size = new System.Drawing.Size(149, 22);
             this.toolStripMenuItemShowTextures.Text = "Show Textures";
             this.toolStripMenuItemShowTextures.Click += new System.EventHandler(this.toolStripMenuItemShowTextures_Click);
             // 
@@ -1649,13 +1656,6 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
-            // reloadViewerToolStripMenuItem
-            // 
-            this.reloadViewerToolStripMenuItem.Name = "reloadViewerToolStripMenuItem";
-            this.reloadViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.reloadViewerToolStripMenuItem.Text = "Reload Viewer";
-            this.reloadViewerToolStripMenuItem.Click += new System.EventHandler(this.reloadViewerToolStripMenuItem_Click);
-            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1665,10 +1665,13 @@ namespace GxModelViewer
             this.Controls.Add(this.toolStripActions);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ModelViewer";
             this.Text = "GxModelViewer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ModelViewer_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ModelViewer_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ModelViewer_KeyUp);
             this.ctxMenuModelOptions.ResumeLayout(false);
             this.toolStripActions.ResumeLayout(false);
             this.toolStripActions.PerformLayout();

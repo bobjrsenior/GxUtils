@@ -45,6 +45,10 @@
       <Project>{f720fe95-f774-4e85-a40a-edb931ba59dc}</Project>
       <Name>LibGxFormat</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LibGxTexture\LibGxTexture.csproj">
+      <Project>{ab5aa934-9b3f-4509-82a2-b79be5929aa5}</Project>
+      <Name>LibGxTexture</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
