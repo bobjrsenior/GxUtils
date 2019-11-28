@@ -218,6 +218,14 @@ namespace GxModelViewer
                             vert.PrimaryTexCoord = OpenTK.Vector2.Divide((OpenTK.Vector2)vert.PrimaryTexCoord, primaryScaleFactor);
                         }
                     }
+
+                    foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCw)
+                    {
+                        foreach (GcmfVertex vert in strip)
+                        {
+                            vert.PrimaryTexCoord = OpenTK.Vector2.Divide((OpenTK.Vector2)vert.PrimaryTexCoord, primaryScaleFactor);
+                        }
+                    }
                 }
 
                 if ((secXValid) && (secYValid) && !(secondaryXCoordScale == 1 && secondaryYCoordScale == 1))
@@ -226,6 +234,14 @@ namespace GxModelViewer
                     {
                         OpenTK.Vector2 secondaryScaleFactor = new OpenTK.Vector2(secondaryXCoordScale, secondaryYCoordScale);
                         foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCcw)
+                        {
+                            foreach (GcmfVertex vert in strip)
+                            {
+                                vert.SecondaryTexCoord = OpenTK.Vector2.Divide((OpenTK.Vector2)vert.SecondaryTexCoord, secondaryScaleFactor);
+                            }
+                        }
+
+                        foreach (GcmfTriangleStrip strip in mesh.Obj1StripsCw)
                         {
                             foreach (GcmfVertex vert in strip)
                             {

@@ -974,7 +974,7 @@ namespace GxModelViewer
             {
                 for (int i = 0; i < tpl.Count; i++)
                 {
-                    TreeNode textureItem = new TreeNode(string.Format("Texture {0}", i));
+                    TreeNode textureItem = new TreeNode(string.Format("Texture {0:X}", i));
                     textureItem.ForeColor = (!tpl[i].IsEmpty) ? Color.DarkGreen : Color.Red;
                     textureItem.Tag = new TextureReference(i, -1);
                     treeTextures.Nodes.Add(textureItem);
