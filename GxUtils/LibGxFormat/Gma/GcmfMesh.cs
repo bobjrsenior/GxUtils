@@ -54,7 +54,6 @@ namespace LibGxFormat.Gma
             UnkFlag40 = 0x40,
             UnkFlag200 = 0x200,
         }
-
         public MeshLayer Layer { get; set; }
 
         public RenderFlag RenderFlags { get; set; }
@@ -70,9 +69,11 @@ namespace LibGxFormat.Gma
         public Vector3 BoundingSphereCenter { get; set; }
         public float Unk3C { get; set; }
         public uint Unk40 { get; set; }
+    
 
         private byte _calculatedUsedMaterialCount;
-        public byte calculatedUsedMaterialCount {
+        public byte calculatedUsedMaterialCount
+        {
             get
             {
                 return Convert.ToByte(((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
@@ -83,8 +84,8 @@ namespace LibGxFormat.Gma
             {
                 _calculatedUsedMaterialCount = value;
             }
-          
-            }
+
+        }
 
         public GcmfTriangleStripGroup Obj1StripsCcw { get; set; }
         public GcmfTriangleStripGroup Obj1StripsCw { get; set; }
@@ -386,7 +387,7 @@ namespace LibGxFormat.Gma
             }
 
             if (Obj2StripsCcw.Count != 0 || Obj2StripsCw.Count != 0)
-            {        
+            {
                 size += 0x20; // Extra header
                 size += Obj2StripsCcw.SizeOfNonIndexed(is16Bit);
                 size += Obj2StripsCw.SizeOfNonIndexed(is16Bit);
@@ -477,13 +478,54 @@ namespace LibGxFormat.Gma
 
         private void RecalculateBoundingSphere()
         {
-            IEnumerable<GcmfTriangleStrip> allTriangleStrip = 
+            IEnumerable<GcmfTriangleStrip> allTriangleStrip =
                 Obj1StripsCcw.Union(Obj1StripsCw).Union(Obj2StripsCcw).Union(Obj2StripsCw);
             IEnumerable<GcmfVertex> allVertices = allTriangleStrip.SelectMany(ts => ts);
             IEnumerable<Vector3> allVertexPositions = allVertices.Select(v => v.Position);
 
             BoundingSphere boundingSphere = BoundingSphere.FromPoints(allVertexPositions);
             BoundingSphereCenter = boundingSphere.Center;
+        }
+        
+        public List<object> getFlagList()
+        {
+            return new List<object>
+            {
+                Layer,
+                RenderFlags,
+                Unk4,
+                Unk8,
+                UnkC,
+                Unk10,
+                Unk14,
+                //PrimaryMaterialIdx,
+                //SecondaryMaterialIdx,
+                //TertiaryMaterialIdx,
+                //TransformMatrixSpecificIdxsObj1,
+                //BoundingSphereCenter,
+                Unk3C,
+                Unk40,
+                //calculatedUsedMaterialCount
+            };
+        }
+
+        public void setFlagList(List<object> flagList)
+        {
+            Layer = (MeshLayer)flagList[0];
+            RenderFlags = (RenderFlag)flagList[1];
+            Unk4 = (uint)flagList[2];
+            Unk8 = (uint)flagList[3];
+            UnkC = (uint)flagList[4];
+            Unk10 = (ushort)flagList[5];
+            Unk14 = (ushort)flagList[6];
+            //PrimaryMaterialIdx = (ushort)flagList[7];
+            //SecondaryMaterialIdx = (ushort)flagList[8];
+            //TertiaryMaterialIdx = (ushort)flagList[9];
+            //TransformMatrixSpecificIdxsObj1 = (byte[])flagList[10];
+            //BoundingSphereCenter = (Vector3)flagList[11];
+            Unk3C = (float)flagList[7];
+            Unk40 = (uint)flagList[8];
+            //calculatedUsedMaterialCount = (byte)flagList[9];
         }
     };
 }

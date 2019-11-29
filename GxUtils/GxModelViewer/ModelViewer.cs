@@ -747,7 +747,7 @@ namespace GxModelViewer
             }
 
             try
-            {               
+            {
                 LoadTplFile(ofdLoadTpl.FileName, pressingShift);
                 tsBtnLoadTpl.Text = "Load TPL...";
             }
@@ -773,7 +773,7 @@ namespace GxModelViewer
                         if ((tplStream.ReadByte() != 0 && GetSelectedGame() == GxGame.SuperMonkeyBall) || pressingShift)
                         {
                             // Gets the file size, to get the number of textures in the file
-                            int fileSize = (int)new System.IO.FileInfo(newTplPath).Length;                            
+                            int fileSize = (int)new System.IO.FileInfo(newTplPath).Length;
                             AddTextureHeader addTextureHeader = new AddTextureHeader(TplTexture.SupportedTextureFormats, GxTextureFormat.RGB5A3, newTplPath, fileSize);
                             addTextureHeader.ShowDialog();
                             if (addTextureHeader.DialogResult == DialogResult.OK)
@@ -790,7 +790,7 @@ namespace GxModelViewer
                             }
                         }
                         else
-                        {                          
+                        {
                             tplStream.Position = 0;
                             tpl = new Tpl(tplStream, GetSelectedGame());
                             currentTplHeaderless = false;
@@ -856,17 +856,19 @@ namespace GxModelViewer
         private void tplButtonTextHeaderless()
         {
             tsBtnLoadTpl.Text = "Load TPL...";
-            if (currentTplHeaderless) {               
+            if (currentTplHeaderless)
+            {
                 tsBtnSaveTpl.Text = "Save Headerless TPL...";
                 tsBtnSaveTplAs.Text = "Save Headerless TPL As...";
             }
-            else {
+            else
+            {
                 tsBtnSaveTpl.Text = "Save TPL...";
                 tsBtnSaveTplAs.Text = "Save TPL As...";
             }
         }
 
-            private bool SaveTplFile(bool noHeader = false)
+        private bool SaveTplFile(bool noHeader = false)
         {
             // If there isn't currently any path set (e.g. we've just imported a model),
             // we have to request one to the user
@@ -1068,7 +1070,7 @@ namespace GxModelViewer
             UpdateMaterialList();
             UpdateMaterialDisplay();
 
-            
+
             // Update texture list
             UpdateTextureTree();
             UpdateTextureButtons();
@@ -1581,7 +1583,7 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateMaterialList();
                         treeMaterials.SelectedNode = treeMaterials.Nodes[gma[GetSelectedModelIdx()].ModelObject.Materials.Count - 1];
-                        UpdateMaterialDisplay();                        
+                        UpdateMaterialDisplay();
                         UpdateTexturesUsedBy();
                         reloadOnNextRedraw = true;
                         break;
@@ -1759,7 +1761,7 @@ namespace GxModelViewer
                     {
                         tpl.Add(newTplTexture);
                     }
-                }                
+                }
             }
             catch (Exception ex)
             {
@@ -1772,7 +1774,7 @@ namespace GxModelViewer
             UpdateTexturesUsedBy();
             UpdateMaterialDisplay();
             UpdateMaterialList();
-            
+
             haveUnsavedGmaChanges = true;
             haveUnsavedTplChanges = true;
             reloadOnNextRedraw = true;
@@ -1945,7 +1947,8 @@ namespace GxModelViewer
 
         private void treeModel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (Control.ModifierKeys != Keys.Shift) {
+            if (Control.ModifierKeys != Keys.Shift)
+            {
                 treeModel.SelectedNode = treeModel.GetNodeAt(e.X, e.Y);
             }
         }
@@ -1996,10 +1999,57 @@ namespace GxModelViewer
                 else
                 {
                     tsBtnSaveTpl.Text = "Save TPL...";
-                    tsBtnSaveTplAs.Text = "Save TPL As...";                    
+                    tsBtnSaveTplAs.Text = "Save TPL As...";
+                }
+            }
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                if (treeModel.SelectedNodes.Count != 0)
+                {
+                    try
+                    {
+                        List<List<Object>> toCopy = new List<List<object>>();
+
+                        foreach (TreeNode selectedNode in treeModel.SelectedNodes)
+                        {
+                            ModelMeshReference currentReference = (ModelMeshReference)selectedNode.Tag;
+
+                            toCopy.Add(gma[currentReference.ModelIdx].ModelObject.Meshes[currentReference.MeshIdx].getFlagList());
+                        }
+
+                        DataObject clipboardData = new DataObject();
+                        clipboardData.SetData("List", toCopy);
+                        Clipboard.SetDataObject(clipboardData);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Copy failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
 
+            if (e.Control && e.KeyCode == Keys.V)
+            {
+                if (treeModel.SelectedNodes.Count != 0)
+                {
+                    try
+                    {
+                        ModelMeshReference currentReference = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
+
+                        List<List<object>> toPaste = (List<List<object>>)(Clipboard.GetDataObject().GetData("List"));
+                        for (int currentMesh = 0; currentMesh < toPaste.Count; currentMesh++)
+                        {
+                            gma[currentReference.ModelIdx].ModelObject.Meshes[currentReference.MeshIdx + currentMesh].setFlagList(toPaste[currentMesh]);
+                        }
+
+                        UpdateModelDisplay();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Paste failed.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void ModelViewer_KeyUp(object sender, KeyEventArgs e)
@@ -2020,7 +2070,6 @@ namespace GxModelViewer
             }
         }
 
-
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
         /// </summary>
@@ -2029,7 +2078,7 @@ namespace GxModelViewer
         public void DeleteTextureAt(int textureId, bool update = true)
         {
             tpl.RemoveAt(textureId);
-            
+
             if (update)
             {
                 foreach (GmaEntry entry in gma)
@@ -2061,7 +2110,7 @@ namespace GxModelViewer
                 if (tpl[texId].usedByModels == null || tpl[texId].usedByModels.Count == 0)
                 {
                     DeleteTextureAt(texId);
-                    texId = -1;                   
+                    texId = -1;
                 }
             }
         }

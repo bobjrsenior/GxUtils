@@ -762,7 +762,7 @@
             this.primaryXCoordScale.Location = new System.Drawing.Point(192, 3);
             this.primaryXCoordScale.Name = "primaryXCoordScale";
             this.primaryXCoordScale.Size = new System.Drawing.Size(50, 20);
-            this.primaryXCoordScale.TabIndex = 2;
+            this.primaryXCoordScale.TabIndex = 65;
             // 
             // secondaryXCoordScale
             // 
@@ -770,7 +770,7 @@
             this.secondaryXCoordScale.Location = new System.Drawing.Point(192, 29);
             this.secondaryXCoordScale.Name = "secondaryXCoordScale";
             this.secondaryXCoordScale.Size = new System.Drawing.Size(50, 20);
-            this.secondaryXCoordScale.TabIndex = 3;
+            this.secondaryXCoordScale.TabIndex = 67;
             // 
             // primaryYCoordScale
             // 
@@ -778,7 +778,7 @@
             this.primaryYCoordScale.Location = new System.Drawing.Point(248, 3);
             this.primaryYCoordScale.Name = "primaryYCoordScale";
             this.primaryYCoordScale.Size = new System.Drawing.Size(50, 20);
-            this.primaryYCoordScale.TabIndex = 4;
+            this.primaryYCoordScale.TabIndex = 66;
             // 
             // secondaryYCoordScale
             // 
@@ -786,7 +786,7 @@
             this.secondaryYCoordScale.Location = new System.Drawing.Point(248, 29);
             this.secondaryYCoordScale.Name = "secondaryYCoordScale";
             this.secondaryYCoordScale.Size = new System.Drawing.Size(50, 20);
-            this.secondaryYCoordScale.TabIndex = 5;
+            this.secondaryYCoordScale.TabIndex = 68;
             // 
             // createCoordsButton
             // 
