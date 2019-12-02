@@ -19,7 +19,7 @@ namespace GxModelViewer
         private const int SW_HIDE = 0;
         private const int SW_SHOW = 5;
 
-        private  const string HELP_FLAG = "-help";
+        private const string HELP_FLAG = "-help";
         private const string INTERACTIVE_HELP_FLAG = "-interHelp";
         private const string INTERACTIVE_FLAG = "-interactive";
         private const string GAME_FLAG = "-game";
@@ -182,16 +182,20 @@ namespace GxModelViewer
                         {
                             string interpolateString = flags[i + 1];
                             bool valid = false;
-                            LibGxFormat.GxInterpolationFormat format = LibGxFormat.GxInterpolationFormat.CSharpDefault;
+                            LibGxFormat.GxInterpolationFormat format = LibGxFormat.GxInterpolationFormat.HighQualityBicubic;
                             switch (interpolateString)
                             {
-                                case "default":
-                                    format = LibGxFormat.GxInterpolationFormat.CSharpDefault;
+                                case "bicubic":
+                                    format = LibGxFormat.GxInterpolationFormat.HighQualityBicubic;
                                     valid = true;
                                     break;
                                 case "nearest":
                                 case "nn":
                                     format = LibGxFormat.GxInterpolationFormat.NearestNeighbor;
+                                    valid = true;
+                                    break;
+                                case "csharpdefault":
+                                    format = LibGxFormat.GxInterpolationFormat.CSharpDefault;
                                     valid = true;
                                     break;
                             }
@@ -411,8 +415,9 @@ namespace GxModelViewer
             Console.WriteLine("\t\t\t\t\t\tfzero: F-Zero GX");
             Console.WriteLine("\t-mipmaps <num>\t\t\tThe number of mipmaps to make on import.");
             Console.WriteLine("\t-interpolate <type>\t\tThe type of interpolation to use with mipmap generation.");
-            Console.WriteLine("\t\t\t\t\t\tdefault: The C# default type (default)");
-            Console.WriteLine("\t\t\t\t\t\tnearest: Nearest neighbor");
+            Console.WriteLine("\t\t\t\t\t\tbicubic: High quality bicubic (default)");
+            Console.WriteLine("\t\t\t\t\t\tcsharpdefault: The C# default type (bilinear)");
+            Console.WriteLine("\t\t\t\t\t\tnearest: Nearest neighbor");           
             Console.WriteLine("\t\t\t\t\t\tnn: Nearest Neighbor alias");
             Console.WriteLine("\t-importObj <model>\t\tImports the designated .obj file.");
             Console.WriteLine("\t-importTpl <texture>\t\tImports the designated .tpl file.");
