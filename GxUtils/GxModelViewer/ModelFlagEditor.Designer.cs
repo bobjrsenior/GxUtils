@@ -258,7 +258,7 @@
             this.boundingSphereRadius.Location = new System.Drawing.Point(181, 108);
             this.boundingSphereRadius.Name = "boundingSphereRadius";
             this.boundingSphereRadius.Size = new System.Drawing.Size(100, 20);
-            this.boundingSphereRadius.TabIndex = 24;
+            this.boundingSphereRadius.TabIndex = 9;
             // 
             // saveButton
             // 

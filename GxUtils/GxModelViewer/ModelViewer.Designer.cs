@@ -170,6 +170,7 @@ namespace GxModelViewer
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
+            this.translateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -1488,11 +1489,12 @@ namespace GxModelViewer
             this.gmaExportTolStripMenuItem,
             this.gmaImporttoolStripMenuItem,
             this.importPreserveFLagsToolStripMenuItem,
+            this.translateModelToolStripMenuItem,
             this.editFlagsToolStripMenuItem,
             this.renameToolStripMenuItem,
             this.removeToolStripMenuItem});
             this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(262, 180);
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(262, 224);
             // 
             // importGMATPLToolStripMenuItem
             // 
@@ -1655,6 +1657,13 @@ namespace GxModelViewer
             // 
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // translateModelToolStripMenuItem
+            // 
+            this.translateModelToolStripMenuItem.Name = "translateModelToolStripMenuItem";
+            this.translateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.translateModelToolStripMenuItem.Text = "Translate Model...";
+            this.translateModelToolStripMenuItem.Click += new System.EventHandler(this.translateModelToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1854,5 +1863,6 @@ namespace GxModelViewer
         private System.Windows.Forms.Label lblTextureUsedBy;
         private System.Windows.Forms.ToolTip toolTipTextureUsedBy;
         private System.Windows.Forms.ToolStripMenuItem reloadViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem translateModelToolStripMenuItem;
     }
 }

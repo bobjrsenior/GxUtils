@@ -2070,6 +2070,68 @@ namespace GxModelViewer
             }
         }
 
+        private void translateModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            using (TranslateMesh translateMesh = new TranslateMesh())
+            {
+                if (treeModel.SelectedNodes.Count == 1)
+                {
+                    ModelMeshReference selectedReference = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
+                    translateMesh.setInitial(gma[selectedReference.ModelIdx].ModelObject.BoundingSphereCenter);
+                }
+                
+                switch (translateMesh.ShowDialog())
+                {
+                    case DialogResult.OK:
+                        Vector3 translation = translateMesh.translation;
+                        foreach (TreeNode selected in treeModel.SelectedNodes)
+                        {
+                            ModelMeshReference currentReference = (ModelMeshReference)selected.Tag;
+                            foreach (GcmfMesh mesh in gma[currentReference.ModelIdx].ModelObject.Meshes)
+                            {
+                                foreach (GcmfTriangleStrip strip1ccw in mesh.Obj1StripsCcw)
+                                {
+                                    foreach (GcmfVertex tri1ccw in strip1ccw)
+                                    {
+                                        tri1ccw.Position += translation;
+                                    }
+                                }
+                                foreach (GcmfTriangleStrip strip1cw in mesh.Obj1StripsCw)
+                                {
+                                    foreach (GcmfVertex tri1cw in strip1cw)
+                                    {
+                                        tri1cw.Position += translation;
+                                    }
+                                }
+                                foreach (GcmfTriangleStrip strip2ccw in mesh.Obj2StripsCcw)
+                                {
+                                    foreach (GcmfVertex tri2ccw in strip2ccw)
+                                    {
+                                        tri2ccw.Position += translation;
+                                    }
+                                }
+                                foreach (GcmfTriangleStrip strip2cw in mesh.Obj2StripsCw)
+                                {
+                                    foreach (GcmfVertex tri2cw in strip2cw)
+                                    {
+                                        tri2cw.Position += translation;
+                                    }
+                                }
+                                mesh.BoundingSphereCenter += translation;                                
+                            }
+                            gma[currentReference.ModelIdx].ModelObject.BoundingSphereCenter += translation;
+                        }
+
+                        reloadOnNextRedraw = true;
+                        glControlModel.Invalidate();
+                        UpdateModelDisplay();
+                        
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
         /// </summary>
