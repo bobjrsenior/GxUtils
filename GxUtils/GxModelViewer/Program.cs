@@ -419,7 +419,7 @@ namespace GxModelViewer
             Console.WriteLine("\t\t\t\t\t\tcsharpdefault: The C# default type (bilinear)");
             Console.WriteLine("\t\t\t\t\t\tnearest: Nearest neighbor");           
             Console.WriteLine("\t\t\t\t\t\tnn: Nearest Neighbor alias");
-            Console.WriteLine("\t-importObj <model>\t\tImports the designated .obj file.");
+            Console.WriteLine("\t-importObjMtl <model>\t\tImports the designated .obj file.");
             Console.WriteLine("\t-importTpl <texture>\t\tImports the designated .tpl file.");
             Console.WriteLine("\t-importGma <model>\t\tImports the designated .gma file.");
             Console.WriteLine("\t-exportObjMtl <model>\t\tExports the loaded model as a .obj/.mtl file.");

@@ -52,7 +52,7 @@ flag is not available in interactive mode and the -quit flag is not available in
                                             default: The C# default type (default)
                                             nearest: Nearest neighbor
                                             nn: Nearest Neighbor alias
-            -importObj <model>          Imports the designated .obj file.
+            -importObjMtl <model>          Imports the designated .obj file.
             -importTpl <texture>        Imports the designated .tpl file.
             -importGma <model>          Imports the designated .gma file.
             -exportObjMtl <model>       Exports the loaded model as a .obj/.mtl file.
