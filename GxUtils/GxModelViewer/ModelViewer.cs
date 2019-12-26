@@ -1604,8 +1604,8 @@ namespace GxModelViewer
         private int defineNewTextureFromBitmap()
         {
             Bitmap bmp;
-            if (ofdTextureImportPath.ShowDialog() != DialogResult.OK)
-                return -1;
+            if (ofdTextureImportPath.ShowDialog() != DialogResult.OK) return -1;
+
             try
             {
                 bmp = new Bitmap(ofdTextureImportPath.FileName);
@@ -1656,7 +1656,10 @@ namespace GxModelViewer
 
         private void defineNewFromTextureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            defineNewMaterial(defineNewTextureFromBitmap());
+            if (defineNewTextureFromBitmap() != -1)
+            {
+                defineNewMaterial();
+            }
         }
 
         private void treeModel_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
