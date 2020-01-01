@@ -129,7 +129,7 @@ namespace GxModelViewer
             int i;
             for (i = 0; i < mipmapItems.Length - 1; ++i)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem("" + i);
+                ToolStripMenuItem item = new ToolStripMenuItem("" + (i+1));
                 item.Click += new EventHandler(mipmapDropDownItemClicked);
                 mipmapItems[i] = item;
             }
@@ -1252,7 +1252,7 @@ namespace GxModelViewer
         {
             string text = ((ToolStripMenuItem)sender).Text;
             int mipmapAmt = int.Parse(text);
-            numMipmaps = mipmapAmt;
+            numMipmaps = mipmapAmt-1;
 
             foreach (ToolStripMenuItem item in mipmapItems)
             {
@@ -1846,11 +1846,6 @@ namespace GxModelViewer
             if (treeTextures.SelectedNode != null)
             {
                 DeleteTextureAt(treeTextures.SelectedNode.Index);
-                UpdateTextureTree();
-                UpdateTextureDisplay();
-                UpdateTextureButtons();
-                reloadOnNextRedraw = true;
-                haveUnsavedTplChanges = true;
             }
             else
             {
@@ -1947,11 +1942,6 @@ namespace GxModelViewer
         private void deletenoMaterialAdjustmentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteTextureAt(treeTextures.SelectedNode.Index, false);
-            UpdateTextureTree();
-            UpdateTextureDisplay();
-            UpdateTextureButtons();
-            reloadOnNextRedraw = true;
-            haveUnsavedTplChanges = true;
         }
 
         private void deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -2153,6 +2143,7 @@ namespace GxModelViewer
         /// <param name="update">Whether or not to correct the texture indices of materials</param>
         public void DeleteTextureAt(int textureId, bool update = true)
         {
+            int previousTextureId = (treeTextures.SelectedNode.Index)-1;
             tpl.RemoveAt(textureId);
 
             if (update)
@@ -2171,6 +2162,19 @@ namespace GxModelViewer
                     }
                 }
             }
+
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+            UpdateTextureButtons();
+            reloadOnNextRedraw = true;
+            haveUnsavedTplChanges = true;
+
+            if (treeTextures.Nodes.Count > 0)
+            {
+                if (previousTextureId > 0) treeTextures.SelectedNode = treeTextures.Nodes[previousTextureId];
+                else treeTextures.SelectedNode = treeTextures.Nodes[0];
+            }
+
         }
 
         /// <summary>
