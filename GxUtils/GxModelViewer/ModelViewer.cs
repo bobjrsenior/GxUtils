@@ -782,7 +782,7 @@ namespace GxModelViewer
                                 tplStream.Position = 0;
                                 tpl = new Tpl(tplStream, GetSelectedGame(), newHeader);
                                 currentTplHeaderless = true;
-
+                                numMipmaps = 0;
                             }
                             else
                             {
@@ -1601,21 +1601,15 @@ namespace GxModelViewer
             editFlagsToolStripMenuItem2.Enabled = (treeMaterials.SelectedNodes.Count != 0);
         }
 
-        private int defineNewTextureFromBitmap()
+        private int defineNewTextureFromBitmap(bool allowMultiImport = false)
         {
             Bitmap bmp;
-            if (ofdTextureImportPath.ShowDialog() != DialogResult.OK) return -1;
+            if (allowMultiImport)
+            {
+                ofdTextureImportPath.Multiselect = true;
+            }
 
-            try
-            {
-                bmp = new Bitmap(ofdTextureImportPath.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error loading image.",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
+            if (ofdTextureImportPath.ShowDialog() != DialogResult.OK) return -1;
 
             // Ask the user to select the format to import
             GxTextureFormatPickerDialog formatPickerDlg = new GxTextureFormatPickerDialog(TplTexture.SupportedTextureFormats, GxTextureFormat.CMPR);
@@ -1626,32 +1620,49 @@ namespace GxModelViewer
 
             GxTextureFormat newFmt = formatPickerDlg.SelectedFormat;
 
-            TplTexture newTexture = new TplTexture(newFmt, intFormat, numMipmaps, bmp);
-            tpl.Add(newTexture);
-            int newId = tpl.Count - 1;
-            try
+            foreach (String newTexturePath in ofdTextureImportPath.FileNames)
             {
-                // Define the entire texture from the bitmap
-                newTexture.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
-                TextureHasChanged(newId);
-                UpdateTextureTree();
-                treeTextures.SelectedNode = treeTextures.Nodes[newId];
-                //treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
-                //.Where(tn => ((TextureReference)tn.Tag).TextureIdx == newId).First();
+                try
+                {
+                    bmp = new Bitmap(newTexturePath);
+                }
+
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error loading image.",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+
+                TplTexture newTexture = new TplTexture(newFmt, intFormat, numMipmaps, bmp);
+                tpl.Add(newTexture);
+                int newId = tpl.Count - 1;
+                try
+                {
+                    // Define the entire texture from the bitmap
+                    newTexture.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
+                    TextureHasChanged(newId);
+                    UpdateTextureTree();
+                    treeTextures.SelectedNode = treeTextures.Nodes[newId];
+                    //treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
+                    //.Where(tn => ((TextureReference)tn.Tag).TextureIdx == newId).First();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occured while importing the texture(s).\nIf you are importing multiple mipmap levels, ensure\nthat all of the mipmaps are of the correct size.",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return -1;
+                }
+
+                if (!allowMultiImport) return newId;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error occured while importing the texture(s).\n" +
-                                "If you are importing multiple mipmap levels, ensure\n",
-                                "that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return -1;
-            }
-            return newId;
+            ofdTextureImportPath.Multiselect = false;
+            return -1;
         }
 
         private void defineNewToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            defineNewTextureFromBitmap();
+            defineNewTextureFromBitmap(true);
         }
 
         private void defineNewFromTextureToolStripMenuItem_Click(object sender, EventArgs e)
