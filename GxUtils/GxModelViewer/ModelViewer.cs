@@ -748,7 +748,7 @@ namespace GxModelViewer
 
             try
             {
-                LoadTplFile(ofdLoadTpl.FileName, pressingShift);
+                LoadTplFile(ofdLoadTpl.FileName, pressingShift);               
                 tsBtnLoadTpl.Text = "Load TPL...";
             }
             catch (Exception ex)
@@ -782,7 +782,7 @@ namespace GxModelViewer
                                 tplStream.Position = 0;
                                 tpl = new Tpl(tplStream, GetSelectedGame(), newHeader);
                                 currentTplHeaderless = true;
-                                numMipmaps = 0;
+                                numMipmaps = 1;
                             }
                             else
                             {
@@ -791,6 +791,8 @@ namespace GxModelViewer
                         }
                         else
                         {
+                            numMipmaps = 255;
+
                             tplStream.Position = 0;
                             tpl = new Tpl(tplStream, GetSelectedGame());
                             currentTplHeaderless = false;
@@ -1252,7 +1254,7 @@ namespace GxModelViewer
         {
             string text = ((ToolStripMenuItem)sender).Text;
             int mipmapAmt = int.Parse(text);
-            numMipmaps = mipmapAmt-1;
+            numMipmaps = mipmapAmt;
 
             foreach (ToolStripMenuItem item in mipmapItems)
             {
