@@ -1,4 +1,65 @@
 # GxModelViewer - A F-Zero GX model viewer and editor
+
+## Introduction
+
+This is a fork of GX Model Viewer that features several improvements over the original version. The complete list of changes is found within CHANGES.txt.
+
+This specific fork of GX Model Viewer was developed for use with, and tested with the Super Monkey Ball series. No testing has been done with F-Zero GX.
+
+In short, the following major features have been added:
+
+* Higher quality default mipmap interpolation algorithm (bicubic)
+* Ability to batch import and export of multiple texture mipmap levels
+* Ability to create new materials
+* Ability to import new textures, delete existing textures, or clean up all unused textures in a TPL
+* Ability to import multiple textures at a time
+* Ability to save and load headerless TPLs without the need of hex editing
+* Ability to use secondary and tertiary materials without the need of hex editing
+* Ability to delete, re-order, and translate models
+* Ability to scale primary and secondary texture coordinates, as well as the ability to create secondary coordinates from primary coordinates
+* Ability to import and export individual models as GMA/TPLs
+	
+These features, respectively, enable you to:
+
+* Use custom textures in a custom level without a fade-in effect appearing on textures after a certain distance.
+* Use pre-generated mipmaps or vanilla textures without having to tediously import each mipmap level
+* Add new materials to a model without having to use workarounds in your 3D modelling program
+* Add new textures without having to use workaround in your 3D modelling program, as well as the ability to decrease the filesize of a TPL
+* Modify the story mode/pratice mode/replay preview image TPL file in the Super Monkey Ball series
+* Quickly import large amounts of textures without having to tediously import them one-by-one
+* Add specular maps or other effects to models
+* Reduce the size of a GMA file, remove unwanted models, move models without having to resort to exporting the GMA to a 3D modelling program
+* Recreate effects similar to the red/green star overlay textures in the Bonus 2 world in Super Monkey Ball 2
+* Use custom bumper or goal models without needing to use GMATool
+	
+Most of these new features are available through the context menus, found by right-clicking on items in the model, material, or texture tabs. 
+
+## Downloads
+
+Windows binaries can be downloaded here:
+
+https://github.com/TheBombSquad/GxUtils/releases
+
+For Linux users, GX Model Viewer should work on the latest version of Wine without any special setup required. 
+It can also be built and run using Mono, but all references to `GetConsoleWindow()` need to be commented out first.
+
+## Headerless TPL modification
+
+GX Model Viewer should detect if a TPL file is loaded without a proper header. You will then be prompted
+to create a header, so that the TPL is properly loaded with the correct number of textures and mipmap levels.
+The software will attempt to derive the correct parameters from the filename and file size of the loaded TPL.
+It will be assumed that you are loading a texture with only one mipmap level, and the resolution of all of the
+textures are uniform. The resolution is obtained from the file name - for example, the textures in the Super Monkey 
+Ball 2 file replist160x112.tpl are all of the resolution 160x112. The number of textures is derived from the file size.
+
+If a headerless TPL is loaded, the software will automatically save it without a header, and the button for saving a TPL
+will change its label to "Save Headerless TPL". If you wish to save it with a header, you can hold Shift before pressing the
+Save button, and the TPL will be saved with a header, using the parameters chosen upon the loading of the TPL. The label of the
+Save button should change accordingly, when the Shift key is pressed.
+
+If you wish to save a TPL with a header as one without one, you can hold Shift before pressing the Save button, and the TPL will
+be saved without a header. The label of the Save button should change accordingly, when the Shift key is pressed.
+
 ## Multiple mipmap level import/export
 This version of GX Model Viewer supports the export/import of multiple mipmap levels at a time. 
 
@@ -101,6 +162,6 @@ bytes from whatever happens to be the next texture. This will "corrupt" the last
 Since this problem, unlike the F-Zero GX CMPR bug, only affects a single texture on a single file,
 and it shouldn't have any negative effect in practice, it's unlikely to be ever fixed.
 
-### (Not a bug) On Super Monkey Ball, preview/*.tpl fails the TPL repacking test
+### (Not a bug) On Super Monkey Ball, previe*.tpl fails the TPL repacking test
 This is because those files are actually headerless image files, instead of TPL files.
 They aren't supported to pass the TPL repacking test.
