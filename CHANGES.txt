@@ -1,0 +1,41 @@
+* Added support for batch import and export of texture mipmap levels.
+* Added ability to modify primary, secondary, and tertiary material indices. Modifying material indices also updates the material count accordingly.
+* Added option to reload the model viewer after updating material flags.
+* Added the ability to define a new material from given flags.
+* Added the ability to define a new material from a given texture file.
+* Added the ability to import new textures into the TPL.
+* Added an icon for the program
+* Added the ability to rename meshes in the GMA.
+* Added the ability to change the order of meshes in the GMA.
+* Added support for high quality bicubic mipmap interpolation, and made it the default interpolation mode.
+* Added support for bicubic interpolation to the command line, and made it the default mode of interpolation.
+* Added the ability to export individual or selected groups of models in a GMA/TPL as seperate GMA/TPL files.
+* Added the abiltiy to merge two GMA/TPL files by importing the respective textures and models to the currently loaded GMA/TPL.
+* Added ability to delete textures from the TPL, and automatically adjust material texture indices to account for the deletion.
+* Added ability to clean up a TPL by deleting all unused textures.
+* Added display for which models are using which textures in the texture viewer.
+* Added ability to define secondary texture coordinates of a mesh from the primary texture coordinates of the mesh.
+* Added ability to scale the primary and secondary texture coordinates of a mesh.
+* Added option to reload the model viewer to model viewer context menu (updates model with any visible changes)
+* Added support for headerless TPLs by generation of a header on file load. Auto-derives header parameters from the file name and size, in the case of Super Monkey Ball 1 and 2.
+* Added ability to save a TPL without a header by holding shift while saving the TPL file.
+* Added ability to translate/change the position of models, as well as translate multiple models at the same time.
+* Added ability to copy and paste flags of selected meshes. (experimental)
+* Added ability to import more than one texture at a time
+* Added ability to remove materials.
+* Added ability to duplicate models.
+* Fixed exception that might occur when renaming models in the GMA
+* Fixed material indices not being properly preserved when multiple meshes are selected with differing indices
+* Fixed issue where right-clicking a node doesn't select the node right-clicked on
+* Fixed issue where the option to rename would appear when a node is clicked
+* Fixed exception when trying to delete unused textures in GMAs with null entries
+* Fixed issue where texture coordinate scaling may not apply. Primary and secondary texture scaling now are applied to objects defined in clockwise order, instead of just those in counterclockwise order.
+* Fixed tab order of mesh flag editor
+* Fixed tab order of model flag editor.
+* Fixed typos in the UI.
+* Fixed issue where overwriting a GMA or TPL would not update the file size correctly
+* Fixed issue where loading a new GMA or TPL while one was already loaded could lead to error messages
+* Fixed issue where pressing the Enter or Esc key did not confirm nor close all dialog boxes properly
+* Changed default material flags to 0x07D4 instead of 0x0000.
+* Changed references to materials and texture IDs such that they are universally referenced to in terms of hexadecimal.
+* Changed the labelling of the mipmap count such that it starts from 1 universally.

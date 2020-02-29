@@ -150,6 +150,7 @@ namespace GxModelViewer
             this.gmaExportTolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gmaImporttoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importPreserveFLagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editFlagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -170,7 +171,8 @@ namespace GxModelViewer
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
-            this.translateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicateModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -1062,9 +1064,10 @@ namespace GxModelViewer
             this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.defineNewToolStripMenuItem,
             this.defineNewFromTextureToolStripMenuItem,
-            this.editFlagsToolStripMenuItem2});
+            this.editFlagsToolStripMenuItem2,
+            this.deleteToolStripMenuItem});
             this.materialMenuStrip.Name = "materialMenuStrip";
-            this.materialMenuStrip.Size = new System.Drawing.Size(215, 70);
+            this.materialMenuStrip.Size = new System.Drawing.Size(215, 114);
             this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
             // 
             // defineNewToolStripMenuItem
@@ -1490,6 +1493,7 @@ namespace GxModelViewer
             this.gmaImporttoolStripMenuItem,
             this.importPreserveFLagsToolStripMenuItem,
             this.translateModelToolStripMenuItem,
+            this.duplicateModelToolStripMenuItem,
             this.editFlagsToolStripMenuItem,
             this.renameToolStripMenuItem,
             this.removeToolStripMenuItem});
@@ -1530,6 +1534,13 @@ namespace GxModelViewer
             this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
             this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ...  (Preserve Flags)";
             this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
+            // 
+            // translateModelToolStripMenuItem
+            // 
+            this.translateModelToolStripMenuItem.Name = "translateModelToolStripMenuItem";
+            this.translateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.translateModelToolStripMenuItem.Text = "Translate Model...";
+            this.translateModelToolStripMenuItem.Click += new System.EventHandler(this.translateModelToolStripMenuItem_Click);
             // 
             // editFlagsToolStripMenuItem
             // 
@@ -1658,12 +1669,19 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
-            // translateModelToolStripMenuItem
+            // deleteToolStripMenuItem
             // 
-            this.translateModelToolStripMenuItem.Name = "translateModelToolStripMenuItem";
-            this.translateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.translateModelToolStripMenuItem.Text = "Translate Model...";
-            this.translateModelToolStripMenuItem.Click += new System.EventHandler(this.translateModelToolStripMenuItem_Click);
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // duplicateModelToolStripMenuItem
+            // 
+            this.duplicateModelToolStripMenuItem.Name = "duplicateModelToolStripMenuItem";
+            this.duplicateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.duplicateModelToolStripMenuItem.Text = "Duplicate Model";
+            this.duplicateModelToolStripMenuItem.Click += new System.EventHandler(this.duplicateModelToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1864,5 +1882,7 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolTip toolTipTextureUsedBy;
         private System.Windows.Forms.ToolStripMenuItem reloadViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translateModelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem duplicateModelToolStripMenuItem;
     }
 }

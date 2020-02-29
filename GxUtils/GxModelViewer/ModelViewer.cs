@@ -129,7 +129,7 @@ namespace GxModelViewer
             int i;
             for (i = 0; i < mipmapItems.Length - 1; ++i)
             {
-                ToolStripMenuItem item = new ToolStripMenuItem("" + (i+1));
+                ToolStripMenuItem item = new ToolStripMenuItem("" + (i + 1));
                 item.Click += new EventHandler(mipmapDropDownItemClicked);
                 mipmapItems[i] = item;
             }
@@ -376,7 +376,20 @@ namespace GxModelViewer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (tpl != null)
+                {
+                    DialogResult unloadChoice = MessageBox.Show("The currently loaded TPL does not appear to be compatible with the selected GMA file.\nWould you like to unload the current TPL?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (unloadChoice == DialogResult.Yes)
+                    {
+                        LoadTplFile(null);
+                        LoadGmaFile(ofdLoadGma.FileName);
+                    }
+                }
+
+                else
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -469,7 +482,7 @@ namespace GxModelViewer
                 gmaPath = sfdSaveGma.FileName;
             }
 
-            using (Stream gmaStream = File.OpenWrite(gmaPath))
+            using (Stream gmaStream = File.Create(gmaPath))
             {
                 gma.Save(gmaStream, GetSelectedGame());
             }
@@ -484,7 +497,7 @@ namespace GxModelViewer
             // Unlike the UI version, this always sets a new underlying GMA
             gmaPath = filename;
 
-            using (Stream gmaStream = File.OpenWrite(gmaPath))
+            using (Stream gmaStream = File.Create(gmaPath))
             {
                 gma.Save(gmaStream, GetSelectedGame());
             }
@@ -748,12 +761,26 @@ namespace GxModelViewer
 
             try
             {
-                LoadTplFile(ofdLoadTpl.FileName, pressingShift);               
+                LoadTplFile(ofdLoadTpl.FileName, pressingShift);
                 tsBtnLoadTpl.Text = "Load TPL...";
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (gma != null)
+                {
+                    DialogResult unloadChoice = MessageBox.Show("The currently loaded GMA does not appear to be compatible with the selected TPL file.\nWould you like to unload the current GMA?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (unloadChoice == DialogResult.Yes)
+                    {
+                        LoadGmaFile(null);
+                        LoadTplFile(ofdLoadTpl.FileName);
+                    }
+                }
+
+                else
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             }
         }
 
@@ -826,7 +853,7 @@ namespace GxModelViewer
             // Update material list
             UpdateMaterialDisplay();
 
-            // Throw delayed until end to keep previous functionality (clear TPL on error)
+            // Throw delayed until end to keep previous functionality (clear TPL on error)           
             if (exception != null)
             {
                 throw exception;
@@ -884,7 +911,7 @@ namespace GxModelViewer
                 tplPath = sfdSaveTpl.FileName;
             }
 
-            using (Stream tplStream = File.OpenWrite(tplPath))
+            using (Stream tplStream = File.Create(tplPath))
             {
                 tpl.Save(tplStream, GetSelectedGame(), noHeader);
             }
@@ -899,7 +926,7 @@ namespace GxModelViewer
             // Unlike the UI version, this always sets a new underlying TPL
             tplPath = filename;
 
-            using (Stream tplStream = File.OpenWrite(tplPath))
+            using (Stream tplStream = File.Create(tplPath))
             {
                 tpl.Save(tplStream, GetSelectedGame());
             }
@@ -1569,6 +1596,65 @@ namespace GxModelViewer
             }
         }
 
+        private void removeMaterial()
+        {
+            int matIndex = treeMaterials.SelectedNode.Index;
+            foreach (GcmfMesh meshCheck in gma[GetSelectedModelIdx()].ModelObject.Meshes)
+            {
+                if (meshCheck.PrimaryMaterialIdx == matIndex || meshCheck.SecondaryMaterialIdx == matIndex || meshCheck.TertiaryMaterialIdx == matIndex)
+                {
+                    DialogResult removeResult = MessageBox.Show("This material is currently assigned to a mesh in the model " + gma[GetSelectedModelIdx()].Name + ".\nMaterials must be unassigned before removal. Would you like to unassign this material from the associated mesh?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (removeResult == DialogResult.Yes)
+                    {
+                        if (meshCheck.PrimaryMaterialIdx == matIndex)
+                        {
+                            meshCheck.PrimaryMaterialIdx = 0xFFFF;
+                        }
+                        if (meshCheck.SecondaryMaterialIdx == matIndex)
+                        {
+                            meshCheck.SecondaryMaterialIdx = 0xFFFF;
+                        }
+                        if (meshCheck.TertiaryMaterialIdx == matIndex)
+                        {
+                            meshCheck.TertiaryMaterialIdx = 0xFFFF;
+                        }
+                        UpdateModelDisplay();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                else
+                {
+                    if (meshCheck.PrimaryMaterialIdx > matIndex && meshCheck.PrimaryMaterialIdx != 0xFFFF)
+                    {
+                        meshCheck.PrimaryMaterialIdx--;
+                    }
+                    if (meshCheck.SecondaryMaterialIdx > matIndex && meshCheck.SecondaryMaterialIdx != 0xFFFF)
+                    {
+                        meshCheck.SecondaryMaterialIdx--;
+                    }
+                    if (meshCheck.TertiaryMaterialIdx > matIndex && meshCheck.TertiaryMaterialIdx != 0xFFFF)
+                    {
+                        meshCheck.TertiaryMaterialIdx--;
+                    }
+                }
+
+            }
+            gma[GetSelectedModelIdx()].ModelObject.Materials.RemoveAt(matIndex);
+
+            UpdateMaterialList();
+            if (gma[GetSelectedModelIdx()].ModelObject.Materials.Count > 1)
+            {
+                treeMaterials.SelectedNode = treeMaterials.Nodes[gma[GetSelectedModelIdx()].ModelObject.Materials.Count - 1];
+            }
+            UpdateMaterialDisplay();
+            UpdateTexturesUsedBy();
+            reloadOnNextRedraw = true;
+        }
+
         private void defineNewMaterial(int inputTextureIdx = 0)
         {
             GcmfMaterial newMaterial = new GcmfMaterial();
@@ -1601,6 +1687,7 @@ namespace GxModelViewer
         {
             // Do not allow for the editing of flags if no material is selected
             editFlagsToolStripMenuItem2.Enabled = (treeMaterials.SelectedNodes.Count != 0);
+            deleteToolStripMenuItem.Enabled = (treeMaterials.SelectedNodes.Count != 0);
         }
 
         private int defineNewTextureFromBitmap(bool allowMultiImport = false)
@@ -1827,12 +1914,12 @@ namespace GxModelViewer
                     tplToBeSaved.Add(tpl[textureIdToBeAdded]);
                 }
 
-                using (Stream gmaStream = File.OpenWrite(sfdSaveGma.FileName))
+                using (Stream gmaStream = File.Create(sfdSaveGma.FileName))
                 {
                     gmaToBeSaved.Save(gmaStream, GetSelectedGame());
                 }
 
-                using (Stream tplStream = File.OpenWrite(sfdSaveTpl.FileName))
+                using (Stream tplStream = File.Create(sfdSaveTpl.FileName))
                 {
                     tplToBeSaved.Save(tplStream, GetSelectedGame());
                 }
@@ -2078,7 +2165,7 @@ namespace GxModelViewer
 
         private void translateModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             using (TranslateMesh translateMesh = new TranslateMesh())
             {
                 if (treeModel.SelectedNodes.Count == 1)
@@ -2086,7 +2173,7 @@ namespace GxModelViewer
                     ModelMeshReference selectedReference = (ModelMeshReference)treeModel.SelectedNodes[0].Tag;
                     translateMesh.setInitial(gma[selectedReference.ModelIdx].ModelObject.BoundingSphereCenter);
                 }
-                
+
                 switch (translateMesh.ShowDialog())
                 {
                     case DialogResult.OK:
@@ -2124,7 +2211,7 @@ namespace GxModelViewer
                                         tri2cw.Position += translation;
                                     }
                                 }
-                                mesh.BoundingSphereCenter += translation;                                
+                                mesh.BoundingSphereCenter += translation;
                             }
                             gma[currentReference.ModelIdx].ModelObject.BoundingSphereCenter += translation;
                         }
@@ -2132,11 +2219,50 @@ namespace GxModelViewer
                         reloadOnNextRedraw = true;
                         glControlModel.Invalidate();
                         UpdateModelDisplay();
-                        
+
                         break;
                 }
             }
         }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            removeMaterial();
+        }
+
+        private void duplicateModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // stupid hacky workaround because C# doesn't let you easily clone objects
+            using (Stream memoryCopy = new MemoryStream()) {
+                Gma tempCopyGma = new Gma();
+                foreach (TreeNode selectedNode in treeModel.SelectedNodes)
+                {
+                    ModelMeshReference modelRef = (ModelMeshReference)selectedNode.Tag;
+                    tempCopyGma.Add(gma[modelRef.ModelIdx]);
+                    
+                }
+                tempCopyGma.Save(memoryCopy, GetSelectedGame());
+                memoryCopy.Position = 0;
+                tempCopyGma = new Gma(memoryCopy, GetSelectedGame());
+                foreach (GmaEntry entry in tempCopyGma)
+                {
+                    gma.Add(entry);
+                }
+            }
+                     
+            UpdateModelDisplay();
+            UpdateModelButtons();
+            UpdateModelTree();
+
+            UpdateMaterialList();
+            UpdateMaterialDisplay();
+
+            UpdateTextureDisplay();
+
+            reloadOnNextRedraw = true;
+            glControlModel.Invalidate();
+        }
+
 
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
@@ -2145,7 +2271,7 @@ namespace GxModelViewer
         /// <param name="update">Whether or not to correct the texture indices of materials</param>
         public void DeleteTextureAt(int textureId, bool update = true)
         {
-            int previousTextureId = (treeTextures.SelectedNode.Index)-1;
+            int previousTextureId = (treeTextures.SelectedNode.Index) - 1;
             tpl.RemoveAt(textureId);
 
             if (update)
