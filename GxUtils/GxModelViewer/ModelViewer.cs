@@ -288,8 +288,11 @@ namespace GxModelViewer
                 {
                     if (treeModel.GetCheckState(modelItem) == CheckState.Checked)
                     {
-                        // Whole item is checked -> Call the display list corresponding to the entire model
-                        ctx.CallDisplayList(modelObjects[modelRef.ModelIdx].Value);
+                        if (modelObjects != null)
+                        {
+                            // Whole item is checked -> Call the display list corresponding to the entire model
+                            ctx.CallDisplayList(modelObjects[modelRef.ModelIdx].Value);
+                        }
                     }
                     else if (treeModel.GetCheckState(modelItem) == CheckState.Indeterminate)
                     {
@@ -2003,7 +2006,7 @@ namespace GxModelViewer
         /// </summary>
         public void UpdateTexturesUsedBy()
         {
-            if (gma != null && tpl != null)
+            if ((gma != null && tpl != null) && (gma.Count > 0 && tpl.Count > 0))
             {
                 // Clears list of models used by textures so it is updated accurately when textures are removed
                 foreach (TplTexture tex in tpl)
