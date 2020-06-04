@@ -126,7 +126,7 @@ namespace GxModelViewer
                                         game = LibGxFormat.GxGame.SuperMonkeyBallDX;
                                         valid = true;
                                         break;
-                                    case "fxero":
+                                    case "fzero":
                                         game = LibGxFormat.GxGame.FZeroGX;
                                         valid = true;
                                         break;

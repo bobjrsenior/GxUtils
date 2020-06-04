@@ -743,9 +743,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(166, 13);
+            this.label1.Size = new System.Drawing.Size(150, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Primary Tex. Coord. Scaling (X, Y)";
+            this.label1.Text = "Primary UV Map Scaling (X, Y)";
             // 
             // label2
             // 
@@ -753,14 +753,14 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 32);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(183, 13);
+            this.label2.Size = new System.Drawing.Size(167, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Secondary Tex. Coord. Scaling (X, Y)";
+            this.label2.Text = "Secondary UV Map Scaling (X, Y)";
             // 
             // primaryXCoordScale
             // 
             this.primaryXCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.primaryXCoordScale.Location = new System.Drawing.Point(192, 3);
+            this.primaryXCoordScale.Location = new System.Drawing.Point(176, 3);
             this.primaryXCoordScale.Name = "primaryXCoordScale";
             this.primaryXCoordScale.Size = new System.Drawing.Size(50, 20);
             this.primaryXCoordScale.TabIndex = 65;
@@ -768,7 +768,7 @@
             // secondaryXCoordScale
             // 
             this.secondaryXCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.secondaryXCoordScale.Location = new System.Drawing.Point(192, 29);
+            this.secondaryXCoordScale.Location = new System.Drawing.Point(176, 29);
             this.secondaryXCoordScale.Name = "secondaryXCoordScale";
             this.secondaryXCoordScale.Size = new System.Drawing.Size(50, 20);
             this.secondaryXCoordScale.TabIndex = 67;
@@ -776,7 +776,7 @@
             // primaryYCoordScale
             // 
             this.primaryYCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.primaryYCoordScale.Location = new System.Drawing.Point(248, 3);
+            this.primaryYCoordScale.Location = new System.Drawing.Point(232, 3);
             this.primaryYCoordScale.Name = "primaryYCoordScale";
             this.primaryYCoordScale.Size = new System.Drawing.Size(50, 20);
             this.primaryYCoordScale.TabIndex = 66;
@@ -784,7 +784,7 @@
             // secondaryYCoordScale
             // 
             this.secondaryYCoordScale.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.secondaryYCoordScale.Location = new System.Drawing.Point(248, 29);
+            this.secondaryYCoordScale.Location = new System.Drawing.Point(232, 29);
             this.secondaryYCoordScale.Name = "secondaryYCoordScale";
             this.secondaryYCoordScale.Size = new System.Drawing.Size(50, 20);
             this.secondaryYCoordScale.TabIndex = 68;
@@ -795,7 +795,7 @@
             this.createCoordsButton.Name = "createCoordsButton";
             this.createCoordsButton.Size = new System.Drawing.Size(172, 23);
             this.createCoordsButton.TabIndex = 69;
-            this.createCoordsButton.Text = "Create Secondary Coordinates";
+            this.createCoordsButton.Text = "Create Secondary UV Map";
             this.createCoordsButton.UseVisualStyleBackColor = true;
             this.createCoordsButton.Click += new System.EventHandler(this.button1_Click);
             // 

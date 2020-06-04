@@ -86,9 +86,9 @@
             this.lblUserAction.AutoSize = true;
             this.lblUserAction.Location = new System.Drawing.Point(3, 217);
             this.lblUserAction.Name = "lblUserAction";
-            this.lblUserAction.Size = new System.Drawing.Size(127, 13);
+            this.lblUserAction.Size = new System.Drawing.Size(275, 13);
             this.lblUserAction.TabIndex = 4;
-            this.lblUserAction.Text = "Do you wish to continue?";
+            this.lblUserAction.Text = "This is not necessarily an error. Do you wish to continue?";
             // 
             // tableLayoutPanel1
             // 
