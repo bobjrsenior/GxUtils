@@ -60,7 +60,6 @@ namespace GxModelViewer
             this.btnModelShowLayer1 = new System.Windows.Forms.Button();
             this.btnModelShowLayer2 = new System.Windows.Forms.Button();
             this.btnModelShowAll = new System.Windows.Forms.Button();
-            this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
             this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
@@ -105,7 +104,6 @@ namespace GxModelViewer
             this.lblMeshRenderFlags = new System.Windows.Forms.Label();
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeMaterials = new TreeViewMS.TreeViewMS();
             this.materialMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.defineNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defineNewFromTextureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -125,7 +123,6 @@ namespace GxModelViewer
             this.lblMaterialAnisotropyLevel = new System.Windows.Forms.Label();
             this.lblMaterialUnkC = new System.Windows.Forms.Label();
             this.lblMaterialUnk10 = new System.Windows.Forms.Label();
-            this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.tabPageTextures = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.treeTextures = new System.Windows.Forms.TreeView();
@@ -144,7 +141,6 @@ namespace GxModelViewer
             this.label2 = new System.Windows.Forms.Label();
             this.lblTextureFormat = new System.Windows.Forms.Label();
             this.lblTextureUsedBy = new System.Windows.Forms.Label();
-            this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.gmaContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.importGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAsGMATPLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -173,6 +169,11 @@ namespace GxModelViewer
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
+            this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
+            this.treeMaterials = new TreeViewMS.TreeViewMS();
+            this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
+            this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
+            this.showValuesAsHexadecimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -193,7 +194,6 @@ namespace GxModelViewer
             this.materialMenuStrip.SuspendLayout();
             this.tlpMaterialDisplay.SuspendLayout();
             this.tlpMaterialProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
             this.tabPageTextures.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -202,11 +202,12 @@ namespace GxModelViewer
             this.textureMenuStrip.SuspendLayout();
             this.tlpTextureDisplay.SuspendLayout();
             this.tlpTextureProperties.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.gmaContextMenuStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.SuspendLayout();
             // 
             // ctxMenuModelOptions
@@ -493,26 +494,6 @@ namespace GxModelViewer
             this.btnModelShowAll.Text = "Show All";
             this.btnModelShowAll.UseVisualStyleBackColor = true;
             this.btnModelShowAll.Click += new System.EventHandler(this.btnModelShowAll_Click);
-            // 
-            // treeModel
-            // 
-            this.treeModel.AllowDrop = true;
-            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeModel.LabelEdit = true;
-            this.treeModel.Location = new System.Drawing.Point(3, 3);
-            this.treeModel.Name = "treeModel";
-            this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
-            this.treeModel.Size = new System.Drawing.Size(301, 370);
-            this.treeModel.TabIndex = 0;
-            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
-            this.treeModel.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_BeforeLabelEdit);
-            this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
-            this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
-            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
-            this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
-            this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
-            this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
-            this.treeModel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeModel_MouseDown);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1047,18 +1028,6 @@ namespace GxModelViewer
             this.splitContainer1.SplitterDistance = 306;
             this.splitContainer1.TabIndex = 0;
             // 
-            // treeMaterials
-            // 
-            this.treeMaterials.ContextMenuStrip = this.materialMenuStrip;
-            this.treeMaterials.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeMaterials.Location = new System.Drawing.Point(0, 0);
-            this.treeMaterials.Name = "treeMaterials";
-            this.treeMaterials.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeMaterials.SelectedNodes")));
-            this.treeMaterials.Size = new System.Drawing.Size(306, 490);
-            this.treeMaterials.TabIndex = 0;
-            this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
-            this.treeMaterials.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeMaterials_MouseDown);
-            // 
             // materialMenuStrip
             // 
             this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1268,15 +1237,6 @@ namespace GxModelViewer
             this.lblMaterialUnk10.TabIndex = 11;
             this.lblMaterialUnk10.Text = "-";
             // 
-            // pbMaterialTextureImage
-            // 
-            this.pbMaterialTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbMaterialTextureImage.Location = new System.Drawing.Point(3, 3);
-            this.pbMaterialTextureImage.Name = "pbMaterialTextureImage";
-            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 350);
-            this.pbMaterialTextureImage.TabIndex = 2;
-            this.pbMaterialTextureImage.TabStop = false;
-            // 
             // tabPageTextures
             // 
             this.tabPageTextures.Controls.Add(this.splitContainer2);
@@ -1482,15 +1442,6 @@ namespace GxModelViewer
             this.lblTextureUsedBy.TabIndex = 5;
             this.lblTextureUsedBy.Text = "-";
             // 
-            // pbTextureImage
-            // 
-            this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
-            this.pbTextureImage.Name = "pbTextureImage";
-            this.pbTextureImage.Size = new System.Drawing.Size(602, 372);
-            this.pbTextureImage.TabIndex = 4;
-            this.pbTextureImage.TabStop = false;
-            // 
             // gmaContextMenuStrip
             // 
             this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1633,7 +1584,8 @@ namespace GxModelViewer
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.numMipmapsToolStripMenuItem,
             this.mipmapInterpolationToolStripMenuItem,
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem});
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem,
+            this.showValuesAsHexadecimalToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -1683,6 +1635,66 @@ namespace GxModelViewer
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
+            // treeModel
+            // 
+            this.treeModel.AllowDrop = true;
+            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeModel.LabelEdit = true;
+            this.treeModel.Location = new System.Drawing.Point(3, 3);
+            this.treeModel.Name = "treeModel";
+            this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
+            this.treeModel.Size = new System.Drawing.Size(301, 370);
+            this.treeModel.TabIndex = 0;
+            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
+            this.treeModel.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_BeforeLabelEdit);
+            this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
+            this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
+            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
+            this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
+            this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
+            this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
+            this.treeModel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeModel_MouseDown);
+            // 
+            // treeMaterials
+            // 
+            this.treeMaterials.ContextMenuStrip = this.materialMenuStrip;
+            this.treeMaterials.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeMaterials.Location = new System.Drawing.Point(0, 0);
+            this.treeMaterials.Name = "treeMaterials";
+            this.treeMaterials.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeMaterials.SelectedNodes")));
+            this.treeMaterials.Size = new System.Drawing.Size(306, 490);
+            this.treeMaterials.TabIndex = 0;
+            this.treeMaterials.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeMaterials_AfterSelect);
+            this.treeMaterials.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeMaterials_MouseDown);
+            // 
+            // pbMaterialTextureImage
+            // 
+            this.pbMaterialTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbMaterialTextureImage.Location = new System.Drawing.Point(3, 3);
+            this.pbMaterialTextureImage.Name = "pbMaterialTextureImage";
+            this.pbMaterialTextureImage.Size = new System.Drawing.Size(601, 350);
+            this.pbMaterialTextureImage.TabIndex = 2;
+            this.pbMaterialTextureImage.TabStop = false;
+            // 
+            // pbTextureImage
+            // 
+            this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
+            this.pbTextureImage.Name = "pbTextureImage";
+            this.pbTextureImage.Size = new System.Drawing.Size(602, 372);
+            this.pbTextureImage.TabIndex = 4;
+            this.pbTextureImage.TabStop = false;
+            // 
+            // showValuesAsHexadecimalToolStripMenuItem
+            // 
+            this.showValuesAsHexadecimalToolStripMenuItem.Checked = true;
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckOnClick = true;
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showValuesAsHexadecimalToolStripMenuItem.Name = "showValuesAsHexadecimalToolStripMenuItem";
+            this.showValuesAsHexadecimalToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.showValuesAsHexadecimalToolStripMenuItem.Text = "Show Values as Hexadecimal";
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showValuesAsHexadecimalToolStripMenuItem_CheckedChanged);
+            // 
             // ModelViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1720,7 +1732,6 @@ namespace GxModelViewer
             this.materialMenuStrip.ResumeLayout(false);
             this.tlpMaterialDisplay.ResumeLayout(false);
             this.tlpMaterialProperties.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
             this.tabPageTextures.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -1730,12 +1741,13 @@ namespace GxModelViewer
             this.tlpTextureDisplay.ResumeLayout(false);
             this.tlpTextureProperties.ResumeLayout(false);
             this.tlpTextureProperties.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.gmaContextMenuStrip.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.meshMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1884,5 +1896,6 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem translateModelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem duplicateModelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showValuesAsHexadecimalToolStripMenuItem;
     }
 }

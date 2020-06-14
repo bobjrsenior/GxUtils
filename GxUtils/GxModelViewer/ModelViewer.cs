@@ -109,9 +109,11 @@ namespace GxModelViewer
         /// <summary> Whether or not the current selection can be renamed. </summary>
         bool canRenameCurrentSelection = false;
 
-        /// <summary>
-        /// Whether or not the current TPL was imported as a headerless TPL.</summary>
+        /// <summary> Whether or not the current TPL was imported as a headerless TPL.</summary>
         bool currentTplHeaderless = false;
+
+        /// <summary> Whether or not to render values in the UI as hexadecimal. </summary>
+        bool hexadecimalNumbers = true;
 
         public ModelViewer()
         {
@@ -596,6 +598,7 @@ namespace GxModelViewer
                 tlpModelDisplay.Visible = false;
                 tlpMeshDisplay.Visible = true;
 
+                String indexFormat = (hexadecimalNumbers) ? "{0:X}" : "{0}";
                 lblMeshRenderFlags.Text = string.Format("0x{0:X8} ({1})", (uint)mesh.RenderFlags, EnumUtils.GetEnumFlagsString(mesh.RenderFlags));
                 lblMeshUnk4.Text = string.Format("0x{0:X8}", mesh.Unk4);
                 lblMeshUnk8.Text = string.Format("0x{0:X8}", mesh.Unk8);
@@ -605,9 +608,9 @@ namespace GxModelViewer
                                      ((mesh.SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
                                      ((mesh.TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0)));
                 lblMeshUnk14.Text = string.Format("0x{0:X4}", mesh.Unk14);
-                lblMeshPrimaryMaterialIdx.Text = string.Format("{0:X}", mesh.PrimaryMaterialIdx);
-                lblMeshSecondaryMaterialIdx.Text = string.Format("{0:X}", mesh.SecondaryMaterialIdx);
-                lblMeshTertiaryMaterialIdx.Text = string.Format("{0:X}", mesh.TertiaryMaterialIdx);
+                lblMeshPrimaryMaterialIdx.Text = (mesh.PrimaryMaterialIdx == 0xFFFF) ? "None" : string.Format(indexFormat, mesh.PrimaryMaterialIdx);
+                lblMeshSecondaryMaterialIdx.Text = (mesh.SecondaryMaterialIdx == 0xFFFF) ? "None" : string.Format(indexFormat, mesh.SecondaryMaterialIdx);
+                lblMeshTertiaryMaterialIdx.Text = (mesh.TertiaryMaterialIdx == 0xFFFF) ? "None" : string.Format(indexFormat, mesh.TertiaryMaterialIdx);
                 lblMeshTransformMatrixSpecificReferences.Text = string.Join(",",
                     Array.ConvertAll(mesh.TransformMatrixSpecificIdxsObj1, b => string.Format("0x{0:X2}", b)));
                 lblMeshCenter.Text = mesh.BoundingSphereCenter.ToString();
@@ -654,7 +657,8 @@ namespace GxModelViewer
             Gcmf model = gma[modelIdx].ModelObject;
             for (int i = 0; i < model.Materials.Count; i++)
             {
-                TreeNode materialItem = new TreeNode(string.Format("Material {0:X}", i));
+                String indexFormat = (hexadecimalNumbers) ? "Material {0:X}" : "Material {0}";
+                TreeNode materialItem = new TreeNode(string.Format(indexFormat, i));
                 materialItem.Tag = new ModelMaterialReference(modelIdx, i);
                 materialItem.ContextMenuStrip = materialMenuStrip;
                 treeMaterials.Nodes.Add(materialItem);
@@ -678,10 +682,11 @@ namespace GxModelViewer
                 return;
             }
 
+            String indexFormat = (hexadecimalNumbers) ? "{0:X}" : "{0}";
             tlpMaterialProperties.Visible = true;
             lblMaterialFlags.Text = string.Format("0x{0:X8}", material.Flags);
             lblMaterialTextureIndex.Text = string.Format("{0:X}", material.TextureIdx);
-            lblMaterialUnk6.Text = string.Format("0x{0:X2}", material.Unk6);
+            lblMaterialUnk6.Text = string.Format(indexFormat, material.Unk6);
             lblMaterialAnisotropyLevel.Text = string.Format("0x{0:X2}", material.AnisotropyLevel);
             lblMaterialUnkC.Text = string.Format("0x{0:X4}", material.UnkC);
             lblMaterialUnk10.Text = string.Format("0x{0:X8}", material.Unk10);
@@ -1004,11 +1009,13 @@ namespace GxModelViewer
             deletenoMaterialAdjustmentToolStripMenuItem.Enabled = (tplNotNull);
 
             treeTextures.Nodes.Clear();
+
+            String indexFormat = (hexadecimalNumbers) ? "Texture {0:X}" : "Texture {0}";
             if (tpl != null)
             {
                 for (int i = 0; i < tpl.Count; i++)
                 {
-                    TreeNode textureItem = new TreeNode(string.Format("Texture {0:X}", i));
+                    TreeNode textureItem = new TreeNode(string.Format(indexFormat, i));
                     textureItem.ForeColor = (!tpl[i].IsEmpty) ? Color.DarkGreen : Color.Red;
                     textureItem.Tag = new TextureReference(i, -1);
                     treeTextures.Nodes.Add(textureItem);
@@ -2266,6 +2273,14 @@ namespace GxModelViewer
             glControlModel.Invalidate();
         }
 
+        private void showValuesAsHexadecimalToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            hexadecimalNumbers = showValuesAsHexadecimalToolStripMenuItem.Checked;
+            UpdateModelDisplay();
+            UpdateModelTree();
+            UpdateMaterialList();
+            UpdateTextureTree();
+        }
 
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
