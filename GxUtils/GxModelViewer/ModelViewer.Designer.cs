@@ -174,6 +174,8 @@ namespace GxModelViewer
             this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.showValuesAsHexadecimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundColorForTextureViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.texViewerColorDialog = new System.Windows.Forms.ColorDialog();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
@@ -1585,7 +1587,8 @@ namespace GxModelViewer
             this.numMipmapsToolStripMenuItem,
             this.mipmapInterpolationToolStripMenuItem,
             this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem,
-            this.showValuesAsHexadecimalToolStripMenuItem});
+            this.showValuesAsHexadecimalToolStripMenuItem,
+            this.backgroundColorForTextureViewerToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem.Text = "Settings";
@@ -1678,6 +1681,7 @@ namespace GxModelViewer
             // 
             // pbTextureImage
             // 
+            this.pbTextureImage.BackColor = System.Drawing.Color.Transparent;
             this.pbTextureImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbTextureImage.Location = new System.Drawing.Point(3, 3);
             this.pbTextureImage.Name = "pbTextureImage";
@@ -1692,8 +1696,15 @@ namespace GxModelViewer
             this.showValuesAsHexadecimalToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showValuesAsHexadecimalToolStripMenuItem.Name = "showValuesAsHexadecimalToolStripMenuItem";
             this.showValuesAsHexadecimalToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.showValuesAsHexadecimalToolStripMenuItem.Text = "Show Values as Hexadecimal";
+            this.showValuesAsHexadecimalToolStripMenuItem.Text = "Show Indices as Hexadecimal";
             this.showValuesAsHexadecimalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showValuesAsHexadecimalToolStripMenuItem_CheckedChanged);
+            // 
+            // backgroundColorForTextureViewerToolStripMenuItem
+            // 
+            this.backgroundColorForTextureViewerToolStripMenuItem.Name = "backgroundColorForTextureViewerToolStripMenuItem";
+            this.backgroundColorForTextureViewerToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.backgroundColorForTextureViewerToolStripMenuItem.Text = "Set Background Color for Texture Viewer";
+            this.backgroundColorForTextureViewerToolStripMenuItem.Click += new System.EventHandler(this.backgroundColorForTextureViewerToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1897,5 +1908,7 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem duplicateModelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showValuesAsHexadecimalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem backgroundColorForTextureViewerToolStripMenuItem;
+        private System.Windows.Forms.ColorDialog texViewerColorDialog;
     }
 }

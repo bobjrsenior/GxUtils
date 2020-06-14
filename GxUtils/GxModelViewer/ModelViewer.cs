@@ -2282,6 +2282,14 @@ namespace GxModelViewer
             UpdateTextureTree();
         }
 
+        private void backgroundColorForTextureViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (texViewerColorDialog.ShowDialog() == DialogResult.OK)
+            {
+                pbTextureImage.BackColor = texViewerColorDialog.Color;
+            }
+        }
+
         /// <summary>
         /// Deletes a texture and corrects the texture index for all materials in the offset by the remoavl of the texture
         /// </summary>
