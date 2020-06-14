@@ -24,6 +24,8 @@
 * Added ability to import more than one texture at a time
 * Added ability to remove materials.
 * Added ability to duplicate models.
+* Added a color selector for the texture viewer's background
+* Added an option to toggle between hexadecimal and decimal numbers for material and texture indices
 * Fixed exception that might occur when renaming models in the GMA
 * Fixed material indices not being properly preserved when multiple meshes are selected with differing indices
 * Fixed issue where right-clicking a node doesn't select the node right-clicked on
@@ -36,6 +38,10 @@
 * Fixed issue where overwriting a GMA or TPL would not update the file size correctly
 * Fixed issue where loading a new GMA or TPL while one was already loaded could lead to error messages
 * Fixed issue where pressing the Enter or Esc key did not confirm nor close all dialog boxes properly
+* Fixed a crash that could occur when a mesh was given an invalid material index
+* Fixed a crash that could occur when an OBJ was imported with no map_Kd element in the MTL.
+* Fixed a typo in the command line arguments (fxero instead of fzero)
 * Changed default material flags to 0x07D4 instead of 0x0000.
 * Changed references to materials and texture IDs such that they are universally referenced to in terms of hexadecimal.
 * Changed the labelling of the mipmap count such that it starts from 1 universally.
+* Changed all references to 'texture coordinate' to 'UV map' for clarification. 
