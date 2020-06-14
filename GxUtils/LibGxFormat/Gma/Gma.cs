@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace LibGxFormat.Gma
 {
@@ -278,10 +279,20 @@ namespace LibGxFormat.Gma
             {
                 if (entry != null)
                 {
-                    // Define a new object for the model
-                    renderer.BeginObject(entry.Name);
-                    entry.ModelObject.Render(renderer);
-                    renderer.EndObject();
+                    try
+                    {
+                        // Define a new object for the model
+                        renderer.BeginObject(entry.Name);
+                        entry.ModelObject.Render(renderer);
+                        renderer.EndObject();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(("Model " + entry.Name + " failed to render for the following reason:\n\n" + e.Message), "Render Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        renderer.EndObject();
+                        renderer.EndObject();
+                        renderer.ClearMaterialList();
+                    }
                 }
                 else
                 {

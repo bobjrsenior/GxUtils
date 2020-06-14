@@ -163,7 +163,7 @@ namespace LibGxFormat.ModelRenderer
 
             // Resolve material id -> texture id
             if (!materialDefs.ContainsKey(materialId))
-                throw new InvalidOperationException("Attempting to bind a material not previously defined.");
+                throw new InvalidOperationException("Attempted to bind to material " + materialId + ", which was not found in a mesh's material list.");
 
             OpenGlMaterial mat = materialDefs[materialId];
 
