@@ -54,54 +54,6 @@ namespace GxModelViewer
             this.tsBtnExportObjMtl = new System.Windows.Forms.ToolStripButton();
             this.tabControlModelsTextures = new System.Windows.Forms.TabControl();
             this.tabPageModels = new System.Windows.Forms.TabPage();
-            this.splitContainerModels = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanelModelSelect = new System.Windows.Forms.TableLayoutPanel();
-            this.btnModelHideAll = new System.Windows.Forms.Button();
-            this.btnModelShowLayer1 = new System.Windows.Forms.Button();
-            this.btnModelShowLayer2 = new System.Windows.Forms.Button();
-            this.btnModelShowAll = new System.Windows.Forms.Button();
-            this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
-            this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
-            this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
-            this.lblModelCenterText = new System.Windows.Forms.Label();
-            this.lblModelRadiusText = new System.Windows.Forms.Label();
-            this.lblModelTransformMatrixDefaultReferencesText = new System.Windows.Forms.Label();
-            this.lblModelNumTransformMatricesText = new System.Windows.Forms.Label();
-            this.lblModelSectionFlags = new System.Windows.Forms.Label();
-            this.lblModelCenter = new System.Windows.Forms.Label();
-            this.lblModelRadius = new System.Windows.Forms.Label();
-            this.lblModelTransformMatrixDefaultReferences = new System.Windows.Forms.Label();
-            this.lblModelNumTransformMatrices = new System.Windows.Forms.Label();
-            this.glControlModel = new OpenTK.GLControl();
-            this.tlpMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
-            this.lblMeshUnk12 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.lblMeshRenderFlagsText = new System.Windows.Forms.Label();
-            this.lblMeshUnk4Text = new System.Windows.Forms.Label();
-            this.lblMeshUnk8Text = new System.Windows.Forms.Label();
-            this.lblMeshUnkCText = new System.Windows.Forms.Label();
-            this.lblMeshUnk10Text = new System.Windows.Forms.Label();
-            this.lblMeshUnk14Text = new System.Windows.Forms.Label();
-            this.lblMeshPrimaryMaterialIdxText = new System.Windows.Forms.Label();
-            this.lblMeshSecondaryMaterialIdxText = new System.Windows.Forms.Label();
-            this.lblMeshTertiaryMaterialIdxText = new System.Windows.Forms.Label();
-            this.lblMeshTransformMatrixSpecificReferencesText = new System.Windows.Forms.Label();
-            this.lblMeshCenterText = new System.Windows.Forms.Label();
-            this.lblMeshUnk3CText = new System.Windows.Forms.Label();
-            this.lblMeshUnk40Text = new System.Windows.Forms.Label();
-            this.lblMeshUnk40 = new System.Windows.Forms.Label();
-            this.lblMeshUnk3C = new System.Windows.Forms.Label();
-            this.lblMeshCenter = new System.Windows.Forms.Label();
-            this.lblMeshTransformMatrixSpecificReferences = new System.Windows.Forms.Label();
-            this.lblMeshTertiaryMaterialIdx = new System.Windows.Forms.Label();
-            this.lblMeshSecondaryMaterialIdx = new System.Windows.Forms.Label();
-            this.lblMeshPrimaryMaterialIdx = new System.Windows.Forms.Label();
-            this.lblMeshUnk14 = new System.Windows.Forms.Label();
-            this.lblMeshUnk10 = new System.Windows.Forms.Label();
-            this.lblMeshUnkC = new System.Windows.Forms.Label();
-            this.lblMeshUnk8 = new System.Windows.Forms.Label();
-            this.lblMeshUnk4 = new System.Windows.Forms.Label();
-            this.lblMeshRenderFlags = new System.Windows.Forms.Label();
             this.tabPageMaterials = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.materialMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -164,30 +116,73 @@ namespace GxModelViewer
             this.numMipmapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mipmapInterpolationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showValuesAsHexadecimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundColorForTextureViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.meshMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editFlagsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.sfdModelExportPath = new System.Windows.Forms.SaveFileDialog();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.toolTipTextureUsedBy = new System.Windows.Forms.ToolTip(this.components);
+            this.texViewerColorDialog = new System.Windows.Forms.ColorDialog();
+            this.regenerateMipmapsForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.regenerateMipmapsForAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainerModels = new System.Windows.Forms.SplitContainer();
+            this.tableLayoutPanelModelSelect = new System.Windows.Forms.TableLayoutPanel();
+            this.btnModelHideAll = new System.Windows.Forms.Button();
+            this.btnModelShowLayer1 = new System.Windows.Forms.Button();
+            this.btnModelShowLayer2 = new System.Windows.Forms.Button();
+            this.btnModelShowAll = new System.Windows.Forms.Button();
             this.treeModel = new GxModelViewer_WinFormsExt.TreeViewAutoPartialCheckBox();
+            this.tlpMaterialMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.tlpModelDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.lblModelSectionFlagsText = new System.Windows.Forms.Label();
+            this.lblModelCenterText = new System.Windows.Forms.Label();
+            this.lblModelRadiusText = new System.Windows.Forms.Label();
+            this.lblModelTransformMatrixDefaultReferencesText = new System.Windows.Forms.Label();
+            this.lblModelNumTransformMatricesText = new System.Windows.Forms.Label();
+            this.lblModelSectionFlags = new System.Windows.Forms.Label();
+            this.lblModelCenter = new System.Windows.Forms.Label();
+            this.lblModelRadius = new System.Windows.Forms.Label();
+            this.lblModelTransformMatrixDefaultReferences = new System.Windows.Forms.Label();
+            this.lblModelNumTransformMatrices = new System.Windows.Forms.Label();
+            this.glControlModel = new OpenTK.GLControl();
+            this.tlpMeshDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.lblMeshUnk12 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblMeshRenderFlagsText = new System.Windows.Forms.Label();
+            this.lblMeshUnk4Text = new System.Windows.Forms.Label();
+            this.lblMeshUnk8Text = new System.Windows.Forms.Label();
+            this.lblMeshUnkCText = new System.Windows.Forms.Label();
+            this.lblMeshUnk10Text = new System.Windows.Forms.Label();
+            this.lblMeshUnk14Text = new System.Windows.Forms.Label();
+            this.lblMeshPrimaryMaterialIdxText = new System.Windows.Forms.Label();
+            this.lblMeshSecondaryMaterialIdxText = new System.Windows.Forms.Label();
+            this.lblMeshTertiaryMaterialIdxText = new System.Windows.Forms.Label();
+            this.lblMeshTransformMatrixSpecificReferencesText = new System.Windows.Forms.Label();
+            this.lblMeshCenterText = new System.Windows.Forms.Label();
+            this.lblMeshUnk3CText = new System.Windows.Forms.Label();
+            this.lblMeshUnk40Text = new System.Windows.Forms.Label();
+            this.lblMeshUnk40 = new System.Windows.Forms.Label();
+            this.lblMeshUnk3C = new System.Windows.Forms.Label();
+            this.lblMeshCenter = new System.Windows.Forms.Label();
+            this.lblMeshTransformMatrixSpecificReferences = new System.Windows.Forms.Label();
+            this.lblMeshTertiaryMaterialIdx = new System.Windows.Forms.Label();
+            this.lblMeshSecondaryMaterialIdx = new System.Windows.Forms.Label();
+            this.lblMeshPrimaryMaterialIdx = new System.Windows.Forms.Label();
+            this.lblMeshUnk14 = new System.Windows.Forms.Label();
+            this.lblMeshUnk10 = new System.Windows.Forms.Label();
+            this.lblMeshUnkC = new System.Windows.Forms.Label();
+            this.lblMeshUnk8 = new System.Windows.Forms.Label();
+            this.lblMeshUnk4 = new System.Windows.Forms.Label();
+            this.lblMeshRenderFlags = new System.Windows.Forms.Label();
             this.treeMaterials = new TreeViewMS.TreeViewMS();
             this.pbMaterialTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
             this.pbTextureImage = new GxModelViewer_WinFormsExt.PictureBoxDownsizeIfNecessary();
-            this.showValuesAsHexadecimalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundColorForTextureViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.texViewerColorDialog = new System.Windows.Forms.ColorDialog();
+            this.changeFormatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuModelOptions.SuspendLayout();
             this.toolStripActions.SuspendLayout();
             this.tabControlModelsTextures.SuspendLayout();
             this.tabPageModels.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).BeginInit();
-            this.splitContainerModels.Panel1.SuspendLayout();
-            this.splitContainerModels.Panel2.SuspendLayout();
-            this.splitContainerModels.SuspendLayout();
-            this.tableLayoutPanelModelSelect.SuspendLayout();
-            this.tlpMaterialMeshDisplay.SuspendLayout();
-            this.tlpModelDisplay.SuspendLayout();
-            this.tlpMeshDisplay.SuspendLayout();
             this.tabPageMaterials.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -208,6 +203,14 @@ namespace GxModelViewer
             this.menuStrip1.SuspendLayout();
             this.meshMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).BeginInit();
+            this.splitContainerModels.Panel1.SuspendLayout();
+            this.splitContainerModels.Panel2.SuspendLayout();
+            this.splitContainerModels.SuspendLayout();
+            this.tableLayoutPanelModelSelect.SuspendLayout();
+            this.tlpMaterialMeshDisplay.SuspendLayout();
+            this.tlpModelDisplay.SuspendLayout();
+            this.tlpMeshDisplay.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).BeginInit();
             this.SuspendLayout();
@@ -413,6 +416,676 @@ namespace GxModelViewer
             this.tabPageModels.Text = "Models";
             this.tabPageModels.UseVisualStyleBackColor = true;
             // 
+            // tabPageMaterials
+            // 
+            this.tabPageMaterials.Controls.Add(this.splitContainer1);
+            this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMaterials.Name = "tabPageMaterials";
+            this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMaterials.Size = new System.Drawing.Size(929, 496);
+            this.tabPageMaterials.TabIndex = 2;
+            this.tabPageMaterials.Text = "Materials";
+            this.tabPageMaterials.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeMaterials);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.tlpMaterialDisplay);
+            this.splitContainer1.Size = new System.Drawing.Size(923, 490);
+            this.splitContainer1.SplitterDistance = 306;
+            this.splitContainer1.TabIndex = 0;
+            // 
+            // materialMenuStrip
+            // 
+            this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem,
+            this.defineNewFromTextureToolStripMenuItem,
+            this.editFlagsToolStripMenuItem2,
+            this.deleteToolStripMenuItem});
+            this.materialMenuStrip.Name = "materialMenuStrip";
+            this.materialMenuStrip.Size = new System.Drawing.Size(242, 92);
+            this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
+            // 
+            // defineNewToolStripMenuItem
+            // 
+            this.defineNewToolStripMenuItem.Name = "defineNewToolStripMenuItem";
+            this.defineNewToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.defineNewToolStripMenuItem.Text = "Create New...";
+            this.defineNewToolStripMenuItem.Click += new System.EventHandler(this.defineNewToolStripMenuItem_Click);
+            // 
+            // defineNewFromTextureToolStripMenuItem
+            // 
+            this.defineNewFromTextureToolStripMenuItem.Name = "defineNewFromTextureToolStripMenuItem";
+            this.defineNewFromTextureToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
+            this.defineNewFromTextureToolStripMenuItem.Text = "Create New from New Texture...";
+            this.defineNewFromTextureToolStripMenuItem.Click += new System.EventHandler(this.defineNewFromTextureToolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem2
+            // 
+            this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
+            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(214, 22);
+            this.editFlagsToolStripMenuItem2.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+            // 
+            // tlpMaterialDisplay
+            // 
+            this.tlpMaterialDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpMaterialDisplay.ColumnCount = 1;
+            this.tlpMaterialDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpMaterialDisplay.Controls.Add(this.tlpMaterialProperties, 0, 1);
+            this.tlpMaterialDisplay.Controls.Add(this.pbMaterialTextureImage, 0, 0);
+            this.tlpMaterialDisplay.Location = new System.Drawing.Point(3, 3);
+            this.tlpMaterialDisplay.Name = "tlpMaterialDisplay";
+            this.tlpMaterialDisplay.RowCount = 3;
+            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpMaterialDisplay.Size = new System.Drawing.Size(607, 484);
+            this.tlpMaterialDisplay.TabIndex = 1;
+            // 
+            // tlpMaterialProperties
+            // 
+            this.tlpMaterialProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpMaterialProperties.ColumnCount = 2;
+            this.tlpMaterialProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMaterialProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialFlagsText, 0, 0);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialTextureIndexText, 0, 1);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk6Text, 0, 2);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialAnisotropyLevelText, 0, 3);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnkCText, 0, 4);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk10Text, 0, 5);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialFlags, 1, 0);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialTextureIndex, 1, 1);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk6, 1, 2);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialAnisotropyLevel, 1, 3);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnkC, 1, 4);
+            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk10, 1, 5);
+            this.tlpMaterialProperties.Location = new System.Drawing.Point(3, 359);
+            this.tlpMaterialProperties.Name = "tlpMaterialProperties";
+            this.tlpMaterialProperties.RowCount = 6;
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpMaterialProperties.Size = new System.Drawing.Size(601, 122);
+            this.tlpMaterialProperties.TabIndex = 1;
+            // 
+            // lblMaterialFlagsText
+            // 
+            this.lblMaterialFlagsText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialFlagsText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialFlagsText.Location = new System.Drawing.Point(3, 0);
+            this.lblMaterialFlagsText.Name = "lblMaterialFlagsText";
+            this.lblMaterialFlagsText.Size = new System.Drawing.Size(294, 20);
+            this.lblMaterialFlagsText.TabIndex = 0;
+            this.lblMaterialFlagsText.Text = "Material Flags (0x00):";
+            this.lblMaterialFlagsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialTextureIndexText
+            // 
+            this.lblMaterialTextureIndexText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialTextureIndexText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialTextureIndexText.Location = new System.Drawing.Point(3, 20);
+            this.lblMaterialTextureIndexText.Name = "lblMaterialTextureIndexText";
+            this.lblMaterialTextureIndexText.Size = new System.Drawing.Size(294, 20);
+            this.lblMaterialTextureIndexText.TabIndex = 1;
+            this.lblMaterialTextureIndexText.Text = "Texture Index (0x04):";
+            this.lblMaterialTextureIndexText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialUnk6Text
+            // 
+            this.lblMaterialUnk6Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnk6Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialUnk6Text.Location = new System.Drawing.Point(3, 40);
+            this.lblMaterialUnk6Text.Name = "lblMaterialUnk6Text";
+            this.lblMaterialUnk6Text.Size = new System.Drawing.Size(294, 20);
+            this.lblMaterialUnk6Text.TabIndex = 2;
+            this.lblMaterialUnk6Text.Text = "Unknown (0x06):";
+            this.lblMaterialUnk6Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialAnisotropyLevelText
+            // 
+            this.lblMaterialAnisotropyLevelText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialAnisotropyLevelText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialAnisotropyLevelText.Location = new System.Drawing.Point(3, 60);
+            this.lblMaterialAnisotropyLevelText.Name = "lblMaterialAnisotropyLevelText";
+            this.lblMaterialAnisotropyLevelText.Size = new System.Drawing.Size(294, 20);
+            this.lblMaterialAnisotropyLevelText.TabIndex = 3;
+            this.lblMaterialAnisotropyLevelText.Text = "Anisotropy Level (0x07):";
+            this.lblMaterialAnisotropyLevelText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialUnkCText
+            // 
+            this.lblMaterialUnkCText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnkCText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialUnkCText.Location = new System.Drawing.Point(3, 80);
+            this.lblMaterialUnkCText.Name = "lblMaterialUnkCText";
+            this.lblMaterialUnkCText.Size = new System.Drawing.Size(294, 20);
+            this.lblMaterialUnkCText.TabIndex = 4;
+            this.lblMaterialUnkCText.Text = "Unknown (0x0C):";
+            this.lblMaterialUnkCText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialUnk10Text
+            // 
+            this.lblMaterialUnk10Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnk10Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMaterialUnk10Text.Location = new System.Drawing.Point(3, 100);
+            this.lblMaterialUnk10Text.Name = "lblMaterialUnk10Text";
+            this.lblMaterialUnk10Text.Size = new System.Drawing.Size(294, 22);
+            this.lblMaterialUnk10Text.TabIndex = 5;
+            this.lblMaterialUnk10Text.Text = "Unknown (0x10):";
+            this.lblMaterialUnk10Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblMaterialFlags
+            // 
+            this.lblMaterialFlags.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialFlags.Location = new System.Drawing.Point(303, 0);
+            this.lblMaterialFlags.Name = "lblMaterialFlags";
+            this.lblMaterialFlags.Size = new System.Drawing.Size(295, 20);
+            this.lblMaterialFlags.TabIndex = 6;
+            this.lblMaterialFlags.Text = "-";
+            // 
+            // lblMaterialTextureIndex
+            // 
+            this.lblMaterialTextureIndex.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialTextureIndex.Location = new System.Drawing.Point(303, 20);
+            this.lblMaterialTextureIndex.Name = "lblMaterialTextureIndex";
+            this.lblMaterialTextureIndex.Size = new System.Drawing.Size(295, 20);
+            this.lblMaterialTextureIndex.TabIndex = 7;
+            this.lblMaterialTextureIndex.Text = "-";
+            // 
+            // lblMaterialUnk6
+            // 
+            this.lblMaterialUnk6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnk6.Location = new System.Drawing.Point(303, 40);
+            this.lblMaterialUnk6.Name = "lblMaterialUnk6";
+            this.lblMaterialUnk6.Size = new System.Drawing.Size(295, 20);
+            this.lblMaterialUnk6.TabIndex = 8;
+            this.lblMaterialUnk6.Text = "-";
+            // 
+            // lblMaterialAnisotropyLevel
+            // 
+            this.lblMaterialAnisotropyLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialAnisotropyLevel.Location = new System.Drawing.Point(303, 60);
+            this.lblMaterialAnisotropyLevel.Name = "lblMaterialAnisotropyLevel";
+            this.lblMaterialAnisotropyLevel.Size = new System.Drawing.Size(295, 20);
+            this.lblMaterialAnisotropyLevel.TabIndex = 9;
+            this.lblMaterialAnisotropyLevel.Text = "-";
+            // 
+            // lblMaterialUnkC
+            // 
+            this.lblMaterialUnkC.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnkC.Location = new System.Drawing.Point(303, 80);
+            this.lblMaterialUnkC.Name = "lblMaterialUnkC";
+            this.lblMaterialUnkC.Size = new System.Drawing.Size(295, 20);
+            this.lblMaterialUnkC.TabIndex = 10;
+            this.lblMaterialUnkC.Text = "-";
+            // 
+            // lblMaterialUnk10
+            // 
+            this.lblMaterialUnk10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMaterialUnk10.Location = new System.Drawing.Point(303, 100);
+            this.lblMaterialUnk10.Name = "lblMaterialUnk10";
+            this.lblMaterialUnk10.Size = new System.Drawing.Size(295, 22);
+            this.lblMaterialUnk10.TabIndex = 11;
+            this.lblMaterialUnk10.Text = "-";
+            // 
+            // tabPageTextures
+            // 
+            this.tabPageTextures.Controls.Add(this.splitContainer2);
+            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTextures.Name = "tabPageTextures";
+            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTextures.Size = new System.Drawing.Size(929, 496);
+            this.tabPageTextures.TabIndex = 1;
+            this.tabPageTextures.Text = "Textures";
+            this.tabPageTextures.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.treeTextures);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.tlpTextureDisplay);
+            this.splitContainer2.Size = new System.Drawing.Size(923, 490);
+            this.splitContainer2.SplitterDistance = 306;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // treeTextures
+            // 
+            this.treeTextures.ContextMenuStrip = this.textureMenuStrip;
+            this.treeTextures.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeTextures.Location = new System.Drawing.Point(0, 0);
+            this.treeTextures.Name = "treeTextures";
+            this.treeTextures.Size = new System.Drawing.Size(306, 490);
+            this.treeTextures.TabIndex = 0;
+            this.treeTextures.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeTextures_AfterSelect);
+            this.treeTextures.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeTextures_MouseDown);
+            // 
+            // textureMenuStrip
+            // 
+            this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defineNewToolStripMenuItem1,
+            this.changeFormatToolStripMenuItem,
+            this.regenerateMipmapsForSelectedToolStripMenuItem,
+            this.regenerateMipmapsForAllToolStripMenuItem,
+            this.removeToolStripMenuItem1,
+            this.deletenoMaterialAdjustmentToolStripMenuItem,
+            this.removeUnusedToolStripMenuItem});
+            this.textureMenuStrip.Name = "textureMenuStrip";
+            this.textureMenuStrip.Size = new System.Drawing.Size(252, 180);
+            // 
+            // defineNewToolStripMenuItem1
+            // 
+            this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
+            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+            this.defineNewToolStripMenuItem1.Text = "Import New Texture(s)...";
+            this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
+            // 
+            // removeToolStripMenuItem1
+            // 
+            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
+            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(251, 22);
+            this.removeToolStripMenuItem1.Text = "Delete";
+            this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
+            // 
+            // deletenoMaterialAdjustmentToolStripMenuItem
+            // 
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Name = "deletenoMaterialAdjustmentToolStripMenuItem";
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Text = "Delete (no material adjustment)";
+            this.deletenoMaterialAdjustmentToolStripMenuItem.Click += new System.EventHandler(this.deletenoMaterialAdjustmentToolStripMenuItem_Click);
+            // 
+            // removeUnusedToolStripMenuItem
+            // 
+            this.removeUnusedToolStripMenuItem.Name = "removeUnusedToolStripMenuItem";
+            this.removeUnusedToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.removeUnusedToolStripMenuItem.Text = "Delete All Unused";
+            this.removeUnusedToolStripMenuItem.Click += new System.EventHandler(this.removeUnusedToolStripMenuItem_Click);
+            // 
+            // tlpTextureDisplay
+            // 
+            this.tlpTextureDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpTextureDisplay.ColumnCount = 1;
+            this.tlpTextureDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTextureDisplay.Controls.Add(this.tlpTextureProperties, 0, 1);
+            this.tlpTextureDisplay.Controls.Add(this.pbTextureImage, 0, 0);
+            this.tlpTextureDisplay.Location = new System.Drawing.Point(2, 3);
+            this.tlpTextureDisplay.Name = "tlpTextureDisplay";
+            this.tlpTextureDisplay.RowCount = 2;
+            this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpTextureDisplay.Size = new System.Drawing.Size(608, 484);
+            this.tlpTextureDisplay.TabIndex = 4;
+            // 
+            // tlpTextureProperties
+            // 
+            this.tlpTextureProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tlpTextureProperties.ColumnCount = 2;
+            this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpTextureProperties.Controls.Add(this.lblTextureDimensionsText, 0, 0);
+            this.tlpTextureProperties.Controls.Add(this.btnExportTextureLevel, 0, 3);
+            this.tlpTextureProperties.Controls.Add(this.btnImportTextureLevel, 1, 3);
+            this.tlpTextureProperties.Controls.Add(this.lblTextureDimensions, 1, 0);
+            this.tlpTextureProperties.Controls.Add(this.lblTextureFormatText, 0, 1);
+            this.tlpTextureProperties.Controls.Add(this.label2, 0, 2);
+            this.tlpTextureProperties.Controls.Add(this.lblTextureFormat, 1, 1);
+            this.tlpTextureProperties.Controls.Add(this.lblTextureUsedBy, 1, 2);
+            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 381);
+            this.tlpTextureProperties.Name = "tlpTextureProperties";
+            this.tlpTextureProperties.RowCount = 4;
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11F));
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpTextureProperties.Size = new System.Drawing.Size(602, 100);
+            this.tlpTextureProperties.TabIndex = 3;
+            // 
+            // lblTextureDimensionsText
+            // 
+            this.lblTextureDimensionsText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTextureDimensionsText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextureDimensionsText.Location = new System.Drawing.Point(3, 0);
+            this.lblTextureDimensionsText.Name = "lblTextureDimensionsText";
+            this.lblTextureDimensionsText.Size = new System.Drawing.Size(295, 20);
+            this.lblTextureDimensionsText.TabIndex = 0;
+            this.lblTextureDimensionsText.Text = "Dimensions:";
+            this.lblTextureDimensionsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnExportTextureLevel
+            // 
+            this.btnExportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnExportTextureLevel.Location = new System.Drawing.Point(3, 63);
+            this.btnExportTextureLevel.Name = "btnExportTextureLevel";
+            this.btnExportTextureLevel.Size = new System.Drawing.Size(295, 34);
+            this.btnExportTextureLevel.TabIndex = 1;
+            this.btnExportTextureLevel.Text = "Export...";
+            this.btnExportTextureLevel.UseVisualStyleBackColor = true;
+            this.btnExportTextureLevel.Click += new System.EventHandler(this.btnExportTextureLevel_Click);
+            // 
+            // btnImportTextureLevel
+            // 
+            this.btnImportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnImportTextureLevel.Location = new System.Drawing.Point(304, 63);
+            this.btnImportTextureLevel.Name = "btnImportTextureLevel";
+            this.btnImportTextureLevel.Size = new System.Drawing.Size(295, 34);
+            this.btnImportTextureLevel.TabIndex = 2;
+            this.btnImportTextureLevel.Text = "Import...";
+            this.btnImportTextureLevel.UseVisualStyleBackColor = true;
+            this.btnImportTextureLevel.Click += new System.EventHandler(this.btnImportTextureLevel_Click);
+            // 
+            // lblTextureDimensions
+            // 
+            this.lblTextureDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTextureDimensions.Location = new System.Drawing.Point(304, 0);
+            this.lblTextureDimensions.Name = "lblTextureDimensions";
+            this.lblTextureDimensions.Size = new System.Drawing.Size(295, 20);
+            this.lblTextureDimensions.TabIndex = 1;
+            this.lblTextureDimensions.Text = "-";
+            // 
+            // lblTextureFormatText
+            // 
+            this.lblTextureFormatText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTextureFormatText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTextureFormatText.Location = new System.Drawing.Point(3, 20);
+            this.lblTextureFormatText.Name = "lblTextureFormatText";
+            this.lblTextureFormatText.Size = new System.Drawing.Size(295, 11);
+            this.lblTextureFormatText.TabIndex = 2;
+            this.lblTextureFormatText.Text = "Format:";
+            this.lblTextureFormatText.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(241, 39);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Used by:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblTextureFormat
+            // 
+            this.lblTextureFormat.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTextureFormat.Location = new System.Drawing.Point(304, 20);
+            this.lblTextureFormat.Name = "lblTextureFormat";
+            this.lblTextureFormat.Size = new System.Drawing.Size(295, 11);
+            this.lblTextureFormat.TabIndex = 3;
+            this.lblTextureFormat.Text = "-";
+            // 
+            // lblTextureUsedBy
+            // 
+            this.lblTextureUsedBy.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblTextureUsedBy.AutoEllipsis = true;
+            this.lblTextureUsedBy.AutoSize = true;
+            this.lblTextureUsedBy.Location = new System.Drawing.Point(304, 39);
+            this.lblTextureUsedBy.Name = "lblTextureUsedBy";
+            this.lblTextureUsedBy.Size = new System.Drawing.Size(10, 13);
+            this.lblTextureUsedBy.TabIndex = 5;
+            this.lblTextureUsedBy.Text = "-";
+            // 
+            // gmaContextMenuStrip
+            // 
+            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importGMATPLToolStripMenuItem,
+            this.exportAsGMATPLToolStripMenuItem,
+            this.gmaExportTolStripMenuItem,
+            this.gmaImporttoolStripMenuItem,
+            this.importPreserveFLagsToolStripMenuItem,
+            this.translateModelToolStripMenuItem,
+            this.duplicateModelToolStripMenuItem,
+            this.editFlagsToolStripMenuItem,
+            this.renameToolStripMenuItem,
+            this.removeToolStripMenuItem});
+            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
+            this.gmaContextMenuStrip.Size = new System.Drawing.Size(262, 224);
+            // 
+            // importGMATPLToolStripMenuItem
+            // 
+            this.importGMATPLToolStripMenuItem.Name = "importGMATPLToolStripMenuItem";
+            this.importGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.importGMATPLToolStripMenuItem.Text = "Import GMA/TPL...";
+            this.importGMATPLToolStripMenuItem.Click += new System.EventHandler(this.importGMATPLToolStripMenuItem_Click);
+            // 
+            // exportAsGMATPLToolStripMenuItem
+            // 
+            this.exportAsGMATPLToolStripMenuItem.Name = "exportAsGMATPLToolStripMenuItem";
+            this.exportAsGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.exportAsGMATPLToolStripMenuItem.Text = "Export as GMA/TPL...";
+            this.exportAsGMATPLToolStripMenuItem.Click += new System.EventHandler(this.exportAsGMATPLToolStripMenuItem_Click);
+            // 
+            // gmaExportTolStripMenuItem
+            // 
+            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
+            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.gmaExportTolStripMenuItem.Text = "Export as OBJ/MTL...";
+            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
+            // 
+            // gmaImporttoolStripMenuItem
+            // 
+            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
+            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.gmaImporttoolStripMenuItem.Text = "Replace with OBJ...";
+            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
+            // 
+            // importPreserveFLagsToolStripMenuItem
+            // 
+            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
+            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ...  (Preserve Flags)";
+            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
+            // 
+            // translateModelToolStripMenuItem
+            // 
+            this.translateModelToolStripMenuItem.Name = "translateModelToolStripMenuItem";
+            this.translateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.translateModelToolStripMenuItem.Text = "Translate Model...";
+            this.translateModelToolStripMenuItem.Click += new System.EventHandler(this.translateModelToolStripMenuItem_Click);
+            // 
+            // duplicateModelToolStripMenuItem
+            // 
+            this.duplicateModelToolStripMenuItem.Name = "duplicateModelToolStripMenuItem";
+            this.duplicateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.duplicateModelToolStripMenuItem.Text = "Duplicate Model";
+            this.duplicateModelToolStripMenuItem.Click += new System.EventHandler(this.duplicateModelToolStripMenuItem_Click);
+            // 
+            // editFlagsToolStripMenuItem
+            // 
+            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
+            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.editFlagsToolStripMenuItem.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
+            // 
+            // renameToolStripMenuItem
+            // 
+            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.renameToolStripMenuItem.Text = "Rename";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
+            this.removeToolStripMenuItem.Text = "Delete";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+            // 
+            // ofdLoadGma
+            // 
+            this.ofdLoadGma.DefaultExt = "gma";
+            this.ofdLoadGma.Filter = "GMA Files|*.gma|All Files|*.*";
+            this.ofdLoadGma.Title = "Load GMA File...";
+            // 
+            // ofdLoadTpl
+            // 
+            this.ofdLoadTpl.DefaultExt = "tpl";
+            this.ofdLoadTpl.Filter = "TPL Files|*.tpl|All Files|*.*";
+            this.ofdLoadTpl.Title = "Load TPL File...";
+            // 
+            // sfdSaveTpl
+            // 
+            this.sfdSaveTpl.DefaultExt = "tpl";
+            this.sfdSaveTpl.Filter = "TPL Files|*.tpl|All Files|*.*";
+            this.sfdSaveTpl.Title = "Save TPL File...";
+            // 
+            // ofdTextureImportPath
+            // 
+            this.ofdTextureImportPath.Filter = "Image files|*.png;*.tiff;*.gif;*.jpg;*.jpeg;*.bmp|All Files|*.*";
+            this.ofdTextureImportPath.Title = "Select texture file to import...";
+            // 
+            // sfdTextureExportPath
+            // 
+            this.sfdTextureExportPath.DefaultExt = "png";
+            this.sfdTextureExportPath.Filter = "Image files|*.png,*.tiff,*.gif,*.jpg,*.jpeg,*.bmp|All Files|*.*";
+            this.sfdTextureExportPath.Title = "Select file to export to...";
+            // 
+            // sfdSaveGma
+            // 
+            this.sfdSaveGma.DefaultExt = "gma";
+            this.sfdSaveGma.Filter = "GMA Files|*.gma|All Files|*.*";
+            this.sfdSaveGma.Title = "Save GMA File...";
+            // 
+            // ofdLoadObj
+            // 
+            this.ofdLoadObj.DefaultExt = "obj";
+            this.ofdLoadObj.Filter = "OBJ Files|*.obj|All Files|*.*";
+            this.ofdLoadObj.Title = "Load OBJ File...";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(961, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.numMipmapsToolStripMenuItem,
+            this.mipmapInterpolationToolStripMenuItem,
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem,
+            this.showValuesAsHexadecimalToolStripMenuItem,
+            this.backgroundColorForTextureViewerToolStripMenuItem});
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // numMipmapsToolStripMenuItem
+            // 
+            this.numMipmapsToolStripMenuItem.Name = "numMipmapsToolStripMenuItem";
+            this.numMipmapsToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.numMipmapsToolStripMenuItem.Text = "Max Number of Mipmaps";
+            // 
+            // mipmapInterpolationToolStripMenuItem
+            // 
+            this.mipmapInterpolationToolStripMenuItem.Name = "mipmapInterpolationToolStripMenuItem";
+            this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
+            // 
+            // deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem
+            // 
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckOnClick = true;
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Name = "deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem";
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Text = "Delete Textures Left Unused on Model Deletion";
+            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckedChanged += new System.EventHandler(this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged);
+            // 
+            // showValuesAsHexadecimalToolStripMenuItem
+            // 
+            this.showValuesAsHexadecimalToolStripMenuItem.Checked = true;
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckOnClick = true;
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showValuesAsHexadecimalToolStripMenuItem.Name = "showValuesAsHexadecimalToolStripMenuItem";
+            this.showValuesAsHexadecimalToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.showValuesAsHexadecimalToolStripMenuItem.Text = "Show Indices as Hexadecimal";
+            this.showValuesAsHexadecimalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showValuesAsHexadecimalToolStripMenuItem_CheckedChanged);
+            // 
+            // backgroundColorForTextureViewerToolStripMenuItem
+            // 
+            this.backgroundColorForTextureViewerToolStripMenuItem.Name = "backgroundColorForTextureViewerToolStripMenuItem";
+            this.backgroundColorForTextureViewerToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
+            this.backgroundColorForTextureViewerToolStripMenuItem.Text = "Set Background Color for Texture Viewer";
+            this.backgroundColorForTextureViewerToolStripMenuItem.Click += new System.EventHandler(this.backgroundColorForTextureViewerToolStripMenuItem_Click);
+            // 
+            // meshMenuStrip
+            // 
+            this.meshMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editFlagsToolStripMenuItem1});
+            this.meshMenuStrip.Name = "meshMenuStrip";
+            this.meshMenuStrip.Size = new System.Drawing.Size(134, 26);
+            // 
+            // editFlagsToolStripMenuItem1
+            // 
+            this.editFlagsToolStripMenuItem1.Name = "editFlagsToolStripMenuItem1";
+            this.editFlagsToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
+            this.editFlagsToolStripMenuItem1.Text = "Edit Flags...";
+            this.editFlagsToolStripMenuItem1.Click += new System.EventHandler(this.editMeshFlagstoolStripMenuItem_Click);
+            // 
+            // sfdModelExportPath
+            // 
+            this.sfdModelExportPath.DefaultExt = "obj";
+            this.sfdModelExportPath.Filter = "OBJ Files|*.obj|All Files|*.*";
+            this.sfdModelExportPath.Title = "Save Model File...";
+            // 
+            // fileSystemWatcher1
+            // 
+            this.fileSystemWatcher1.EnableRaisingEvents = true;
+            this.fileSystemWatcher1.SynchronizingObject = this;
+            // 
+            // regenerateMipmapsForSelectedToolStripMenuItem
+            // 
+            this.regenerateMipmapsForSelectedToolStripMenuItem.Name = "regenerateMipmapsForSelectedToolStripMenuItem";
+            this.regenerateMipmapsForSelectedToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.regenerateMipmapsForSelectedToolStripMenuItem.Text = "Regenerate Mipmaps for Selected";
+            this.regenerateMipmapsForSelectedToolStripMenuItem.Click += new System.EventHandler(this.regenerateMipmapsForSelectedToolStripMenuItem_Click);
+            // 
+            // regenerateMipmapsForAllToolStripMenuItem
+            // 
+            this.regenerateMipmapsForAllToolStripMenuItem.Name = "regenerateMipmapsForAllToolStripMenuItem";
+            this.regenerateMipmapsForAllToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.regenerateMipmapsForAllToolStripMenuItem.Text = "Regenerate Mipmaps for All";
+            this.regenerateMipmapsForAllToolStripMenuItem.Click += new System.EventHandler(this.regenerateMipmapsForAllToolStripMenuItem_Click);
+            // 
             // splitContainerModels
             // 
             this.splitContainerModels.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -496,6 +1169,26 @@ namespace GxModelViewer
             this.btnModelShowAll.Text = "Show All";
             this.btnModelShowAll.UseVisualStyleBackColor = true;
             this.btnModelShowAll.Click += new System.EventHandler(this.btnModelShowAll_Click);
+            // 
+            // treeModel
+            // 
+            this.treeModel.AllowDrop = true;
+            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeModel.LabelEdit = true;
+            this.treeModel.Location = new System.Drawing.Point(3, 3);
+            this.treeModel.Name = "treeModel";
+            this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
+            this.treeModel.Size = new System.Drawing.Size(301, 370);
+            this.treeModel.TabIndex = 0;
+            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
+            this.treeModel.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_BeforeLabelEdit);
+            this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
+            this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
+            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
+            this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
+            this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
+            this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
+            this.treeModel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeModel_MouseDown);
             // 
             // tlpMaterialMeshDisplay
             // 
@@ -1002,662 +1695,6 @@ namespace GxModelViewer
             this.lblMeshRenderFlags.TabIndex = 27;
             this.lblMeshRenderFlags.Text = "-";
             // 
-            // tabPageMaterials
-            // 
-            this.tabPageMaterials.Controls.Add(this.splitContainer1);
-            this.tabPageMaterials.Location = new System.Drawing.Point(4, 22);
-            this.tabPageMaterials.Name = "tabPageMaterials";
-            this.tabPageMaterials.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMaterials.Size = new System.Drawing.Size(929, 496);
-            this.tabPageMaterials.TabIndex = 2;
-            this.tabPageMaterials.Text = "Materials";
-            this.tabPageMaterials.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeMaterials);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.tlpMaterialDisplay);
-            this.splitContainer1.Size = new System.Drawing.Size(923, 490);
-            this.splitContainer1.SplitterDistance = 306;
-            this.splitContainer1.TabIndex = 0;
-            // 
-            // materialMenuStrip
-            // 
-            this.materialMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defineNewToolStripMenuItem,
-            this.defineNewFromTextureToolStripMenuItem,
-            this.editFlagsToolStripMenuItem2,
-            this.deleteToolStripMenuItem});
-            this.materialMenuStrip.Name = "materialMenuStrip";
-            this.materialMenuStrip.Size = new System.Drawing.Size(215, 92);
-            this.materialMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.materialMenuStrip_Opening);
-            // 
-            // defineNewToolStripMenuItem
-            // 
-            this.defineNewToolStripMenuItem.Name = "defineNewToolStripMenuItem";
-            this.defineNewToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.defineNewToolStripMenuItem.Text = "Define New...";
-            this.defineNewToolStripMenuItem.Click += new System.EventHandler(this.defineNewToolStripMenuItem_Click);
-            // 
-            // defineNewFromTextureToolStripMenuItem
-            // 
-            this.defineNewFromTextureToolStripMenuItem.Name = "defineNewFromTextureToolStripMenuItem";
-            this.defineNewFromTextureToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.defineNewFromTextureToolStripMenuItem.Text = "Define New from Texture...";
-            this.defineNewFromTextureToolStripMenuItem.Click += new System.EventHandler(this.defineNewFromTextureToolStripMenuItem_Click);
-            // 
-            // editFlagsToolStripMenuItem2
-            // 
-            this.editFlagsToolStripMenuItem2.Name = "editFlagsToolStripMenuItem2";
-            this.editFlagsToolStripMenuItem2.Size = new System.Drawing.Size(214, 22);
-            this.editFlagsToolStripMenuItem2.Text = "Edit Flags...";
-            this.editFlagsToolStripMenuItem2.Click += new System.EventHandler(this.editMaterialFlagstoolStripMenuItem_Click);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
-            // tlpMaterialDisplay
-            // 
-            this.tlpMaterialDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpMaterialDisplay.ColumnCount = 1;
-            this.tlpMaterialDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpMaterialDisplay.Controls.Add(this.tlpMaterialProperties, 0, 1);
-            this.tlpMaterialDisplay.Controls.Add(this.pbMaterialTextureImage, 0, 0);
-            this.tlpMaterialDisplay.Location = new System.Drawing.Point(3, 3);
-            this.tlpMaterialDisplay.Name = "tlpMaterialDisplay";
-            this.tlpMaterialDisplay.RowCount = 3;
-            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpMaterialDisplay.Size = new System.Drawing.Size(607, 484);
-            this.tlpMaterialDisplay.TabIndex = 1;
-            // 
-            // tlpMaterialProperties
-            // 
-            this.tlpMaterialProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpMaterialProperties.ColumnCount = 2;
-            this.tlpMaterialProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMaterialProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialFlagsText, 0, 0);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialTextureIndexText, 0, 1);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk6Text, 0, 2);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialAnisotropyLevelText, 0, 3);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnkCText, 0, 4);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk10Text, 0, 5);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialFlags, 1, 0);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialTextureIndex, 1, 1);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk6, 1, 2);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialAnisotropyLevel, 1, 3);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnkC, 1, 4);
-            this.tlpMaterialProperties.Controls.Add(this.lblMaterialUnk10, 1, 5);
-            this.tlpMaterialProperties.Location = new System.Drawing.Point(3, 359);
-            this.tlpMaterialProperties.Name = "tlpMaterialProperties";
-            this.tlpMaterialProperties.RowCount = 6;
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpMaterialProperties.Size = new System.Drawing.Size(601, 122);
-            this.tlpMaterialProperties.TabIndex = 1;
-            // 
-            // lblMaterialFlagsText
-            // 
-            this.lblMaterialFlagsText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialFlagsText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialFlagsText.Location = new System.Drawing.Point(3, 0);
-            this.lblMaterialFlagsText.Name = "lblMaterialFlagsText";
-            this.lblMaterialFlagsText.Size = new System.Drawing.Size(294, 20);
-            this.lblMaterialFlagsText.TabIndex = 0;
-            this.lblMaterialFlagsText.Text = "Material Flags (0x00):";
-            this.lblMaterialFlagsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialTextureIndexText
-            // 
-            this.lblMaterialTextureIndexText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialTextureIndexText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialTextureIndexText.Location = new System.Drawing.Point(3, 20);
-            this.lblMaterialTextureIndexText.Name = "lblMaterialTextureIndexText";
-            this.lblMaterialTextureIndexText.Size = new System.Drawing.Size(294, 20);
-            this.lblMaterialTextureIndexText.TabIndex = 1;
-            this.lblMaterialTextureIndexText.Text = "Texture Index (0x04):";
-            this.lblMaterialTextureIndexText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialUnk6Text
-            // 
-            this.lblMaterialUnk6Text.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnk6Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialUnk6Text.Location = new System.Drawing.Point(3, 40);
-            this.lblMaterialUnk6Text.Name = "lblMaterialUnk6Text";
-            this.lblMaterialUnk6Text.Size = new System.Drawing.Size(294, 20);
-            this.lblMaterialUnk6Text.TabIndex = 2;
-            this.lblMaterialUnk6Text.Text = "Unknown (0x06):";
-            this.lblMaterialUnk6Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialAnisotropyLevelText
-            // 
-            this.lblMaterialAnisotropyLevelText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialAnisotropyLevelText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialAnisotropyLevelText.Location = new System.Drawing.Point(3, 60);
-            this.lblMaterialAnisotropyLevelText.Name = "lblMaterialAnisotropyLevelText";
-            this.lblMaterialAnisotropyLevelText.Size = new System.Drawing.Size(294, 20);
-            this.lblMaterialAnisotropyLevelText.TabIndex = 3;
-            this.lblMaterialAnisotropyLevelText.Text = "Anisotropy Level (0x07):";
-            this.lblMaterialAnisotropyLevelText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialUnkCText
-            // 
-            this.lblMaterialUnkCText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnkCText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialUnkCText.Location = new System.Drawing.Point(3, 80);
-            this.lblMaterialUnkCText.Name = "lblMaterialUnkCText";
-            this.lblMaterialUnkCText.Size = new System.Drawing.Size(294, 20);
-            this.lblMaterialUnkCText.TabIndex = 4;
-            this.lblMaterialUnkCText.Text = "Unknown (0x0C):";
-            this.lblMaterialUnkCText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialUnk10Text
-            // 
-            this.lblMaterialUnk10Text.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnk10Text.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMaterialUnk10Text.Location = new System.Drawing.Point(3, 100);
-            this.lblMaterialUnk10Text.Name = "lblMaterialUnk10Text";
-            this.lblMaterialUnk10Text.Size = new System.Drawing.Size(294, 22);
-            this.lblMaterialUnk10Text.TabIndex = 5;
-            this.lblMaterialUnk10Text.Text = "Unknown (0x10):";
-            this.lblMaterialUnk10Text.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // lblMaterialFlags
-            // 
-            this.lblMaterialFlags.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialFlags.Location = new System.Drawing.Point(303, 0);
-            this.lblMaterialFlags.Name = "lblMaterialFlags";
-            this.lblMaterialFlags.Size = new System.Drawing.Size(295, 20);
-            this.lblMaterialFlags.TabIndex = 6;
-            this.lblMaterialFlags.Text = "-";
-            // 
-            // lblMaterialTextureIndex
-            // 
-            this.lblMaterialTextureIndex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialTextureIndex.Location = new System.Drawing.Point(303, 20);
-            this.lblMaterialTextureIndex.Name = "lblMaterialTextureIndex";
-            this.lblMaterialTextureIndex.Size = new System.Drawing.Size(295, 20);
-            this.lblMaterialTextureIndex.TabIndex = 7;
-            this.lblMaterialTextureIndex.Text = "-";
-            // 
-            // lblMaterialUnk6
-            // 
-            this.lblMaterialUnk6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnk6.Location = new System.Drawing.Point(303, 40);
-            this.lblMaterialUnk6.Name = "lblMaterialUnk6";
-            this.lblMaterialUnk6.Size = new System.Drawing.Size(295, 20);
-            this.lblMaterialUnk6.TabIndex = 8;
-            this.lblMaterialUnk6.Text = "-";
-            // 
-            // lblMaterialAnisotropyLevel
-            // 
-            this.lblMaterialAnisotropyLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialAnisotropyLevel.Location = new System.Drawing.Point(303, 60);
-            this.lblMaterialAnisotropyLevel.Name = "lblMaterialAnisotropyLevel";
-            this.lblMaterialAnisotropyLevel.Size = new System.Drawing.Size(295, 20);
-            this.lblMaterialAnisotropyLevel.TabIndex = 9;
-            this.lblMaterialAnisotropyLevel.Text = "-";
-            // 
-            // lblMaterialUnkC
-            // 
-            this.lblMaterialUnkC.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnkC.Location = new System.Drawing.Point(303, 80);
-            this.lblMaterialUnkC.Name = "lblMaterialUnkC";
-            this.lblMaterialUnkC.Size = new System.Drawing.Size(295, 20);
-            this.lblMaterialUnkC.TabIndex = 10;
-            this.lblMaterialUnkC.Text = "-";
-            // 
-            // lblMaterialUnk10
-            // 
-            this.lblMaterialUnk10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblMaterialUnk10.Location = new System.Drawing.Point(303, 100);
-            this.lblMaterialUnk10.Name = "lblMaterialUnk10";
-            this.lblMaterialUnk10.Size = new System.Drawing.Size(295, 22);
-            this.lblMaterialUnk10.TabIndex = 11;
-            this.lblMaterialUnk10.Text = "-";
-            // 
-            // tabPageTextures
-            // 
-            this.tabPageTextures.Controls.Add(this.splitContainer2);
-            this.tabPageTextures.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTextures.Name = "tabPageTextures";
-            this.tabPageTextures.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTextures.Size = new System.Drawing.Size(929, 496);
-            this.tabPageTextures.TabIndex = 1;
-            this.tabPageTextures.Text = "Textures";
-            this.tabPageTextures.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.treeTextures);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.tlpTextureDisplay);
-            this.splitContainer2.Size = new System.Drawing.Size(923, 490);
-            this.splitContainer2.SplitterDistance = 306;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // treeTextures
-            // 
-            this.treeTextures.ContextMenuStrip = this.textureMenuStrip;
-            this.treeTextures.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeTextures.Location = new System.Drawing.Point(0, 0);
-            this.treeTextures.Name = "treeTextures";
-            this.treeTextures.Size = new System.Drawing.Size(306, 490);
-            this.treeTextures.TabIndex = 0;
-            this.treeTextures.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeTextures_AfterSelect);
-            this.treeTextures.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeTextures_MouseDown);
-            // 
-            // textureMenuStrip
-            // 
-            this.textureMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defineNewToolStripMenuItem1,
-            this.removeToolStripMenuItem1,
-            this.deletenoMaterialAdjustmentToolStripMenuItem,
-            this.removeUnusedToolStripMenuItem});
-            this.textureMenuStrip.Name = "textureMenuStrip";
-            this.textureMenuStrip.Size = new System.Drawing.Size(242, 92);
-            // 
-            // defineNewToolStripMenuItem1
-            // 
-            this.defineNewToolStripMenuItem1.Name = "defineNewToolStripMenuItem1";
-            this.defineNewToolStripMenuItem1.Size = new System.Drawing.Size(241, 22);
-            this.defineNewToolStripMenuItem1.Text = "Define New...";
-            this.defineNewToolStripMenuItem1.Click += new System.EventHandler(this.defineNewToolStripMenuItem1_Click);
-            // 
-            // removeToolStripMenuItem1
-            // 
-            this.removeToolStripMenuItem1.Name = "removeToolStripMenuItem1";
-            this.removeToolStripMenuItem1.Size = new System.Drawing.Size(241, 22);
-            this.removeToolStripMenuItem1.Text = "Delete";
-            this.removeToolStripMenuItem1.Click += new System.EventHandler(this.removeToolStripMenuItem1_Click);
-            // 
-            // deletenoMaterialAdjustmentToolStripMenuItem
-            // 
-            this.deletenoMaterialAdjustmentToolStripMenuItem.Name = "deletenoMaterialAdjustmentToolStripMenuItem";
-            this.deletenoMaterialAdjustmentToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.deletenoMaterialAdjustmentToolStripMenuItem.Text = "Delete (no material adjustment)";
-            this.deletenoMaterialAdjustmentToolStripMenuItem.Click += new System.EventHandler(this.deletenoMaterialAdjustmentToolStripMenuItem_Click);
-            // 
-            // removeUnusedToolStripMenuItem
-            // 
-            this.removeUnusedToolStripMenuItem.Name = "removeUnusedToolStripMenuItem";
-            this.removeUnusedToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.removeUnusedToolStripMenuItem.Text = "Delete All Unused";
-            this.removeUnusedToolStripMenuItem.Click += new System.EventHandler(this.removeUnusedToolStripMenuItem_Click);
-            // 
-            // tlpTextureDisplay
-            // 
-            this.tlpTextureDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpTextureDisplay.ColumnCount = 1;
-            this.tlpTextureDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTextureDisplay.Controls.Add(this.tlpTextureProperties, 0, 1);
-            this.tlpTextureDisplay.Controls.Add(this.pbTextureImage, 0, 0);
-            this.tlpTextureDisplay.Location = new System.Drawing.Point(2, 3);
-            this.tlpTextureDisplay.Name = "tlpTextureDisplay";
-            this.tlpTextureDisplay.RowCount = 2;
-            this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpTextureDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTextureDisplay.Size = new System.Drawing.Size(608, 484);
-            this.tlpTextureDisplay.TabIndex = 4;
-            // 
-            // tlpTextureProperties
-            // 
-            this.tlpTextureProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tlpTextureProperties.ColumnCount = 2;
-            this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpTextureProperties.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpTextureProperties.Controls.Add(this.lblTextureDimensionsText, 0, 0);
-            this.tlpTextureProperties.Controls.Add(this.btnExportTextureLevel, 0, 3);
-            this.tlpTextureProperties.Controls.Add(this.btnImportTextureLevel, 1, 3);
-            this.tlpTextureProperties.Controls.Add(this.lblTextureDimensions, 1, 0);
-            this.tlpTextureProperties.Controls.Add(this.lblTextureFormatText, 0, 1);
-            this.tlpTextureProperties.Controls.Add(this.label2, 0, 2);
-            this.tlpTextureProperties.Controls.Add(this.lblTextureFormat, 1, 1);
-            this.tlpTextureProperties.Controls.Add(this.lblTextureUsedBy, 1, 2);
-            this.tlpTextureProperties.Location = new System.Drawing.Point(3, 381);
-            this.tlpTextureProperties.Name = "tlpTextureProperties";
-            this.tlpTextureProperties.RowCount = 4;
-            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 11F));
-            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tlpTextureProperties.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpTextureProperties.Size = new System.Drawing.Size(602, 100);
-            this.tlpTextureProperties.TabIndex = 3;
-            // 
-            // lblTextureDimensionsText
-            // 
-            this.lblTextureDimensionsText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTextureDimensionsText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextureDimensionsText.Location = new System.Drawing.Point(3, 0);
-            this.lblTextureDimensionsText.Name = "lblTextureDimensionsText";
-            this.lblTextureDimensionsText.Size = new System.Drawing.Size(295, 20);
-            this.lblTextureDimensionsText.TabIndex = 0;
-            this.lblTextureDimensionsText.Text = "Dimensions:";
-            this.lblTextureDimensionsText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // btnExportTextureLevel
-            // 
-            this.btnExportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExportTextureLevel.Location = new System.Drawing.Point(3, 63);
-            this.btnExportTextureLevel.Name = "btnExportTextureLevel";
-            this.btnExportTextureLevel.Size = new System.Drawing.Size(295, 34);
-            this.btnExportTextureLevel.TabIndex = 1;
-            this.btnExportTextureLevel.Text = "Export...";
-            this.btnExportTextureLevel.UseVisualStyleBackColor = true;
-            this.btnExportTextureLevel.Click += new System.EventHandler(this.btnExportTextureLevel_Click);
-            // 
-            // btnImportTextureLevel
-            // 
-            this.btnImportTextureLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnImportTextureLevel.Location = new System.Drawing.Point(304, 63);
-            this.btnImportTextureLevel.Name = "btnImportTextureLevel";
-            this.btnImportTextureLevel.Size = new System.Drawing.Size(295, 34);
-            this.btnImportTextureLevel.TabIndex = 2;
-            this.btnImportTextureLevel.Text = "Import...";
-            this.btnImportTextureLevel.UseVisualStyleBackColor = true;
-            this.btnImportTextureLevel.Click += new System.EventHandler(this.btnImportTextureLevel_Click);
-            // 
-            // lblTextureDimensions
-            // 
-            this.lblTextureDimensions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTextureDimensions.Location = new System.Drawing.Point(304, 0);
-            this.lblTextureDimensions.Name = "lblTextureDimensions";
-            this.lblTextureDimensions.Size = new System.Drawing.Size(295, 20);
-            this.lblTextureDimensions.TabIndex = 1;
-            this.lblTextureDimensions.Text = "-";
-            // 
-            // lblTextureFormatText
-            // 
-            this.lblTextureFormatText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTextureFormatText.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTextureFormatText.Location = new System.Drawing.Point(3, 20);
-            this.lblTextureFormatText.Name = "lblTextureFormatText";
-            this.lblTextureFormatText.Size = new System.Drawing.Size(295, 11);
-            this.lblTextureFormatText.TabIndex = 2;
-            this.lblTextureFormatText.Text = "Format:";
-            this.lblTextureFormatText.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(241, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Used by:";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblTextureFormat
-            // 
-            this.lblTextureFormat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTextureFormat.Location = new System.Drawing.Point(304, 20);
-            this.lblTextureFormat.Name = "lblTextureFormat";
-            this.lblTextureFormat.Size = new System.Drawing.Size(295, 11);
-            this.lblTextureFormat.TabIndex = 3;
-            this.lblTextureFormat.Text = "-";
-            // 
-            // lblTextureUsedBy
-            // 
-            this.lblTextureUsedBy.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblTextureUsedBy.AutoEllipsis = true;
-            this.lblTextureUsedBy.AutoSize = true;
-            this.lblTextureUsedBy.Location = new System.Drawing.Point(304, 39);
-            this.lblTextureUsedBy.Name = "lblTextureUsedBy";
-            this.lblTextureUsedBy.Size = new System.Drawing.Size(10, 13);
-            this.lblTextureUsedBy.TabIndex = 5;
-            this.lblTextureUsedBy.Text = "-";
-            // 
-            // gmaContextMenuStrip
-            // 
-            this.gmaContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importGMATPLToolStripMenuItem,
-            this.exportAsGMATPLToolStripMenuItem,
-            this.gmaExportTolStripMenuItem,
-            this.gmaImporttoolStripMenuItem,
-            this.importPreserveFLagsToolStripMenuItem,
-            this.translateModelToolStripMenuItem,
-            this.duplicateModelToolStripMenuItem,
-            this.editFlagsToolStripMenuItem,
-            this.renameToolStripMenuItem,
-            this.removeToolStripMenuItem});
-            this.gmaContextMenuStrip.Name = "gmaContextMenuStrip";
-            this.gmaContextMenuStrip.Size = new System.Drawing.Size(262, 224);
-            // 
-            // importGMATPLToolStripMenuItem
-            // 
-            this.importGMATPLToolStripMenuItem.Name = "importGMATPLToolStripMenuItem";
-            this.importGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.importGMATPLToolStripMenuItem.Text = "Import GMA/TPL...";
-            this.importGMATPLToolStripMenuItem.Click += new System.EventHandler(this.importGMATPLToolStripMenuItem_Click);
-            // 
-            // exportAsGMATPLToolStripMenuItem
-            // 
-            this.exportAsGMATPLToolStripMenuItem.Name = "exportAsGMATPLToolStripMenuItem";
-            this.exportAsGMATPLToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.exportAsGMATPLToolStripMenuItem.Text = "Export as GMA/TPL...";
-            this.exportAsGMATPLToolStripMenuItem.Click += new System.EventHandler(this.exportAsGMATPLToolStripMenuItem_Click);
-            // 
-            // gmaExportTolStripMenuItem
-            // 
-            this.gmaExportTolStripMenuItem.Name = "gmaExportTolStripMenuItem";
-            this.gmaExportTolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.gmaExportTolStripMenuItem.Text = "Export as OBJ/MTL...";
-            this.gmaExportTolStripMenuItem.Click += new System.EventHandler(this.gmaExportTolStripMenuItem_Click);
-            // 
-            // gmaImporttoolStripMenuItem
-            // 
-            this.gmaImporttoolStripMenuItem.Name = "gmaImporttoolStripMenuItem";
-            this.gmaImporttoolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.gmaImporttoolStripMenuItem.Text = "Replace with OBJ...";
-            this.gmaImporttoolStripMenuItem.Click += new System.EventHandler(this.gmaImporttoolStripMenuItem_Click);
-            // 
-            // importPreserveFLagsToolStripMenuItem
-            // 
-            this.importPreserveFLagsToolStripMenuItem.Name = "importPreserveFLagsToolStripMenuItem";
-            this.importPreserveFLagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.importPreserveFLagsToolStripMenuItem.Text = "Replace with OBJ...  (Preserve Flags)";
-            this.importPreserveFLagsToolStripMenuItem.Click += new System.EventHandler(this.gmaImportPreserveFlagstoolStripMenuItem_Click);
-            // 
-            // translateModelToolStripMenuItem
-            // 
-            this.translateModelToolStripMenuItem.Name = "translateModelToolStripMenuItem";
-            this.translateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.translateModelToolStripMenuItem.Text = "Translate Model...";
-            this.translateModelToolStripMenuItem.Click += new System.EventHandler(this.translateModelToolStripMenuItem_Click);
-            // 
-            // duplicateModelToolStripMenuItem
-            // 
-            this.duplicateModelToolStripMenuItem.Name = "duplicateModelToolStripMenuItem";
-            this.duplicateModelToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.duplicateModelToolStripMenuItem.Text = "Duplicate Model";
-            this.duplicateModelToolStripMenuItem.Click += new System.EventHandler(this.duplicateModelToolStripMenuItem_Click);
-            // 
-            // editFlagsToolStripMenuItem
-            // 
-            this.editFlagsToolStripMenuItem.Name = "editFlagsToolStripMenuItem";
-            this.editFlagsToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.editFlagsToolStripMenuItem.Text = "Edit Flags...";
-            this.editFlagsToolStripMenuItem.Click += new System.EventHandler(this.editModelFlagstoolStripMenuItem_Click);
-            // 
-            // renameToolStripMenuItem
-            // 
-            this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.renameToolStripMenuItem.Text = "Rename";
-            this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
-            // 
-            // removeToolStripMenuItem
-            // 
-            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(261, 22);
-            this.removeToolStripMenuItem.Text = "Delete";
-            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
-            // 
-            // ofdLoadGma
-            // 
-            this.ofdLoadGma.DefaultExt = "gma";
-            this.ofdLoadGma.Filter = "GMA Files|*.gma|All Files|*.*";
-            this.ofdLoadGma.Title = "Load GMA File...";
-            // 
-            // ofdLoadTpl
-            // 
-            this.ofdLoadTpl.DefaultExt = "tpl";
-            this.ofdLoadTpl.Filter = "TPL Files|*.tpl|All Files|*.*";
-            this.ofdLoadTpl.Title = "Load TPL File...";
-            // 
-            // sfdSaveTpl
-            // 
-            this.sfdSaveTpl.DefaultExt = "tpl";
-            this.sfdSaveTpl.Filter = "TPL Files|*.tpl|All Files|*.*";
-            this.sfdSaveTpl.Title = "Save TPL File...";
-            // 
-            // ofdTextureImportPath
-            // 
-            this.ofdTextureImportPath.Filter = "Image files|*.png;*.tiff;*.gif;*.jpg;*.jpeg;*.bmp|All Files|*.*";
-            this.ofdTextureImportPath.Title = "Select texture file to import...";
-            // 
-            // sfdTextureExportPath
-            // 
-            this.sfdTextureExportPath.DefaultExt = "png";
-            this.sfdTextureExportPath.Filter = "Image files|*.png,*.tiff,*.gif,*.jpg,*.jpeg,*.bmp|All Files|*.*";
-            this.sfdTextureExportPath.Title = "Select file to export to...";
-            // 
-            // sfdSaveGma
-            // 
-            this.sfdSaveGma.DefaultExt = "gma";
-            this.sfdSaveGma.Filter = "GMA Files|*.gma|All Files|*.*";
-            this.sfdSaveGma.Title = "Save GMA File...";
-            // 
-            // ofdLoadObj
-            // 
-            this.ofdLoadObj.DefaultExt = "obj";
-            this.ofdLoadObj.Filter = "OBJ Files|*.obj|All Files|*.*";
-            this.ofdLoadObj.Title = "Load OBJ File...";
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(961, 24);
-            this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.numMipmapsToolStripMenuItem,
-            this.mipmapInterpolationToolStripMenuItem,
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem,
-            this.showValuesAsHexadecimalToolStripMenuItem,
-            this.backgroundColorForTextureViewerToolStripMenuItem});
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            // 
-            // numMipmapsToolStripMenuItem
-            // 
-            this.numMipmapsToolStripMenuItem.Name = "numMipmapsToolStripMenuItem";
-            this.numMipmapsToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.numMipmapsToolStripMenuItem.Text = "Max Number of Mipmaps";
-            // 
-            // mipmapInterpolationToolStripMenuItem
-            // 
-            this.mipmapInterpolationToolStripMenuItem.Name = "mipmapInterpolationToolStripMenuItem";
-            this.mipmapInterpolationToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.mipmapInterpolationToolStripMenuItem.Text = "Mipmap Interpolation";
-            // 
-            // deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem
-            // 
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckOnClick = true;
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Name = "deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem";
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.Text = "Delete Textures Left Unused on Model Deletion";
-            this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem.CheckedChanged += new System.EventHandler(this.deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged);
-            // 
-            // meshMenuStrip
-            // 
-            this.meshMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editFlagsToolStripMenuItem1});
-            this.meshMenuStrip.Name = "meshMenuStrip";
-            this.meshMenuStrip.Size = new System.Drawing.Size(134, 26);
-            // 
-            // editFlagsToolStripMenuItem1
-            // 
-            this.editFlagsToolStripMenuItem1.Name = "editFlagsToolStripMenuItem1";
-            this.editFlagsToolStripMenuItem1.Size = new System.Drawing.Size(133, 22);
-            this.editFlagsToolStripMenuItem1.Text = "Edit Flags...";
-            this.editFlagsToolStripMenuItem1.Click += new System.EventHandler(this.editMeshFlagstoolStripMenuItem_Click);
-            // 
-            // sfdModelExportPath
-            // 
-            this.sfdModelExportPath.DefaultExt = "obj";
-            this.sfdModelExportPath.Filter = "OBJ Files|*.obj|All Files|*.*";
-            this.sfdModelExportPath.Title = "Save Model File...";
-            // 
-            // fileSystemWatcher1
-            // 
-            this.fileSystemWatcher1.EnableRaisingEvents = true;
-            this.fileSystemWatcher1.SynchronizingObject = this;
-            // 
-            // treeModel
-            // 
-            this.treeModel.AllowDrop = true;
-            this.treeModel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeModel.LabelEdit = true;
-            this.treeModel.Location = new System.Drawing.Point(3, 3);
-            this.treeModel.Name = "treeModel";
-            this.treeModel.SelectedNodes = ((System.Collections.Generic.List<System.Windows.Forms.TreeNode>)(resources.GetObject("treeModel.SelectedNodes")));
-            this.treeModel.Size = new System.Drawing.Size(301, 370);
-            this.treeModel.TabIndex = 0;
-            this.treeModel.AfterCheckState += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterCheckState);
-            this.treeModel.BeforeLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_BeforeLabelEdit);
-            this.treeModel.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeModel_AfterLabelEdit);
-            this.treeModel.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeModel_ItemDrag);
-            this.treeModel.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeModel_AfterSelect);
-            this.treeModel.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeModel_DragDrop);
-            this.treeModel.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeModel_DragEnter);
-            this.treeModel.DragOver += new System.Windows.Forms.DragEventHandler(this.treeModel_DragOver);
-            this.treeModel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeModel_MouseDown);
-            // 
             // treeMaterials
             // 
             this.treeMaterials.ContextMenuStrip = this.materialMenuStrip;
@@ -1689,22 +1726,12 @@ namespace GxModelViewer
             this.pbTextureImage.TabIndex = 4;
             this.pbTextureImage.TabStop = false;
             // 
-            // showValuesAsHexadecimalToolStripMenuItem
+            // changeFormatToolStripMenuItem
             // 
-            this.showValuesAsHexadecimalToolStripMenuItem.Checked = true;
-            this.showValuesAsHexadecimalToolStripMenuItem.CheckOnClick = true;
-            this.showValuesAsHexadecimalToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showValuesAsHexadecimalToolStripMenuItem.Name = "showValuesAsHexadecimalToolStripMenuItem";
-            this.showValuesAsHexadecimalToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.showValuesAsHexadecimalToolStripMenuItem.Text = "Show Indices as Hexadecimal";
-            this.showValuesAsHexadecimalToolStripMenuItem.CheckedChanged += new System.EventHandler(this.showValuesAsHexadecimalToolStripMenuItem_CheckedChanged);
-            // 
-            // backgroundColorForTextureViewerToolStripMenuItem
-            // 
-            this.backgroundColorForTextureViewerToolStripMenuItem.Name = "backgroundColorForTextureViewerToolStripMenuItem";
-            this.backgroundColorForTextureViewerToolStripMenuItem.Size = new System.Drawing.Size(320, 22);
-            this.backgroundColorForTextureViewerToolStripMenuItem.Text = "Set Background Color for Texture Viewer";
-            this.backgroundColorForTextureViewerToolStripMenuItem.Click += new System.EventHandler(this.backgroundColorForTextureViewerToolStripMenuItem_Click);
+            this.changeFormatToolStripMenuItem.Name = "changeFormatToolStripMenuItem";
+            this.changeFormatToolStripMenuItem.Size = new System.Drawing.Size(251, 22);
+            this.changeFormatToolStripMenuItem.Text = "Change Format...";
+            this.changeFormatToolStripMenuItem.Click += new System.EventHandler(this.changeFormatToolStripMenuItem_Click);
             // 
             // ModelViewer
             // 
@@ -1727,14 +1754,6 @@ namespace GxModelViewer
             this.toolStripActions.PerformLayout();
             this.tabControlModelsTextures.ResumeLayout(false);
             this.tabPageModels.ResumeLayout(false);
-            this.splitContainerModels.Panel1.ResumeLayout(false);
-            this.splitContainerModels.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).EndInit();
-            this.splitContainerModels.ResumeLayout(false);
-            this.tableLayoutPanelModelSelect.ResumeLayout(false);
-            this.tlpMaterialMeshDisplay.ResumeLayout(false);
-            this.tlpModelDisplay.ResumeLayout(false);
-            this.tlpMeshDisplay.ResumeLayout(false);
             this.tabPageMaterials.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -1757,6 +1776,14 @@ namespace GxModelViewer
             this.menuStrip1.PerformLayout();
             this.meshMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).EndInit();
+            this.splitContainerModels.Panel1.ResumeLayout(false);
+            this.splitContainerModels.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerModels)).EndInit();
+            this.splitContainerModels.ResumeLayout(false);
+            this.tableLayoutPanelModelSelect.ResumeLayout(false);
+            this.tlpMaterialMeshDisplay.ResumeLayout(false);
+            this.tlpModelDisplay.ResumeLayout(false);
+            this.tlpMeshDisplay.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbMaterialTextureImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbTextureImage)).EndInit();
             this.ResumeLayout(false);
@@ -1910,5 +1937,8 @@ namespace GxModelViewer
         private System.Windows.Forms.ToolStripMenuItem showValuesAsHexadecimalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backgroundColorForTextureViewerToolStripMenuItem;
         private System.Windows.Forms.ColorDialog texViewerColorDialog;
+        private System.Windows.Forms.ToolStripMenuItem regenerateMipmapsForSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem regenerateMipmapsForAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeFormatToolStripMenuItem;
     }
 }

@@ -385,7 +385,7 @@ namespace LibGxFormat.Tpl
         /// <param name="intFormat">The type of interpolation to use</param>
         /// <param name="bmp">The bitmap that will define the texture.</param>
         /// <param name="path">The path to the bitmap file.</param>
-        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path)
+        public void DefineTextureFromBitmap(GxTextureFormat format, GxInterpolationFormat intFormat, int numMipmaps, Bitmap bmp, String path = "")
         {
             if (!SupportedTextureFormats.Contains(format))
                 throw new ArgumentOutOfRangeException("format", "Unsupported format.");

@@ -1684,6 +1684,8 @@ namespace GxModelViewer
                         UpdateMaterialDisplay();
                         UpdateTexturesUsedBy();
                         reloadOnNextRedraw = true;
+                        glControlModel.Invalidate();
+                        haveUnsavedGmaChanges = true;
                         break;
                 }
             }
@@ -1865,6 +1867,7 @@ namespace GxModelViewer
                         }
                         gma.Add(newGmaEntry);
                     }
+                    haveUnsavedGmaChanges = true;
                 }
 
                 using (Stream tplStream = File.OpenRead(ofdLoadTpl.FileName))
@@ -1874,6 +1877,7 @@ namespace GxModelViewer
                     {
                         tpl.Add(newTplTexture);
                     }
+                    haveUnsavedTplChanges = true;
                 }
             }
             catch (Exception ex)
@@ -1888,8 +1892,6 @@ namespace GxModelViewer
             UpdateMaterialDisplay();
             UpdateMaterialList();
 
-            haveUnsavedGmaChanges = true;
-            haveUnsavedTplChanges = true;
             reloadOnNextRedraw = true;
             glControlModel.Invalidate();
         }
@@ -1969,6 +1971,8 @@ namespace GxModelViewer
                     case DialogResult.OK:
                         UpdateMaterialDisplay();
                         UpdateTexturesUsedBy();
+                        reloadOnNextRedraw = true;
+                        glControlModel.Invalidate();
                         haveUnsavedGmaChanges = true;
                         break;
                 }
@@ -2288,6 +2292,76 @@ namespace GxModelViewer
             {
                 pbTextureImage.BackColor = texViewerColorDialog.Color;
             }
+        }
+
+        private void regenerateMipmapsForAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            treeTextures.SelectedNode = null;
+
+            for (int textureId = 0; textureId < tpl.Count; textureId++)
+            {
+                RegenerateMipmaps(textureId);
+                TextureHasChanged(textureId);
+            }
+
+            UpdateTexturesUsedBy();
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+        }
+
+        private void regenerateMipmapsForSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextureReference textureData = (TextureReference)treeTextures.SelectedNode.Tag;
+            TplTexture tex = tpl[textureData.TextureIdx];
+
+            treeTextures.SelectedNode = treeTextures.Nodes[textureData.TextureIdx];
+            RegenerateMipmaps(textureData.TextureIdx);
+            TextureHasChanged(textureData.TextureIdx);
+
+            UpdateTexturesUsedBy();
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+        }
+
+        public void RegenerateMipmaps(int textureId)
+        {
+            TplTexture tex = tpl[textureId];
+            Bitmap bmp = tex.DecodeLevelToBitmap(0);
+            TplTexture regeneratedTexture = new TplTexture(tex.Format, intFormat, numMipmaps, bmp);
+
+            regeneratedTexture.DefineTextureFromBitmap(tex.Format, intFormat, numMipmaps, bmp);
+
+            tpl[textureId] = regeneratedTexture;
+        }
+
+        private void changeFormatToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TextureReference textureData = (TextureReference)treeTextures.SelectedNode.Tag;
+            TplTexture tex = tpl[textureData.TextureIdx];
+            GxTextureFormatPickerDialog formatPickerDlg = new GxTextureFormatPickerDialog(TplTexture.SupportedTextureFormats, tex.Format);
+
+            if (formatPickerDlg.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            ChangeFormat(textureData.TextureIdx, formatPickerDlg.SelectedFormat);
+            TextureHasChanged(textureData.TextureIdx);
+
+            UpdateTexturesUsedBy();
+            UpdateTextureTree();
+            UpdateTextureDisplay();
+        }
+
+        public void ChangeFormat(int textureId, GxTextureFormat format)
+        {
+            TplTexture tex = tpl[textureId];
+            Bitmap bmp = tex.DecodeLevelToBitmap(0);
+            TplTexture regeneratedTexture = new TplTexture(format, intFormat, numMipmaps, bmp);
+
+            regeneratedTexture.DefineTextureFromBitmap(format, intFormat, numMipmaps, bmp);
+
+            tpl[textureId] = regeneratedTexture;
         }
 
         /// <summary>
