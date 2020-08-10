@@ -28,9 +28,12 @@ namespace GxModelViewer
         private const string IMPORT_OBJ_MTL_FLAG = "-importObjMtl";
         private const string IMPORT_TPL_FLAG = "-importTpl";
         private const string IMPORT_GMA_FLAG = "-importGma";
+        private const string MERGE_GMATPL_FLAG = "-mergeGmaTpl";
         private const string EXPORT_OBJ_MTL_FLAG = "-exportObjMtl";
         private const string EXPORT_TPL_FLAG = "-exportTpl";
         private const string EXPORT_GMA_FLAG = "-exportGma";
+        private const string FIX_SCROLLING_TEXTURES = "-fixScrollingTextures";
+        private const string FIX_TRANSPARENCY = "-fixTransparentMeshes";
         private const string SET_ALL_MIPMAPS = "-setAllMipmaps";
 
         // Interactive Mode Only
@@ -215,6 +218,28 @@ namespace GxModelViewer
                             WriteCommandError(flag, "Not enough args for command");
                         }
                         break;
+                    case FIX_SCROLLING_TEXTURES:
+                        try
+                        {
+                            modelViewer.FixScrollingTextures();
+                            WriteCommandSuccess(flag);
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteCommandError(flag, "Error updating flags for scrollable textures->" + ex.Message + "\n" + ex.StackTrace);
+                        }
+                        break;
+                    case FIX_TRANSPARENCY:
+                        try
+                        {
+                            modelViewer.FixTransparency();
+                            WriteCommandSuccess(flag);
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteCommandError(flag, "Error updating flags for transparent meshes->" + ex.Message + "\n" + ex.StackTrace);
+                        }
+                        break;
                     case IMPORT_OBJ_MTL_FLAG:
                         if(i < flags.Length - 1)
                         {
@@ -281,6 +306,31 @@ namespace GxModelViewer
                         else
                         {
                             WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
+                    case MERGE_GMATPL_FLAG:
+                        if (i < flags.Length - 1 && flags[i + 1].Split(',').Length == 2)
+                        {
+                            try
+                            {
+                                string newgmapath = flags[i + 1].Split(',')[0];
+                                string newtplpath = flags[i + 1].Split(',')[1];
+                                modelViewer.MergeGMATPLFiles(newgmapath,newtplpath);
+                                WriteCommandSuccess(flag);
+                            }
+                            catch (Exception ex)
+                            {
+                                WriteCommandError(flag, "Error merging in the file GMA and TPL files->" + ex.Message);
+                            }
+                            finally
+                            {
+                                // Skip the command argument
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command, provide GMA filepath and TPL filepath separated by comma (Ex: dir1/file.gma,dir2/file.tpl)");
                         }
                         break;
                     case EXPORT_OBJ_MTL_FLAG:
@@ -427,6 +477,12 @@ namespace GxModelViewer
             Console.WriteLine("\t-exportGma <model>\t\tExports the loaded model as a .gma file.");
             Console.WriteLine("\t-setAllMipmaps <num>\t\tSets the number of mipmaps for every loaded texture to <num>.");
             Console.WriteLine("\t\t\t\t\tTexture files should be loaded before calling this flag.");
+            Console.WriteLine("\t-mergeGmaTpl <GMA>,<TPL>\t\tMerges the specified GMA and TPL with the active GMA and TPL.");
+            Console.WriteLine("\t-fixScrollingTextures\t\tSets texture scroll flag for all materials of a model with 'texture'");
+            Console.WriteLine("\t\t\t\t\tand 'scroll' in the name.");
+            Console.WriteLine("\t-fixTransparentMeshes\t\tSets transparency on all models with 'transparency100%' or 'transparent100%'");
+            Console.WriteLine("\t\t\t\t\tin their name, or any variant in steps of 25% (0%, 25%, 50%, 75%, 100%)");
+            
         }
 
         private static void DisplayInteractiveHelp()

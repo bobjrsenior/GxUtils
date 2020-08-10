@@ -121,6 +121,11 @@ flag is not available in interactive mode and the -quit flag is not available in
             -exportGma <model>          Exports the loaded model as a .gma file.
             -setAllMipmaps <num>        Sets the number of mipmaps for every loaded texture to <num>.
                                         Texture files should be loaded before calling this flag.
+			-mergeGmaTpl <GMA>,<TPL>	Merges the specified GMA and TPL with the active GMA and TPL.
+			-fixScrollingTextures		Sets texture scroll flag for all materials of a model with 'texture' 
+										and 'scroll' in the name.
+			-fixTransparentMeshes		Sets transparency on all models with 'transparency100%' or 'transparent100%'
+										in their name, or any variant in steps of 25% (0%, 25%, 50%, 75%, 100%).
 
 ### Interactive Mode Specifics
     GX Model Viewer Interactive Mode Help

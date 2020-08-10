@@ -849,7 +849,6 @@
         private System.Windows.Forms.TextBox unknown40TextBox;
         private System.Windows.Forms.Button okayButton;
         private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.TextBox unknown10TextBox;
         private System.Windows.Forms.TextBox matrixId8TextBox;
         private System.Windows.Forms.TextBox matrixId7TextBox;
         private System.Windows.Forms.TextBox matrixId6TextBox;
@@ -905,5 +904,6 @@
         private System.Windows.Forms.TextBox primaryYCoordScale;
         private System.Windows.Forms.TextBox secondaryYCoordScale;
         private System.Windows.Forms.Button createCoordsButton;
+        private System.Windows.Forms.TextBox unknown10TextBox;
     }
 }

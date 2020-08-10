@@ -344,7 +344,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox flagsTextBox;
         private System.Windows.Forms.TextBox textureIndexTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox anistropyTextBox;
@@ -368,5 +367,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox flagsTextBox;
     }
 }

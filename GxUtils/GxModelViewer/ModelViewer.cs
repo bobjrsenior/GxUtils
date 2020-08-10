@@ -9,11 +9,13 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Windows.Forms;
 using LibGxFormat.ModelLoader;
 using System.Collections.Generic;
+
 
 namespace GxModelViewer
 {
@@ -459,6 +461,74 @@ namespace GxModelViewer
             removeUnusedToolStripMenuItem.Enabled = true;
 
             if (tpl != null) UpdateTexturesUsedBy();
+        }
+
+        public void MergeGMATPLFiles(string newGmaPath, string newTplPath)
+        {
+            MergeGMA(newGmaPath);
+            MergeTPL(newTplPath);
+        }
+
+        public void FixScrollingTextures()
+        {
+            //Check all models for "texturescroll" text
+            foreach (GmaEntry entry in gma)
+            {
+                if (entry.Name.ToLower().Contains("texture") && entry.Name.ToLower().Contains("scroll"))
+                {
+                    Console.WriteLine("[+] Detected material with transparency: " + entry.Name);
+                                      
+                    Console.WriteLine("  [-] Materials loaded for object: " + entry.ModelObject.Materials.Count);
+
+                    foreach (GcmfMaterial material in entry.ModelObject.Materials)
+                    {
+                        material.Flags |= 0x20000;
+                    }
+                    
+                }
+            }
+
+            UpdateMaterialDisplay();
+            UpdateMaterialList();
+            reloadOnNextRedraw = true;
+            glControlModel.Invalidate();
+        }
+
+        public void FixTransparency()
+        {
+            //Check all models for "transaparency" text
+            foreach (GmaEntry entry in gma)
+            {
+                if (entry.Name.ToLower().Contains("transparen"))
+                {
+                    ushort transparencyFlag = 0x00FF;
+                    if (entry.Name.ToLower().Contains("transparency100%")) transparencyFlag = 0x0000;
+                    if (entry.Name.ToLower().Contains("transparency75%")) transparencyFlag = 0x003F;
+                    if (entry.Name.ToLower().Contains("transparency50%")) transparencyFlag = 0x007F;
+                    if (entry.Name.ToLower().Contains("transparency25%")) transparencyFlag = 0x00BF;
+                    if (entry.Name.ToLower().Contains("transparency0%")) transparencyFlag = 0x00FF;
+
+                    if (entry.Name.ToLower().Contains("transparent100%")) transparencyFlag = 0x0000;
+                    if (entry.Name.ToLower().Contains("transparent75%")) transparencyFlag = 0x003F;
+                    if (entry.Name.ToLower().Contains("transparent50%")) transparencyFlag = 0x007F;
+                    if (entry.Name.ToLower().Contains("transparent25%")) transparencyFlag = 0x00BF;
+                    if (entry.Name.ToLower().Contains("transparent0%")) transparencyFlag = 0x00FF;
+
+                    Console.WriteLine("[+] Detected material with transparency: " + entry.Name);
+                    
+                    // Grab selected nodes
+                    foreach (GcmfMesh mesh in entry.ModelObject.Meshes)
+                    {
+                        mesh.Unk10 = transparencyFlag;
+                    }                   
+                }
+            }
+
+            UpdateModelButtons();
+            UpdateModelDisplay();
+            UpdateModelTree();
+            reloadOnNextRedraw = true;
+            glControlModel.Invalidate();
         }
 
         private void tsBtnSaveGma_Click(object sender, EventArgs e)
@@ -1518,9 +1588,8 @@ namespace GxModelViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An error occured while importing the texture(s).\n" +
-                                    "If you are importing multiple mipmap levels, ensure\n",
-                                    "that all of the mipmaps are the correct size.", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("An error occured while importing the texture(s).\nIf you are importing multiple mipmap levels, ensure\nthat all of the mipmaps are of the correct size.",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -1832,12 +1901,11 @@ namespace GxModelViewer
             {
                 gma.RemoveAt(treeModel.SelectedNode.Index);
                 treeModel.SelectedNodes.Clear();
-                haveUnsavedGmaChanges = true;
-
+				haveUnsavedGmaChanges = true;
+				
                 UpdateModelDisplay();
                 UpdateModelButtons();
                 UpdateModelTree();
-
                 if (deleteUnusedTexturesAuto)
                 {
                     DeleteUnusedTextures();
@@ -1850,6 +1918,38 @@ namespace GxModelViewer
             }
         }
 
+
+        private void MergeGMA(String gmaFilename)
+        {
+            using (Stream gmaStream = File.OpenRead(gmaFilename))
+            {
+                Gma importedGma = new Gma(gmaStream, GetSelectedGame());
+                foreach (GmaEntry newGmaEntry in importedGma)
+                {
+                    foreach (GcmfMaterial newGcmfMat in newGmaEntry.ModelObject.Materials)
+                    {
+                        // Accounts for the offset of importing new textures to the existing TPL
+                        newGcmfMat.TextureIdx += (ushort)tpl.Count;
+                    }
+                    gma.Add(newGmaEntry);
+                }
+                haveUnsavedGmaChanges = true;
+            }
+        }
+
+        private void MergeTPL(String tplFilename)
+        {
+            using (Stream tplStream = File.OpenRead(tplFilename))
+            {
+                Tpl importedTpl = new Tpl(tplStream, GetSelectedGame());
+                foreach (TplTexture newTplTexture in importedTpl)
+                {
+                    tpl.Add(newTplTexture);
+                }
+                haveUnsavedTplChanges = true;
+            }
+        }
+
         private void importGMATPLToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ofdLoadGma.ShowDialog() != DialogResult.OK)
@@ -1858,34 +1958,12 @@ namespace GxModelViewer
                 return;
             try
             {
-                using (Stream gmaStream = File.OpenRead(ofdLoadGma.FileName))
-                {
-                    Gma importedGma = new Gma(gmaStream, GetSelectedGame());
-                    foreach (GmaEntry newGmaEntry in importedGma)
-                    {
-                        foreach (GcmfMaterial newGcmfMat in newGmaEntry.ModelObject.Materials)
-                        {
-                            // Accounts for the offset of importing new textures to the existing TPL
-                            newGcmfMat.TextureIdx += (ushort)tpl.Count;
-                        }
-                        gma.Add(newGmaEntry);
-                    }
-                    haveUnsavedGmaChanges = true;
-                }
-
-                using (Stream tplStream = File.OpenRead(ofdLoadTpl.FileName))
-                {
-                    Tpl importedTpl = new Tpl(tplStream, GetSelectedGame());
-                    foreach (TplTexture newTplTexture in importedTpl)
-                    {
-                        tpl.Add(newTplTexture);
-                    }
-                    haveUnsavedTplChanges = true;
-                }
+                MergeGMA(ofdLoadGma.FileName);
+                MergeTPL(ofdLoadTpl.FileName);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error importing a new GMA/TPL.", "Ërror", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error importing a new GMA/TPL.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             UpdateModelButtons();
             UpdateModelTree();
