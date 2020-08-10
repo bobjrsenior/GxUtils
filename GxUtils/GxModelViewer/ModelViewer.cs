@@ -1832,9 +1832,12 @@ namespace GxModelViewer
             {
                 gma.RemoveAt(treeModel.SelectedNode.Index);
                 treeModel.SelectedNodes.Clear();
+                haveUnsavedGmaChanges = true;
+
                 UpdateModelDisplay();
                 UpdateModelButtons();
                 UpdateModelTree();
+
                 if (deleteUnusedTexturesAuto)
                 {
                     DeleteUnusedTextures();
