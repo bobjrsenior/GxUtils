@@ -1811,9 +1811,7 @@ namespace GxModelViewer
                 {
                     // Define the entire texture from the bitmap
                     newTexture.DefineTextureFromBitmap(newFmt, GetSelectedMipmap(), GetNumMipmaps(), bmp, ofdTextureImportPath.FileName);
-                    TextureHasChanged(newId);
-                    UpdateTextureTree();
-                    treeTextures.SelectedNode = treeTextures.Nodes[newId];
+                    TextureHasChanged(newId);                    
                     //treeTextures.SelectedNode = treeTextures.Nodes.Cast<TreeNode>()
                     //.Where(tn => ((TextureReference)tn.Tag).TextureIdx == newId).First();
                 }
@@ -1823,7 +1821,7 @@ namespace GxModelViewer
                                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return -1;
                 }
-
+                
                 if (!allowMultiImport) return newId;
             }
             ofdTextureImportPath.Multiselect = false;
@@ -1833,6 +1831,8 @@ namespace GxModelViewer
         private void defineNewToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             defineNewTextureFromBitmap(true);
+            UpdateTextureTree();
+            treeTextures.SelectedNode = treeTextures.Nodes[treeTextures.Nodes.Count - 1];
         }
 
         private void defineNewFromTextureToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2027,7 +2027,19 @@ namespace GxModelViewer
         {
             if (treeTextures.SelectedNode != null)
             {
+                int previousTextureId = (treeTextures.SelectedNode.Index) - 1;
                 DeleteTextureAt(treeTextures.SelectedNode.Index);
+
+                UpdateTextureTree();
+                UpdateTextureDisplay();
+                UpdateTextureButtons();
+                reloadOnNextRedraw = true;
+                
+                if (treeTextures.Nodes.Count > 0)
+                {
+                    if (previousTextureId > 0) treeTextures.SelectedNode = treeTextures.Nodes[previousTextureId];
+                    else treeTextures.SelectedNode = treeTextures.Nodes[0];
+                }
             }
             else
             {
@@ -2086,10 +2098,19 @@ namespace GxModelViewer
 
         private void removeUnusedToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int previousTextureId = (treeTextures.SelectedNode.Index) - 1;
             DeleteUnusedTextures();
             UpdateTextureTree();
             UpdateTextureButtons();
             UpdateTextureDisplay();
+            reloadOnNextRedraw = true;
+
+            if (treeTextures.Nodes.Count > 0)
+            {
+                if (previousTextureId > 0) treeTextures.SelectedNode = treeTextures.Nodes[previousTextureId];
+                else treeTextures.SelectedNode = treeTextures.Nodes[0];
+            }
+
             haveUnsavedTplChanges = true;
         }
 
@@ -2117,7 +2138,7 @@ namespace GxModelViewer
                             {
                                 if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
                                 {
-                                    Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
+                                    //Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
                                     tpl[material.TextureIdx].usedByModels.Add(entry);
                                 }
                             }
@@ -2129,7 +2150,26 @@ namespace GxModelViewer
 
         private void deletenoMaterialAdjustmentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteTextureAt(treeTextures.SelectedNode.Index, false);
+            if (treeTextures.SelectedNode != null)
+            {
+                int previousTextureId = (treeTextures.SelectedNode.Index) - 1;
+                DeleteTextureAt(treeTextures.SelectedNode.Index, false);
+
+                UpdateTextureTree();
+                UpdateTextureDisplay();
+                UpdateTextureButtons();
+                reloadOnNextRedraw = true;
+
+                if (treeTextures.Nodes.Count > 0)
+                {
+                    if (previousTextureId > 0) treeTextures.SelectedNode = treeTextures.Nodes[previousTextureId];
+                    else treeTextures.SelectedNode = treeTextures.Nodes[0];
+                }
+            }
+            else
+            {
+                MessageBox.Show("No texture selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void deleteTextureLeftUnusedOnModelDeleteToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
@@ -2456,7 +2496,6 @@ namespace GxModelViewer
         /// <param name="update">Whether or not to correct the texture indices of materials</param>
         public void DeleteTextureAt(int textureId, bool update = true)
         {
-            int previousTextureId = (treeTextures.SelectedNode.Index) - 1;
             tpl.RemoveAt(textureId);
 
             if (update)
@@ -2475,19 +2514,7 @@ namespace GxModelViewer
                     }
                 }
             }
-
-            UpdateTextureTree();
-            UpdateTextureDisplay();
-            UpdateTextureButtons();
-            reloadOnNextRedraw = true;
             haveUnsavedTplChanges = true;
-
-            if (treeTextures.Nodes.Count > 0)
-            {
-                if (previousTextureId > 0) treeTextures.SelectedNode = treeTextures.Nodes[previousTextureId];
-                else treeTextures.SelectedNode = treeTextures.Nodes[0];
-            }
-
         }
 
         /// <summary>
@@ -2498,14 +2525,17 @@ namespace GxModelViewer
             // Probably a crappy way of doing this, and it's slow with lots of textures, but it works and has no issues with duplicate textures
             // Adding a method to delete a texture using a TplTexture as an argument might allow this to not be inefficient
             UpdateTexturesUsedBy();
+            int removedCount = 0;
             for (int texId = 0; texId < tpl.Count; texId++)
             {
                 if (tpl[texId].usedByModels == null || tpl[texId].usedByModels.Count == 0)
                 {
                     DeleteTextureAt(texId);
                     texId = -1;
+                    removedCount++;
                 }
             }
+            Console.WriteLine("Removed " + removedCount + " unused textures");
         }
     }
 }

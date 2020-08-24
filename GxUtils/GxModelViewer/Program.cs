@@ -35,6 +35,7 @@ namespace GxModelViewer
         private const string FIX_SCROLLING_TEXTURES = "-fixScrollingTextures";
         private const string FIX_TRANSPARENCY = "-fixTransparentMeshes";
         private const string SET_ALL_MIPMAPS = "-setAllMipmaps";
+        private const string REMOVE_UNUSED_TEXTURES = "-removeUnusedTextures";
 
         // Interactive Mode Only
         private const string QUIT_FLAG = "-quit";
@@ -430,6 +431,18 @@ namespace GxModelViewer
                             WriteCommandError(flag, "Not enough args for command");
                         }
                         break;
+                    case REMOVE_UNUSED_TEXTURES:
+                        try
+                        {
+                            modelViewer.DeleteUnusedTextures();
+                            WriteCommandSuccess(flag);
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteCommandError(flag, "Error removing unused textures->" + ex.Message + "\n" + ex.StackTrace);
+                        }
+                        break;
+
                     default:
                         WriteCommandError(flag, "Unknown command");
                         break;
@@ -482,7 +495,8 @@ namespace GxModelViewer
             Console.WriteLine("\t\t\t\t\tand 'scroll' in the name.");
             Console.WriteLine("\t-fixTransparentMeshes\t\tSets transparency on all models with 'transparency100%' or 'transparent100%'");
             Console.WriteLine("\t\t\t\t\tin their name, or any variant in steps of 25% (0%, 25%, 50%, 75%, 100%)");
-            
+            Console.WriteLine("\t-removeUnusedTextures\t\tRemoves textures that are not used by any materials.");
+
         }
 
         private static void DisplayInteractiveHelp()

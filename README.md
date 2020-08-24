@@ -126,6 +126,7 @@ flag is not available in interactive mode and the -quit flag is not available in
 										and 'scroll' in the name.
 			-fixTransparentMeshes		Sets transparency on all models with 'transparency100%' or 'transparent100%'
 										in their name, or any variant in steps of 25% (0%, 25%, 50%, 75%, 100%).
+			-removeUnusedTextures		Removes textures that are not used by any materials.
 
 ### Interactive Mode Specifics
     GX Model Viewer Interactive Mode Help
