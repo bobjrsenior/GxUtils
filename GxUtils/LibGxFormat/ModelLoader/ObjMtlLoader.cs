@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace LibGxFormat.ModelLoader
 {
@@ -126,6 +127,8 @@ namespace LibGxFormat.ModelLoader
                             break;
                         case "f":
                             ParseObjFaceDeclaration();
+                            break;
+                        case "s":
                             break;
                         default:
                             warningLog.Add(string.Format(
@@ -457,10 +460,28 @@ namespace LibGxFormat.ModelLoader
                         case "map_Kd":
                             ParseMtlDiffuseTextureMapDeclaration();
                             break;
+                        case "Ka":
+                        case "Kd":
+                        case "Ks":
+                        case "Ke":
+                        case "Ni":
+                        case "Ns":
+                        case "d":
+                        case "illum":
+                            break;
                         default:
                             warningLog.Add(string.Format(
                                 "{0}: Unrecognized keyword '{1}'.", mtlParser.GetFilePositionStr(), keyword));
                             break;
+                    }
+                }
+                // Check for untextured materials
+                foreach (KeyValuePair<string, ObjMtlMaterial> objectMaterial in materials)
+                {
+                    if (objectMaterial.Value.DiffuseTextureMap == null)
+                    {
+                        warningLog.Add(string.Format(
+                        "Material name \"{0}\": No texture associated with the material.", objectMaterial.Key));
                     }
                 }
             }
@@ -541,11 +562,20 @@ namespace LibGxFormat.ModelLoader
 
             // https://stackoverflow.com/a/8701748
             Bitmap tempImage;
-            using(var bmpOnDisk = new Bitmap(textureFilePath))
+            if (File.Exists(textureFilePath))
             {
-                tempImage = new Bitmap(bmpOnDisk);
+                using (var bmpOnDisk = new Bitmap(textureFilePath))
+                {
+                    tempImage = new Bitmap(bmpOnDisk);
+                }
+                currentLoadMaterial.DiffuseTextureMap = new Bitmap(tempImage);
             }
-            currentLoadMaterial.DiffuseTextureMap = new Bitmap(tempImage);
+            else
+            {
+                throw new InvalidObjMtlFileException(string.Format(
+                "{0}: Texture file {1} could not be found.", mtlParser.GetFilePositionStr(), Path.GetFullPath(textureFilePath)));
+            }
+                
         }
     }
 }

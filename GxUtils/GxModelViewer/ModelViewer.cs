@@ -2109,13 +2109,17 @@ namespace GxModelViewer
                 {
                     if (entry != null)
                     {
+                        // Iterate through every material
                         foreach (GcmfMaterial material in entry.ModelObject.Materials)
                         {
-
-                            if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
+                            // Materials with index 0xFFFF have no associated texture
+                            if (material.TextureIdx != 0xFFFF)
                             {
-                                Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
-                                tpl[material.TextureIdx].usedByModels.Add(entry);
+                                if (tpl[material.TextureIdx].usedByModels == null || !(tpl[material.TextureIdx].usedByModels.Contains(entry)))
+                                {
+                                    Console.WriteLine("Added model " + entry.Name + " to textureUsed list for texture " + material.TextureIdx);
+                                    tpl[material.TextureIdx].usedByModels.Add(entry);
+                                }
                             }
                         }
                     }
