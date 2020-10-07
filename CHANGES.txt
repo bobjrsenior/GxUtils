@@ -26,6 +26,11 @@
 * Added ability to duplicate models.
 * Added a color selector for the texture viewer's background
 * Added an option to toggle between hexadecimal and decimal numbers for material and texture indices
+* Added the option to regenerate mipmaps for one or all textures in the texture list context menu
+* Added the option to change the format of a texture in the texture list context menu
+* Added a command line option to remove unused textures: -removeUnusedTextures
+* Added the command line options -mergeGmaTPl, -fixScrollingTextures, -fixTransparentMeshes
+* Added a command line option to remove unused textures: -removeUnusedTextures
 * Fixed exception that might occur when renaming models in the GMA
 * Fixed material indices not being properly preserved when multiple meshes are selected with differing indices
 * Fixed issue where right-clicking a node doesn't select the node right-clicked on
@@ -41,6 +46,16 @@
 * Fixed a crash that could occur when a mesh was given an invalid material index
 * Fixed a crash that could occur when an OBJ was imported with no map_Kd element in the MTL.
 * Fixed a typo in the command line arguments (fxero instead of fzero)
+* Fixed issue where merging GMA/TPLs would not mark the GMA and TPL as modified
+* Fixed issue where aterial flag changes did not trigger the viewer to refresh and display the changes
+* Fixed vague errors that could occur when a face is untextured, or when a texture file has an invalid path
+* Fixed issue where removing unused textures could take a long time
+* Fixed issue where bulk importing textures could take a long time
+* Fixed issue where Blender's default OBJ elements would throw warnings	
+* Fixed issue where deleting a model in a GMA would not mark the GMA as dirty
+* Fixed vague errors that could occur when a face is untextured, or when a texture file has an invalid path
+* Fixed issue where removing unused textures could take a long time
+* Fixed issue where bulk importing textures could take a long time
 * Changed default material flags to 0x07D4 instead of 0x0000.
 * Changed references to materials and texture IDs such that they are universally referenced to in terms of hexadecimal.
 * Changed the labelling of the mipmap count such that it starts from 1 universally.
