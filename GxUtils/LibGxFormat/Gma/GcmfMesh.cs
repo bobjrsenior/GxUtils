@@ -133,6 +133,9 @@ namespace LibGxFormat.Gma
             Obj1StripsCcw = new GcmfTriangleStripGroup(mesh);
 
             RecalculateBoundingSphere();
+
+            Unk10 = (ushort)(Math.Round((float)0xFF * mesh.Material.Transparency));
+
         }
 
         /// <summary>

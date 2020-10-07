@@ -460,13 +460,15 @@ namespace LibGxFormat.ModelLoader
                         case "map_Kd":
                             ParseMtlDiffuseTextureMapDeclaration();
                             break;
+                        case "d":
+                            ParseMtlTransparencyDeclaration();
+                            break;
                         case "Ka":
                         case "Kd":
                         case "Ks":
                         case "Ke":
                         case "Ni":
                         case "Ns":
-                        case "d":
                         case "illum":
                             break;
                         default:
@@ -576,6 +578,22 @@ namespace LibGxFormat.ModelLoader
                 "{0}: Texture file {1} could not be found.", mtlParser.GetFilePositionStr(), Path.GetFullPath(textureFilePath)));
             }
                 
+        }
+
+        /// <summary>
+        /// Parse a transparency declaration in a .MTL file (a line of the kind "d 0.50000").
+        /// </summary
+        private void ParseMtlTransparencyDeclaration()
+        {
+            // Check that a material declaration was started
+            if (currentLoadMaterial == null)
+            {
+                throw new InvalidObjMtlFileException(string.Format(
+                    "{0}: Transparency declaration before starting a material.", mtlParser.GetFilePositionStr()));
+            }
+
+            float transparencyValue = float.Parse(mtlParser.ReadRestOfLine().Trim());
+            currentLoadMaterial.Transparency = transparencyValue;
         }
     }
 }

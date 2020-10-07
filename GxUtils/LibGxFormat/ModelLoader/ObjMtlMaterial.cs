@@ -19,10 +19,18 @@ namespace LibGxFormat.ModelLoader
             set;
         }
 
+        /// <summary>Floating point value to store dissolve transparency</summary>
+        public float Transparency
+        {
+            get;
+            set;
+        }
+
         /// <summary>Create a new material with no properties associated.</summary>
         public ObjMtlMaterial()
         {
             this.DiffuseTextureMap = null;
+            this.Transparency = 1.0f;
         }
     }
 }
