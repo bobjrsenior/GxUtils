@@ -511,6 +511,7 @@ namespace LibGxFormat.ModelLoader
                     "{0}: Duplicate material name '{1}'.", mtlParser.GetFilePositionStr(), materialName));
             }
             materials.Add(materialName, currentLoadMaterial);
+            materials[materialName].Unshaded = materialName.Contains("[UNSHADED]");
         }
 
         /// <summary>

@@ -135,7 +135,10 @@ namespace LibGxFormat.Gma
             RecalculateBoundingSphere();
 
             Unk10 = (ushort)(Math.Round((float)0xFF * mesh.Material.Transparency));
-
+            if (mesh.Material.Unshaded)
+            {
+                RenderFlags |= (RenderFlag)0x1;
+            }
         }
 
         /// <summary>

@@ -26,11 +26,18 @@ namespace LibGxFormat.ModelLoader
             set;
         }
 
+        public bool Unshaded
+        {
+            get;
+            set;
+        }
+
         /// <summary>Create a new material with no properties associated.</summary>
         public ObjMtlMaterial()
         {
             this.DiffuseTextureMap = null;
             this.Transparency = 1.0f;
+            this.Unshaded = false;
         }
     }
 }
