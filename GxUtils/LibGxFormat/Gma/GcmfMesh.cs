@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LibGxFormat.Gma
 {
@@ -126,7 +127,7 @@ namespace LibGxFormat.Gma
             Obj2StripsCw = new GcmfTriangleStripGroup();
         }
 
-        public GcmfMesh(ObjMtlMesh mesh, Dictionary<ObjMtlMaterial, int> modelMaterialMapping)
+        public GcmfMesh(ObjMtlMesh mesh, Dictionary<ObjMtlMaterial, int> modelMaterialMapping, string presetFolder)
             : this()
         {
             PrimaryMaterialIdx = Convert.ToUInt16(modelMaterialMapping[mesh.Material]);
@@ -135,9 +136,107 @@ namespace LibGxFormat.Gma
             RecalculateBoundingSphere();
 
             Unk10 = (ushort)(Math.Round((float)0xFF * mesh.Material.Transparency));
-            if (mesh.Material.Unshaded)
+            if (Unk10 != 0xFF) Layer = MeshLayer.Layer2;
+
+            if (mesh.Material.Unshaded) RenderFlags |= (RenderFlag)0x1;
+
+            Match meshPreset = Regex.Match(mesh.Material.Name, @"(?<=MESH_)[^\]]*");
+
+            if (presetFolder != null && meshPreset.Success)
             {
-                RenderFlags |= (RenderFlag)0x1;
+
+                    string[] lines = System.IO.File.ReadAllLines(String.Format("{0}\\{1}.txt", presetFolder, meshPreset.Value));
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        string[] line = lines[i].Split();
+                        if (line.Length == 2)
+                        {
+                            switch (line[0])
+                            {
+                                case "RENDER_FLAGS":
+                                    RenderFlags = (GcmfMesh.RenderFlag)Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "LAYER":
+                                    Layer = (GcmfMesh.MeshLayer)Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_4":
+                                    Unk4 = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_8":
+                                    Unk8 = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_C":
+                                    UnkC = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_10":
+                                    Unk10 = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_14":
+                                    Unk14 = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_16":
+                                    PrimaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_18":
+                                    SecondaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_1A":
+                                    TertiaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_ONE":
+                                    TransformMatrixSpecificIdxsObj1[0] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_TWO":
+                                    TransformMatrixSpecificIdxsObj1[1] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_THREE":
+                                    TransformMatrixSpecificIdxsObj1[2] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_FOUR":
+                                    TransformMatrixSpecificIdxsObj1[3] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_FIVE":
+                                    TransformMatrixSpecificIdxsObj1[4] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_SIXE":
+                                    TransformMatrixSpecificIdxsObj1[5] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_SEVEN":
+                                    TransformMatrixSpecificIdxsObj1[6] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_EIGHT":
+                                    TransformMatrixSpecificIdxsObj1[7] = Convert.ToByte(line[1]);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_X":
+                                    BoundingSphereCenter = new OpenTK.Vector3(Convert.ToSingle(line[1]), BoundingSphereCenter.Y, BoundingSphereCenter.Z);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_Y":
+                                    BoundingSphereCenter = new OpenTK.Vector3(BoundingSphereCenter.X, Convert.ToSingle(line[1]), BoundingSphereCenter.Z);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_Z":
+                                    BoundingSphereCenter = new OpenTK.Vector3(BoundingSphereCenter.X, BoundingSphereCenter.Y, Convert.ToSingle(line[1]));
+                                    break;
+                                case "UNKNOWN_3C":
+                                    Unk3C = Convert.ToSingle(line[1]);
+                                    break;
+                                case "UNKNOWN_40":
+                                    Unk40 = Convert.ToUInt32(line[1], 16);
+                                    break;
+
+                                default:
+                                    throw new InvalidOperationException(String.Format("Mesh preset {0} contains an invalid entry.", meshPreset.Value));
+                            }
+
+                        calculatedUsedMaterialCount = Convert.ToByte(((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
+                    }
+                        else
+                        {
+                            throw new InvalidOperationException(String.Format("Mesh preset {0} is not valid.", meshPreset.Value));
+                        }
+                    }
             }
         }
 

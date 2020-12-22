@@ -36,6 +36,7 @@ namespace GxModelViewer
         private const string FIX_TRANSPARENCY = "-fixTransparentMeshes";
         private const string SET_ALL_MIPMAPS = "-setAllMipmaps";
         private const string REMOVE_UNUSED_TEXTURES = "-removeUnusedTextures";
+        private const string PRESET_FOLDER_FLAG = "-setPresetFolder";
 
         // Interactive Mode Only
         private const string QUIT_FLAG = "-quit";
@@ -443,6 +444,27 @@ namespace GxModelViewer
                         }
                         break;
 
+                    case PRESET_FOLDER_FLAG:
+                        if (i < flags.Length - 1)
+                        {
+                            bool exists = Directory.Exists(flags[i + 1]);
+                            if (exists)
+                            {
+                                modelViewer.presetFolder = flags[i + 1];
+                                WriteCommandSuccess(flag);
+                            }
+                            else
+                            {
+                                WriteCommandError(flag, "Directory does not exist->" + flags[i+1]);
+                            }
+
+                            i++;
+                        }
+                        else
+                        {
+                            WriteCommandError(flag, "Not enough args for command");
+                        }
+                        break;
                     default:
                         WriteCommandError(flag, "Unknown command");
                         break;
@@ -496,6 +518,7 @@ namespace GxModelViewer
             Console.WriteLine("\t-fixTransparentMeshes\t\tSets transparency on all models with 'transparency100%' or 'transparent100%'");
             Console.WriteLine("\t\t\t\t\tin their name, or any variant in steps of 25% (0%, 25%, 50%, 75%, 100%)");
             Console.WriteLine("\t-removeUnusedTextures\t\tRemoves textures that are not used by any materials.");
+            Console.WriteLine("\t-setPresetFolder\t\tSets the folder to look for preset files in.");
 
         }
 

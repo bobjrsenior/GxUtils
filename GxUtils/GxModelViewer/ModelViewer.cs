@@ -117,6 +117,8 @@ namespace GxModelViewer
         /// <summary> Whether or not to render values in the UI as hexadecimal. </summary>
         bool hexadecimalNumbers = true;
 
+        public string presetFolder = String.Format(@"{0}\\Presets", Directory.GetCurrentDirectory());
+
         public ModelViewer()
         {
             InitializeComponent();
@@ -1164,7 +1166,7 @@ namespace GxModelViewer
 
             Dictionary<Bitmap, int> textureIndexMapping;
             tpl = new Tpl(model, GetSelectedMipmap(), GetNumMipmaps(), out textureIndexMapping);
-            gma = new Gma(model, textureIndexMapping);
+            gma = new Gma(model, textureIndexMapping, presetFolder);
 
             // Set TPL / GMA as changed
             haveUnsavedGmaChanges = true;

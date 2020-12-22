@@ -110,7 +110,7 @@ namespace LibGxFormat.Gma
         /// </summary>
         /// <param name="modelObject">The object from which to create the Gcmf object.</param>
         /// <param name="textureIndexMapping">Correspondence between the textures defined in the model materials and .TPL texture indices.</param>
-        public Gcmf(ObjMtlObject modelObject, Dictionary<Bitmap, int> modelTextureMapping)
+        public Gcmf(ObjMtlObject modelObject, Dictionary<Bitmap, int> modelTextureMapping, string presetFolder=null)
             : this()
         {
             Dictionary<ObjMtlMaterial, int> modelMaterialMapping = new Dictionary<ObjMtlMaterial, int>();
@@ -120,7 +120,7 @@ namespace LibGxFormat.Gma
                 if (!modelMaterialMapping.ContainsKey(mat))
                 {
                     modelMaterialMapping.Add(mat, Materials.Count);
-                    Materials.Add(new GcmfMaterial(mat, modelTextureMapping));
+                    Materials.Add(new GcmfMaterial(mat, modelTextureMapping, presetFolder));
                 }
 
                 
@@ -128,7 +128,7 @@ namespace LibGxFormat.Gma
 
             foreach (ObjMtlMesh mesh in modelObject.Meshes)
             {
-                Meshes.Add(new GcmfMesh(mesh, modelMaterialMapping));
+                Meshes.Add(new GcmfMesh(mesh, modelMaterialMapping, presetFolder));
             }
 
             UpdateBoundingSphere();

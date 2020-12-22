@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace LibGxFormat.Gma
 {
@@ -42,7 +43,7 @@ namespace LibGxFormat.Gma
             Unk10 = 0x00000030;
         }
 
-        public GcmfMaterial(ObjMtlMaterial mtl, Dictionary<Bitmap, int> modelTextureMapping)
+        public GcmfMaterial(ObjMtlMaterial mtl, Dictionary<Bitmap, int> modelTextureMapping, string presetFolder)
             : this()
         {
             Flags = 0x7D4; // TODOXXX
@@ -51,6 +52,48 @@ namespace LibGxFormat.Gma
                 if (!BitmapComparision.ContainsBitmap(modelTextureMapping, mtl.DiffuseTextureMap))
                     throw new InvalidOperationException("Diffuse texture map not found in modelTextureMapping.");
                 TextureIdx = Convert.ToUInt16(BitmapComparision.GetKeyFromBitmap(modelTextureMapping, mtl.DiffuseTextureMap));
+            }
+
+            Match materialPreset = Regex.Match(mtl.Name, @"(?<=MAT_)[^\]]*");
+
+            if (presetFolder != null && materialPreset.Success)
+            {
+                    string[] lines = System.IO.File.ReadAllLines(String.Format("{0}\\{1}.txt", presetFolder, materialPreset.Value));
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        string[] line = lines[i].Split();
+                        if (line.Length == 2)
+                        {
+                            switch (line[0])
+                            {
+                                case "FLAGS":
+                                    Flags = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "TEXTURE_INDEX":
+                                    TextureIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_6":
+                                    Unk6 = Convert.ToByte(line[1], 16);
+                                    break;
+                                case "ANISOTROPY":
+                                    AnisotropyLevel = Convert.ToByte(line[1], 16);
+                                    break;
+                                case "UNKNOWN_C":
+                                    UnkC = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_10":
+                                    Unk10 = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                default:
+                                    throw new InvalidOperationException(String.Format("Material preset {0} contains an invalid entry.", materialPreset.Value));
+                            }
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException(String.Format("Material preset {0} is not valid.", materialPreset.Value));
+                        }
+                    }
             }
         }
 

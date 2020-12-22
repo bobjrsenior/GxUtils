@@ -30,7 +30,7 @@ namespace LibGxFormat.Gma
         /// </summary>
         /// <param name="model">The model to load the .GMA file from.</param>
         /// <param name="textureIndexMapping">Correspondence between the textures defined in the model materials and .TPL texture indices.</param>
-        public Gma(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping)
+        public Gma(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping, string presetFolder)
             : this()
         {
             if (model.Objects.ContainsKey("") && model.Objects[""].Meshes.SelectMany(m => m.Faces).Any())
@@ -38,7 +38,7 @@ namespace LibGxFormat.Gma
 
             foreach (KeyValuePair<string, ObjMtlObject> objectEntry in model.Objects)
             {
-                Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping);
+                Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping, presetFolder);
                 this.Add(new GmaEntry(objectEntry.Key, modelObject));
             }
         }

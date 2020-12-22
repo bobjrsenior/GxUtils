@@ -512,6 +512,7 @@ namespace LibGxFormat.ModelLoader
             }
             materials.Add(materialName, currentLoadMaterial);
             materials[materialName].Unshaded = materialName.Contains("[UNSHADED]");
+            materials[materialName].Name = materialName;
         }
 
         /// <summary>
