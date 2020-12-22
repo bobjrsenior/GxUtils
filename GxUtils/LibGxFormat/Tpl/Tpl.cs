@@ -7,6 +7,7 @@ using LibGxTexture;
 using LibGxFormat.ModelLoader;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 
 namespace LibGxFormat.Tpl
@@ -47,7 +48,38 @@ namespace LibGxFormat.Tpl
                 if (mat.DiffuseTextureMap != null && !textureIndexMappingInt.ContainsKey(mat.DiffuseTextureMap))
                 {
                     int textureIndex = Count;
-                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, numMipmaps, mat.DiffuseTextureMap);
+
+                    Match materialPreset = Regex.Match(mat.Name, @"(?<=TEX_)[^\]]*");
+                    GxTextureFormat format = GxTextureFormat.CMPR;
+
+                    if (materialPreset.Success)
+                    {
+                        switch (materialPreset.Value)
+                        {
+                            case "RGB5A3":
+                                format = GxTextureFormat.RGB5A3;
+                                break;
+                            case "RGB565":
+                                format = GxTextureFormat.RGB565;
+                                break;
+                            case "RGBA8":
+                                format = GxTextureFormat.RGBA8;
+                                break;
+                            case "I4":
+                                format = GxTextureFormat.I4;
+                                break;
+                            case "I8":
+                                format = GxTextureFormat.I8;
+                                break;
+                            case "IA4":
+                                format = GxTextureFormat.IA4;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    TplTexture texture = new TplTexture(format, intFormat, numMipmaps, mat.DiffuseTextureMap);
                     Add(texture);
                     textureIndexMappingInt.Add(mat.DiffuseTextureMap, textureIndex);
                 }

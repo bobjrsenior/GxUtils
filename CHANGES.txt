@@ -31,6 +31,8 @@
 * Added a command line option to remove unused textures: -removeUnusedTextures
 * Added the command line options -mergeGmaTPl, -fixScrollingTextures, -fixTransparentMeshes
 * Added a command line option to remove unused textures: -removeUnusedTextures
+* Added support for mesh and material flag preset declaration. To declare a mesh preset, the tag `[MESH_NAME]` must be in the name of the material, where 'NAME' is the name of an exported mesh flag file in the presets folder. By default, the Presets folder is in the same directory as the GxModelViewer.exe file. This can be changed using the command-line option `-setPresetFolder`.  In this case, the mesh flags in the file `Presets/NAME.txt` will be applied to the mesh containing the material. To declare a material preset, the process is the same, but the tag format is `[MAT_NAME]`. 
+* Added support for texture format declaration. To change the format of a texture for a particualar material, a tag of the format `[TEX_TYPE]` must be in the name of the material. 'TYPE' should be replaced with the desired texture format. Valid format values are CMPR, RGB5A3, RGB565, RGBA8, I4, I8, and IA4. Invalid values will default to CMPR.
 * Fixed exception that might occur when renaming models in the GMA
 * Fixed material indices not being properly preserved when multiple meshes are selected with differing indices
 * Fixed issue where right-clicking a node doesn't select the node right-clicked on
