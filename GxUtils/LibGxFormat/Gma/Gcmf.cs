@@ -7,6 +7,7 @@ using LibGxFormat.ModelRenderer;
 using MiscUtil.IO;
 using LibGxFormat.ModelLoader;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace LibGxFormat.Gma
 {
@@ -120,10 +121,27 @@ namespace LibGxFormat.Gma
                 if (!modelMaterialMapping.ContainsKey(mat))
                 {
                     modelMaterialMapping.Add(mat, Materials.Count);
-                    Materials.Add(new GcmfMaterial(mat, modelTextureMapping, presetFolder));
+
+                    GcmfMaterial NewMaterial = new GcmfMaterial(mat, modelTextureMapping, presetFolder);
+                 
+                    Match flagPreset = Regex.Match(mat.Name, @"(?<=MATFLAG_)[^\]]*");
+
+                    if (flagPreset.Success)
+                    {
+                        switch (flagPreset.Value)
+                        {
+                            case "SCROLL":
+                                NewMaterial.Flags |= 0x20000;
+                                break;
+       
+                            default:
+                                break;
+                        }
+                    }
+
+                    Materials.Add(NewMaterial);
                 }
 
-                
             }
 
             foreach (ObjMtlMesh mesh in modelObject.Meshes)
