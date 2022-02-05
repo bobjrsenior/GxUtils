@@ -584,34 +584,54 @@ namespace GxModelViewer
             return true;
         }
 
-        private void UpdateModelTree()
+        private void UpdateModelTree(bool recreate=true)
         {
-            treeModel.Nodes.Clear();
-            if (gma != null)
+            if (recreate)
             {
-                for (int i = 0; i < gma.Count; i++)
+                treeModel.Nodes.Clear();
+                if (gma != null)
                 {
-                    // Add entry corresponding to the whole model
-                    TreeNode modelItem = new TreeNode((gma[i] != null) ? gma[i].Name : "Unnamed");
-                    modelItem.Tag = new ModelMeshReference(i, -1);
-                    modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
-                    modelItem.ContextMenuStrip = gmaContextMenuStrip;
-                    treeModel.Nodes.Add(modelItem);
-
-                    // Add display list entries for the meshes within the model
-                    if (gma[i] != null)
+                    for (int i = 0; i < gma.Count; i++)
                     {
-                        Gcmf model = gma[i].ModelObject;
-                        for (int j = 0; j < model.Meshes.Count; j++)
+                        // Add entry corresponding to the whole model
+                        TreeNode modelItem = new TreeNode((gma[i] != null) ? gma[i].Name : "Unnamed");
+                        modelItem.Tag = new ModelMeshReference(i, -1);
+                        modelItem.ForeColor = (gma[i] != null) ? Color.DarkGreen : Color.Red;
+                        modelItem.ContextMenuStrip = gmaContextMenuStrip;
+                        treeModel.Nodes.Add(modelItem);
+
+                        // Add display list entries for the meshes within the model
+                        if (gma[i] != null)
                         {
-                            int layerNo = (model.Meshes[j].Layer == GcmfMesh.MeshLayer.Layer1) ? 1 : 2;
-                            TreeNode meshItem = new TreeNode(string.Format("[Layer {0}] Mesh {1}", layerNo, j));
-                            meshItem.Tag = new ModelMeshReference(i, j);
-                            meshItem.ContextMenuStrip = meshMenuStrip;
-                            modelItem.Nodes.Add(meshItem);
+                            Gcmf model = gma[i].ModelObject;
+                            for (int j = 0; j < model.Meshes.Count; j++)
+                            {
+                                int layerNo = (model.Meshes[j].Layer == GcmfMesh.MeshLayer.Layer1) ? 1 : 2;
+                                TreeNode meshItem = new TreeNode(string.Format("[Layer {0}] Mesh {1}", layerNo, j));
+                                meshItem.Tag = new ModelMeshReference(i, j);
+                                meshItem.ContextMenuStrip = meshMenuStrip;
+                                modelItem.Nodes.Add(meshItem);
+                            }
                         }
+                        treeModel.SetCheckState(modelItem, CheckState.Checked);
                     }
-                    treeModel.SetCheckState(modelItem, CheckState.Checked);
+                }
+            }
+            else
+            {
+                foreach (TreeNode modelNode in treeModel.Nodes)
+                {
+                    foreach (TreeNode node in modelNode.Nodes)
+                    {
+                        ModelMeshReference nodeRef = (ModelMeshReference)node.Tag;
+                        int meshId = nodeRef.MeshIdx;
+                        int modelId = nodeRef.ModelIdx;
+
+                        int layerNo = (gma[modelId].ModelObject.Meshes[meshId].Layer == GcmfMesh.MeshLayer.Layer1 ? 1 : 2);
+
+                        node.Name = string.Format("[Layer {0}] Mesh {1}", layerNo, meshId);
+                        node.Text = node.Name;
+                    }
                 }
             }
         }
@@ -1665,11 +1685,11 @@ namespace GxModelViewer
                 {
                     case DialogResult.OK:
                         UpdateModelDisplay();
-                        UpdateModelTree();
+                        UpdateModelTree(recreate:false);
                         break;
                     case DialogResult.Yes:
                         UpdateModelDisplay();
-                        UpdateModelTree();
+                        UpdateModelTree(recreate:false);
                         reloadOnNextRedraw = true;
                         glControlModel.Invalidate();
                         break;
