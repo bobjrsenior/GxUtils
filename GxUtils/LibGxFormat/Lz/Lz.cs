@@ -281,29 +281,43 @@ namespace LibGxFormat.Lz
 
     public static class Lz
     {
-        public static void Unpack(Stream inputStream, Stream outputStream, GxGame game)
+        public static void Unpack(Stream inputStream, Stream outputStream)
         {
             if (inputStream == null)
                 throw new ArgumentNullException("inputStream");
             if (outputStream == null)
                 throw new ArgumentNullException("outputStream");
-            if (!Enum.IsDefined(typeof(GxGame), game))
-                throw new ArgumentOutOfRangeException("game");
 
             EndianBinaryReader inputBinaryStream = new EndianBinaryReader(EndianBitConverter.Little, inputStream);
 
             // Read file header
             int headerSizeField = inputBinaryStream.ReadInt32();
             int uncompressedSize = inputBinaryStream.ReadInt32();
-
             int compressedSize = headerSizeField;
-            if (game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX)
-                compressedSize -= 8; // SMB counts the 8 bytes of header in the compressed size field
 
-            // Check that the size of the input matches the expected value
-            if (compressedSize + 8 != inputStream.Length)
+            // We can reason about which size the file is knowing the following:
+            // (A) the size in the file's header and the files's length are equal OR
+            // (B) the size in the file's header is 8 bytes less than and the files's length
+            int fileLength = (int)inputBinaryStream.BaseStream.Length;
+            // If size in file matches the size in header, we subtract 8 bytes from the header size.
+            // This is because these games count the header size in the length.
+            bool isMatchingExact = headerSizeField == fileLength;
+            // ... and if it isn't, it should be exactly 8 bytes less.
+            // If it isn't, we may be dealing with a different kind of file.
+            bool isMatchingMinus8 = headerSizeField == fileLength - 8;
+
+            // This does that precise check.
+            // Condition (A): we need to subtract 8 from the size.
+            if (isMatchingExact)
             {
-                throw new InvalidLzFileException("Invalid .lz file, inputSize does not match actual input size.");
+                compressedSize -= 8;
+            }
+            // Condition (B): no need to change size.
+            // Sanity check: if neither is true, we are not dealing with a supported file.
+            else if (!isMatchingMinus8)
+            {
+                var errorMessage = "Invalid LZ file. File size and headerSizeField do not match known cases.";
+                throw new InvalidLzFileException(errorMessage);
             }
 
             // Read and uncompress LZSS data
@@ -315,9 +329,15 @@ namespace LibGxFormat.Lz
             {
                 throw new InvalidLzFileException("Invalid .lz file, outputSize does not match actual output size.");
             }
-            
+
             // Write uncompressed data to output stream
             outputStream.Write(uncompressedData, 0, uncompressedData.Length);
+        }
+
+        [Obsolete]
+        public static void Unpack(Stream inputStream, Stream outputStream, GxGame game)
+        {
+            Unpack(inputStream, outputStream);
         }
 
         public static void Pack(Stream inputStream, Stream outputStream, GxGame game)
@@ -337,8 +357,26 @@ namespace LibGxFormat.Lz
 
             // Write file header and data
             int headerSizeField = compressedData.Length;
-            if (game == GxGame.SuperMonkeyBall || game == GxGame.SuperMonkeyBallDX)
-                headerSizeField += 8; // SMB counts the 8 bytes of header in the compressed size field
+            switch (game)
+            {
+                case GxGame.SuperMonkeyBall:
+                case GxGame.SuperMonkeyBallDX:
+                case GxGame.FZeroAX:
+                    {
+                        // These games count the 8 bytes of header in the compressed size field
+                        headerSizeField += 8;
+                    }
+                    break;
+
+                case GxGame.FZeroGX:
+                    {
+                        // These games store the compressed size exactly
+                    }
+                    break;
+
+                default:
+                    throw new NotImplementedException($"Packing for game '{game}' is not implemented!");
+            }
 
             EndianBinaryWriter outputBinaryWriter = new EndianBinaryWriter(EndianBitConverter.Little, outputStream);
             outputBinaryWriter.Write(headerSizeField);

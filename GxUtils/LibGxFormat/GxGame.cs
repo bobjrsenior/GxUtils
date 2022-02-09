@@ -17,7 +17,10 @@ namespace LibGxFormat
         SuperMonkeyBallDX,
         /// <summary>F-Zero GX</summary>
         [Description("F-Zero GX")]
-        FZeroGX
+        FZeroGX,
+        /// <summary>F-Zero AX</summary>
+        [Description("F-Zero AX")]
+        FZeroAX,
     }
 }
 
