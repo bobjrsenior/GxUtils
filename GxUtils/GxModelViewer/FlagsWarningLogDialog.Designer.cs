@@ -1,6 +1,6 @@
 ﻿namespace GxModelViewer
 {
-    partial class ObjMtlWarningLogDialog
+    partial class FlagsWarningLogDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -31,8 +31,6 @@
             this.lblInfoText = new System.Windows.Forms.Label();
             this.tbWarningList = new System.Windows.Forms.TextBox();
             this.btnYes = new System.Windows.Forms.Button();
-            this.btnNo = new System.Windows.Forms.Button();
-            this.lblUserAction = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flpButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
@@ -44,9 +42,9 @@
             this.lblInfoText.AutoSize = true;
             this.lblInfoText.Location = new System.Drawing.Point(3, 0);
             this.lblInfoText.Name = "lblInfoText";
-            this.lblInfoText.Size = new System.Drawing.Size(331, 13);
+            this.lblInfoText.Size = new System.Drawing.Size(284, 13);
             this.lblInfoText.TabIndex = 0;
-            this.lblInfoText.Text = "The following warnings were issued while loading the .OBJ/.MTL file:";
+            this.lblInfoText.Text = "The following warnings were issued while loading the flags:";
             // 
             // tbWarningList
             // 
@@ -64,31 +62,12 @@
             // btnYes
             // 
             this.btnYes.DialogResult = System.Windows.Forms.DialogResult.Yes;
-            this.btnYes.Location = new System.Drawing.Point(455, 3);
+            this.btnYes.Location = new System.Drawing.Point(536, 3);
             this.btnYes.Name = "btnYes";
             this.btnYes.Size = new System.Drawing.Size(75, 23);
             this.btnYes.TabIndex = 2;
-            this.btnYes.Text = "Yes";
+            this.btnYes.Text = "Ok";
             this.btnYes.UseVisualStyleBackColor = true;
-            // 
-            // btnNo
-            // 
-            this.btnNo.DialogResult = System.Windows.Forms.DialogResult.No;
-            this.btnNo.Location = new System.Drawing.Point(536, 3);
-            this.btnNo.Name = "btnNo";
-            this.btnNo.Size = new System.Drawing.Size(75, 23);
-            this.btnNo.TabIndex = 3;
-            this.btnNo.Text = "No";
-            this.btnNo.UseVisualStyleBackColor = true;
-            // 
-            // lblUserAction
-            // 
-            this.lblUserAction.AutoSize = true;
-            this.lblUserAction.Location = new System.Drawing.Point(3, 217);
-            this.lblUserAction.Name = "lblUserAction";
-            this.lblUserAction.Size = new System.Drawing.Size(275, 13);
-            this.lblUserAction.TabIndex = 4;
-            this.lblUserAction.Text = "This is not necessarily an error. Do you wish to continue?";
             // 
             // tableLayoutPanel1
             // 
@@ -100,7 +79,6 @@
             this.tableLayoutPanel1.Controls.Add(this.flpButtons, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.lblInfoText, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tbWarningList, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lblUserAction, 0, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
@@ -116,7 +94,6 @@
             this.flpButtons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.flpButtons.Controls.Add(this.btnNo);
             this.flpButtons.Controls.Add(this.btnYes);
             this.flpButtons.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flpButtons.Location = new System.Drawing.Point(3, 240);
@@ -124,16 +101,15 @@
             this.flpButtons.Size = new System.Drawing.Size(614, 29);
             this.flpButtons.TabIndex = 6;
             // 
-            // ObjMtlWarningLogDialog
+            // FlagsWarningLogDialog
             // 
             this.AcceptButton = this.btnYes;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnNo;
             this.ClientSize = new System.Drawing.Size(644, 296);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ObjMtlWarningLogDialog";
-            this.Text = ".OBJ/.MTL Warnings";
+            this.Name = "FlagsWarningLogDialog";
+            this.Text = "Flag Load Warnings";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flpButtons.ResumeLayout(false);
@@ -146,8 +122,6 @@
         private System.Windows.Forms.Label lblInfoText;
         private System.Windows.Forms.TextBox tbWarningList;
         private System.Windows.Forms.Button btnYes;
-        private System.Windows.Forms.Button btnNo;
-        private System.Windows.Forms.Label lblUserAction;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flpButtons;
     }

@@ -118,7 +118,7 @@ namespace LibGxFormat.ModelRenderer
         public void BindMaterial(int materialId)
         {
             if (!materialIdToMtlMaterialIdx.ContainsKey(materialId))
-                throw new InvalidOperationException("Attempting to bind a material not previously defined.");
+                throw new InvalidOperationException("Attempted to bind to material " + materialId + ", which was not found in a mesh's material list.");
 
             objStream.WriteLine(string.Format(CultureInfo.InvariantCulture, "usemtl gxmat{0}", materialIdToMtlMaterialIdx[materialId]));
         }

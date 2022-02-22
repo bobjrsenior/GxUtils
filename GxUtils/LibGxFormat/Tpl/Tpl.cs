@@ -7,6 +7,8 @@ using LibGxTexture;
 using LibGxFormat.ModelLoader;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text.RegularExpressions;
+
 
 namespace LibGxFormat.Tpl
 {
@@ -46,7 +48,38 @@ namespace LibGxFormat.Tpl
                 if (mat.DiffuseTextureMap != null && !textureIndexMappingInt.ContainsKey(mat.DiffuseTextureMap))
                 {
                     int textureIndex = Count;
-                    TplTexture texture = new TplTexture(GxTextureFormat.CMPR, intFormat, numMipmaps, mat.DiffuseTextureMap);
+
+                    Match materialPreset = Regex.Match(mat.Name, @"(?<=TEX_)[^\]]*");
+                    GxTextureFormat format = GxTextureFormat.CMPR;
+
+                    if (materialPreset.Success)
+                    {
+                        switch (materialPreset.Value)
+                        {
+                            case "RGB5A3":
+                                format = GxTextureFormat.RGB5A3;
+                                break;
+                            case "RGB565":
+                                format = GxTextureFormat.RGB565;
+                                break;
+                            case "RGBA8":
+                                format = GxTextureFormat.RGBA8;
+                                break;
+                            case "I4":
+                                format = GxTextureFormat.I4;
+                                break;
+                            case "I8":
+                                format = GxTextureFormat.I8;
+                                break;
+                            case "IA4":
+                                format = GxTextureFormat.IA4;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    TplTexture texture = new TplTexture(format, intFormat, numMipmaps, mat.DiffuseTextureMap);
                     Add(texture);
                     textureIndexMappingInt.Add(mat.DiffuseTextureMap, textureIndex);
                 }
@@ -62,7 +95,7 @@ namespace LibGxFormat.Tpl
 		/// </summary>
 		/// <param name="inputStream">The input stream that contains the .TPL file.</param>
 		/// <param name="game">The game from which the .TPL file is.</param>
-		public Tpl(Stream inputStream, GxGame game)
+		public Tpl(Stream inputStream, GxGame game, GeneratedTextureHeader? newTextureHeader = null)
 		{
 			if (inputStream == null)
 				throw new ArgumentNullException("inputStream");
@@ -71,11 +104,11 @@ namespace LibGxFormat.Tpl
 
             if(game == GxGame.SuperMonkeyBallDX)
             {
-                Load(new EndianBinaryReader(EndianBitConverter.Little, inputStream), game);
+                Load(new EndianBinaryReader(EndianBitConverter.Little, inputStream), game, newTextureHeader);
             }
             else
             {
-                Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game);
+                Load(new EndianBinaryReader(EndianBitConverter.Big, inputStream), game, newTextureHeader);
             }
 			
 		}
@@ -92,33 +125,60 @@ namespace LibGxFormat.Tpl
             public int LevelCount;
         }
 
-        private void Load(EndianBinaryReader input, GxGame game)
+        private void Load(EndianBinaryReader input, GxGame game, GeneratedTextureHeader? newHeader)
         {
             if(game == GxGame.SuperMonkeyBallDX)
             {
                 input.ReadInt32();
             }
-            int numTextures = input.ReadInt32();
+
+            // If there is a header, use the value from that header, otherwise use the generated header value
+            int numTextures = (newHeader == null) ? (numTextures = input.ReadInt32()) : (numTextures = newHeader.Value.textureCount);
 
             // Load texture definition headers
             TextureHeader[] texHdr = new TextureHeader[numTextures];
-            for (int i = 0; i < numTextures; i++)
+            if (newHeader == null) 
             {
-                texHdr[i].FormatRaw = input.ReadInt32();
-                texHdr[i].Offset = input.ReadInt32();
-                texHdr[i].Width = Convert.ToInt32(input.ReadUInt16());
-                texHdr[i].Height = Convert.ToInt32(input.ReadUInt16());
-                texHdr[i].LevelCount = Convert.ToInt32(input.ReadUInt16());
-                UInt16 check = input.ReadUInt16();
-                if ((game != GxGame.SuperMonkeyBallDX && check != 0x1234) || (game == GxGame.SuperMonkeyBallDX && check != 0x3412))
-                    throw new InvalidTplFileException("Invalid texture header (Field @0x0E).");
+                for (int i = 0; i < numTextures; i++)
+                {
+                    texHdr[i].FormatRaw = input.ReadInt32();
+                    texHdr[i].Offset = input.ReadInt32();
+                    texHdr[i].Width = Convert.ToInt32(input.ReadUInt16());
+                    texHdr[i].Height = Convert.ToInt32(input.ReadUInt16());
+                    texHdr[i].LevelCount = Convert.ToInt32(input.ReadUInt16());
+                    UInt16 check = input.ReadUInt16();
+                    if ((game != GxGame.SuperMonkeyBallDX && check != 0x1234) || (game == GxGame.SuperMonkeyBallDX && check != 0x3412))
+                        throw new InvalidTplFileException("Invalid texture header (Field @0x0E).");
+                }
+            }
+
+            // Creates a new texture header from provided texture header characteristics
+            else
+            {
+                // The length of the header after this operation's completion
+                int initialOffset = newHeader.Value.textureCount * 16;
+                // Size of a texture based on how many bytes per pixel
+                int texSize = newHeader.Value.textureHeight * newHeader.Value.textureWidth * GxTextureFormatCodec.GetCodec(newHeader.Value.textureFormat).BitsPerPixel/8;
+                // Maximum possible offset for the TPL
+                int maxOffset = initialOffset + (texSize) * numTextures;
+                // Iteration variable for referencing the index of the texture header
+                int iteration;     
+                for (int iterateOffset = initialOffset; iterateOffset < maxOffset; iterateOffset += texSize)
+                {
+                    iteration = (iterateOffset - initialOffset) / texSize;
+                    texHdr[iteration].FormatRaw = (int)newHeader.Value.textureFormat;
+                    texHdr[iteration].Width = newHeader.Value.textureWidth;
+                    texHdr[iteration].Height = newHeader.Value.textureHeight;                   
+                    texHdr[iteration].Offset = iterateOffset;
+                    texHdr[iteration].LevelCount = newHeader.Value.textureMipmapCount;
+                }
             }
 
             // Load textures data
             for (int i = 0; i < numTextures; i++)
             {
                 TplTexture tex = new TplTexture();
-
+                
                 if (texHdr[i].Offset != 0 && texHdr[i].Width != 0 &&
                     texHdr[i].Height != 0 && texHdr[i].LevelCount != 0) // Texture with defined levels
                 {
@@ -160,7 +220,15 @@ namespace LibGxFormat.Tpl
                     }
                     else
                     {
-                        input.BaseStream.Position = texHdr[i].Offset;
+                        if (newHeader == null)
+                        {
+                            input.BaseStream.Position = texHdr[i].Offset;
+                        }
+
+                        else
+                        {
+                            input.BaseStream.Position = texHdr[i].Offset - (newHeader.Value.textureCount * 16);
+                        }
                     }
                     tex.LoadTextureData(input, game, (GxTextureFormat)texHdr[i].FormatRaw,
                             texHdr[i].Width, texHdr[i].Height, texHdr[i].LevelCount);
@@ -249,7 +317,7 @@ namespace LibGxFormat.Tpl
 		/// </summary>
 		/// <param name="outputStream">The input stream to which to write the .TPL file.</param>
 		/// <param name="game">The game from which the .TPL file is.</param>
-		public void Save(Stream outputStream, GxGame game)
+		public void Save(Stream outputStream, GxGame game, bool noHeader = false)
 		{
 			if (outputStream == null)
 				throw new ArgumentNullException("outputStream");
@@ -258,16 +326,16 @@ namespace LibGxFormat.Tpl
             
             if(game == GxGame.SuperMonkeyBallDX)
             {
-                Save(new EndianBinaryWriter(EndianBitConverter.Little, outputStream), game);
+                Save(new EndianBinaryWriter(EndianBitConverter.Little, outputStream), game, noHeader);
             }
             else
             {
-                Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game);
+                Save(new EndianBinaryWriter(EndianBitConverter.Big, outputStream), game, noHeader);
             }
 			
 		}
 
-        private void Save(EndianBinaryWriter output, GxGame game)
+        private void Save(EndianBinaryWriter output, GxGame game, bool noHeader = false)
         {
             if (game == GxGame.SuperMonkeyBallDX)
             {
@@ -277,47 +345,49 @@ namespace LibGxFormat.Tpl
                 output.Write('L');
             }
 
-            output.Write(Count);
-
-            // Write texture definition headers
-            int beginDataOffset = SizeOfHeaderEntries(game);
-            int currentDataOffset = beginDataOffset;
-
-            foreach (TplTexture tex in Items)
+            if (!noHeader)
             {
-                if (tex.LevelCount != 0)
+                output.Write(Count);
+                // Write texture definition headers
+                int beginDataOffset = SizeOfHeaderEntries(game);
+                int currentDataOffset = beginDataOffset;
+
+                foreach (TplTexture tex in Items)
                 {
-                    output.Write((int)tex.Format);
-                    output.Write(currentDataOffset);
-                    output.Write(Convert.ToUInt16(tex.WidthOfLevel(0)));
-                    output.Write(Convert.ToUInt16(tex.HeightOfLevel(0)));
-                    output.Write(Convert.ToUInt16(tex.LevelCount));
-                }
-                else
-                {
-                    output.Write(tex.FormatRaw);
-                    output.Write((int)0);
-                    output.Write((ushort)0);
-                    output.Write((ushort)0);
-                    output.Write((ushort)0);
-                }
-                if(game == GxGame.SuperMonkeyBallDX)
-                {
-                    output.Write((ushort)0x3412);
-                }
-                else
-                {
-                    output.Write((ushort)0x1234);
+                    if (tex.LevelCount != 0)
+                    {
+                        output.Write((int)tex.Format);
+                        output.Write(currentDataOffset);
+                        output.Write(Convert.ToUInt16(tex.WidthOfLevel(0)));
+                        output.Write(Convert.ToUInt16(tex.HeightOfLevel(0)));
+                        output.Write(Convert.ToUInt16(tex.LevelCount));
+                    }
+                    else
+                    {
+                        output.Write(tex.FormatRaw);
+                        output.Write((int)0);
+                        output.Write((ushort)0);
+                        output.Write((ushort)0);
+                        output.Write((ushort)0);
+                    }
+                    if (game == GxGame.SuperMonkeyBallDX)
+                    {
+                        output.Write((ushort)0x3412);
+                    }
+                    else
+                    {
+                        output.Write((ushort)0x1234);
+                    }
+
+                    currentDataOffset += tex.SizeOfTextureData(game);
+
                 }
 
-                currentDataOffset += tex.SizeOfTextureData(game);
-                
+                int paddingAmount = beginDataOffset - Convert.ToInt32(output.BaseStream.Position);
+                for (int i = 0; i < paddingAmount; i++)
+                    output.Write((byte)i); // Curious padding pattern of 0x00, 0x01, 0x02, 0x03, ...
+
             }
-
-            int paddingAmount = beginDataOffset - Convert.ToInt32(output.BaseStream.Position);
-            for (int i = 0; i < paddingAmount; i++)
-                output.Write((byte)i); // Curious padding pattern of 0x00, 0x01, 0x02, 0x03, ...
-
             // Write texture data
             foreach (TplTexture tex in Items)
             {

@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LibGxFormat.Gma
 {
@@ -54,7 +55,6 @@ namespace LibGxFormat.Gma
             UnkFlag40 = 0x40,
             UnkFlag200 = 0x200,
         }
-
         public MeshLayer Layer { get; set; }
 
         public RenderFlag RenderFlags { get; set; }
@@ -70,14 +70,31 @@ namespace LibGxFormat.Gma
         public Vector3 BoundingSphereCenter { get; set; }
         public float Unk3C { get; set; }
         public uint Unk40 { get; set; }
+    
 
-        public GcmfTriangleStripGroup Obj1StripsCcw { get; private set; }
-        public GcmfTriangleStripGroup Obj1StripsCw { get; private set; }
+        private byte _calculatedUsedMaterialCount;
+        public byte calculatedUsedMaterialCount
+        {
+            get
+            {
+                return Convert.ToByte(((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
+            }
+            set
+            {
+                _calculatedUsedMaterialCount = value;
+            }
+
+        }
+
+        public GcmfTriangleStripGroup Obj1StripsCcw { get; set; }
+        public GcmfTriangleStripGroup Obj1StripsCw { get; set; }
 
         public byte[] TransformMatrixSpecificIdxsObj2 { get; set; }
 
-        public GcmfTriangleStripGroup Obj2StripsCcw { get; private set; }
-        public GcmfTriangleStripGroup Obj2StripsCw { get; private set; }
+        public GcmfTriangleStripGroup Obj2StripsCcw { get; set; }
+        public GcmfTriangleStripGroup Obj2StripsCw { get; set; }
 
         public GcmfMesh()
         {
@@ -110,13 +127,117 @@ namespace LibGxFormat.Gma
             Obj2StripsCw = new GcmfTriangleStripGroup();
         }
 
-        public GcmfMesh(ObjMtlMesh mesh, Dictionary<ObjMtlMaterial, int> modelMaterialMapping)
+        public GcmfMesh(ObjMtlMesh mesh, Dictionary<ObjMtlMaterial, int> modelMaterialMapping, string presetFolder)
             : this()
         {
             PrimaryMaterialIdx = Convert.ToUInt16(modelMaterialMapping[mesh.Material]);
             Obj1StripsCcw = new GcmfTriangleStripGroup(mesh);
 
             RecalculateBoundingSphere();
+
+            Unk10 = (ushort)(Math.Round((float)0xFF * mesh.Material.Transparency));
+            if (Unk10 != 0xFF) Layer = MeshLayer.Layer2;
+
+            if (mesh.Material.Unshaded) RenderFlags |= (RenderFlag)0x1;
+
+            Match meshPreset = Regex.Match(mesh.Material.Name, @"(?<=MESH_)[^\]]*");
+
+            if (presetFolder != null && meshPreset.Success)
+            {
+
+                    string[] lines = System.IO.File.ReadAllLines(String.Format("{0}\\{1}.txt", presetFolder, meshPreset.Value));
+
+                    for (int i = 0; i < lines.Length; i++)
+                    {
+                        string[] line = lines[i].Split();
+                        if (line.Length == 2)
+                        {
+                            switch (line[0])
+                            {
+                                case "RENDER_FLAGS":
+                                    RenderFlags = (GcmfMesh.RenderFlag)Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "LAYER":
+                                    Layer = (GcmfMesh.MeshLayer)Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_4":
+                                    Unk4 = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_8":
+                                    Unk8 = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_C":
+                                    UnkC = Convert.ToUInt32(line[1], 16);
+                                    break;
+                                case "UNKNOWN_10":
+                                    Unk10 = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_14":
+                                    Unk14 = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_16":
+                                    PrimaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_18":
+                                    SecondaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "UNKNOWN_1A":
+                                    TertiaryMaterialIdx = Convert.ToUInt16(line[1], 16);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_ONE":
+                                    TransformMatrixSpecificIdxsObj1[0] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_TWO":
+                                    TransformMatrixSpecificIdxsObj1[1] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_THREE":
+                                    TransformMatrixSpecificIdxsObj1[2] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_FOUR":
+                                    TransformMatrixSpecificIdxsObj1[3] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_FIVE":
+                                    TransformMatrixSpecificIdxsObj1[4] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_SIXE":
+                                    TransformMatrixSpecificIdxsObj1[5] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_SEVEN":
+                                    TransformMatrixSpecificIdxsObj1[6] = Convert.ToByte(line[1]);
+                                    break;
+                                case "MATRIX_SPECIFIC_IDS_EIGHT":
+                                    TransformMatrixSpecificIdxsObj1[7] = Convert.ToByte(line[1]);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_X":
+                                    BoundingSphereCenter = new OpenTK.Vector3(Convert.ToSingle(line[1]), BoundingSphereCenter.Y, BoundingSphereCenter.Z);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_Y":
+                                    BoundingSphereCenter = new OpenTK.Vector3(BoundingSphereCenter.X, Convert.ToSingle(line[1]), BoundingSphereCenter.Z);
+                                    break;
+                                case "BOUNDING_SPHERE_CENTER_Z":
+                                    BoundingSphereCenter = new OpenTK.Vector3(BoundingSphereCenter.X, BoundingSphereCenter.Y, Convert.ToSingle(line[1]));
+                                    break;
+                                case "UNKNOWN_3C":
+                                    Unk3C = Convert.ToSingle(line[1]);
+                                    break;
+                                case "UNKNOWN_40":
+                                    Unk40 = Convert.ToUInt32(line[1], 16);
+                                    break;
+
+                                default:
+                                    throw new InvalidOperationException(String.Format("Mesh preset {0} contains an invalid entry.", meshPreset.Value));
+                            }
+
+                        calculatedUsedMaterialCount = Convert.ToByte(((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
+                        ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
+                    }
+                        else
+                        {
+                            throw new InvalidOperationException(String.Format("Mesh preset {0} is not valid.", meshPreset.Value));
+                        }
+                    }
+            }
         }
 
         /// <summary>
@@ -275,10 +396,6 @@ namespace LibGxFormat.Gma
             output.Write(Unk8);
             output.Write(UnkC);
             output.Write(Unk10);
-            byte calculatedUsedMaterialCount = (byte)(
-                ((PrimaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
-                ((SecondaryMaterialIdx != ushort.MaxValue) ? 1 : 0) +
-                ((TertiaryMaterialIdx != ushort.MaxValue) ? 1 : 0));
             output.Write(calculatedUsedMaterialCount);
             output.Write(sectionFlags);
             output.Write(Unk14);
@@ -375,7 +492,7 @@ namespace LibGxFormat.Gma
             }
 
             if (Obj2StripsCcw.Count != 0 || Obj2StripsCw.Count != 0)
-            {        
+            {
                 size += 0x20; // Extra header
                 size += Obj2StripsCcw.SizeOfNonIndexed(is16Bit);
                 size += Obj2StripsCw.SizeOfNonIndexed(is16Bit);
@@ -466,13 +583,54 @@ namespace LibGxFormat.Gma
 
         private void RecalculateBoundingSphere()
         {
-            IEnumerable<GcmfTriangleStrip> allTriangleStrip = 
+            IEnumerable<GcmfTriangleStrip> allTriangleStrip =
                 Obj1StripsCcw.Union(Obj1StripsCw).Union(Obj2StripsCcw).Union(Obj2StripsCw);
             IEnumerable<GcmfVertex> allVertices = allTriangleStrip.SelectMany(ts => ts);
             IEnumerable<Vector3> allVertexPositions = allVertices.Select(v => v.Position);
 
             BoundingSphere boundingSphere = BoundingSphere.FromPoints(allVertexPositions);
             BoundingSphereCenter = boundingSphere.Center;
+        }
+        
+        public List<object> getFlagList()
+        {
+            return new List<object>
+            {
+                Layer,
+                RenderFlags,
+                Unk4,
+                Unk8,
+                UnkC,
+                Unk10,
+                Unk14,
+                //PrimaryMaterialIdx,
+                //SecondaryMaterialIdx,
+                //TertiaryMaterialIdx,
+                //TransformMatrixSpecificIdxsObj1,
+                //BoundingSphereCenter,
+                Unk3C,
+                Unk40,
+                //calculatedUsedMaterialCount
+            };
+        }
+
+        public void setFlagList(List<object> flagList)
+        {
+            Layer = (MeshLayer)flagList[0];
+            RenderFlags = (RenderFlag)flagList[1];
+            Unk4 = (uint)flagList[2];
+            Unk8 = (uint)flagList[3];
+            UnkC = (uint)flagList[4];
+            Unk10 = (ushort)flagList[5];
+            Unk14 = (ushort)flagList[6];
+            //PrimaryMaterialIdx = (ushort)flagList[7];
+            //SecondaryMaterialIdx = (ushort)flagList[8];
+            //TertiaryMaterialIdx = (ushort)flagList[9];
+            //TransformMatrixSpecificIdxsObj1 = (byte[])flagList[10];
+            //BoundingSphereCenter = (Vector3)flagList[11];
+            Unk3C = (float)flagList[7];
+            Unk40 = (uint)flagList[8];
+            //calculatedUsedMaterialCount = (byte)flagList[9];
         }
     };
 }

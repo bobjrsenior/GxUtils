@@ -14,6 +14,9 @@ namespace LibGxFormat
         NearestNeighbor,
         /// <summary>Uses C# default interpolation</summary>
         [Description("C# Default")]
-        CSharpDefault
+        CSharpDefault,
+        /// <summary>Uses the C# high-quality bilinear interploation algorithm</summary>
+        [Description("High Quality Bicubic")]
+        HighQualityBicubic,
     }
 }

@@ -1,0 +1,66 @@
+* Added support for batch import and export of texture mipmap levels.
+* Added ability to modify primary, secondary, and tertiary material indices. Modifying material indices also updates the material count accordingly.
+* Added option to reload the model viewer after updating material flags.
+* Added the ability to define a new material from given flags.
+* Added the ability to define a new material from a given texture file.
+* Added the ability to import new textures into the TPL.
+* Added an icon for the program
+* Added the ability to rename meshes in the GMA.
+* Added the ability to change the order of meshes in the GMA.
+* Added support for high quality bicubic mipmap interpolation, and made it the default interpolation mode.
+* Added support for bicubic interpolation to the command line, and made it the default mode of interpolation.
+* Added the ability to export individual or selected groups of models in a GMA/TPL as seperate GMA/TPL files.
+* Added the abiltiy to merge two GMA/TPL files by importing the respective textures and models to the currently loaded GMA/TPL.
+* Added ability to delete textures from the TPL, and automatically adjust material texture indices to account for the deletion.
+* Added ability to clean up a TPL by deleting all unused textures.
+* Added display for which models are using which textures in the texture viewer.
+* Added ability to define secondary texture coordinates of a mesh from the primary texture coordinates of the mesh.
+* Added ability to scale the primary and secondary texture coordinates of a mesh.
+* Added option to reload the model viewer to model viewer context menu (updates model with any visible changes)
+* Added support for headerless TPLs by generation of a header on file load. Auto-derives header parameters from the file name and size, in the case of Super Monkey Ball 1 and 2.
+* Added ability to save a TPL without a header by holding shift while saving the TPL file.
+* Added ability to translate/change the position of models, as well as translate multiple models at the same time.
+* Added ability to copy and paste flags of selected meshes. (experimental)
+* Added ability to import more than one texture at a time
+* Added ability to remove materials.
+* Added ability to duplicate models.
+* Added a color selector for the texture viewer's background
+* Added an option to toggle between hexadecimal and decimal numbers for material and texture indices
+* Added the option to regenerate mipmaps for one or all textures in the texture list context menu
+* Added the option to change the format of a texture in the texture list context menu
+* Added a command line option to remove unused textures: -removeUnusedTextures
+* Added the command line options -mergeGmaTPl, -fixScrollingTextures, -fixTransparentMeshes
+* Added a command line option to remove unused textures: -removeUnusedTextures
+* Added support for mesh and material flag preset declaration. To declare a mesh preset, the tag `[MESH_NAME]` must be in the name of the material, where 'NAME' is the name of an exported mesh flag file in the presets folder. By default, the Presets folder is in the same directory as the GxModelViewer.exe file. This can be changed using the command-line option `-setPresetFolder`.  In this case, the mesh flags in the file `Presets/NAME.txt` will be applied to the mesh containing the material. To declare a material preset, the process is the same, but the tag format is `[MAT_NAME]`. 
+* Added support for texture format declaration. To change the format of a texture for a particualar material, a tag of the format `[TEX_TYPE]` must be in the name of the material. 'TYPE' should be replaced with the desired texture format. Valid format values are CMPR, RGB5A3, RGB565, RGBA8, I4, I8, and IA4. Invalid values will default to CMPR.
+* Added support for material flag declaration. To declare a material flag, the tag `[MATFLAG_NAME]` must be in the name of the material, where 'NAME' is the name of the material flag to use. Presently, `SCROLL` is the only valid material flag, which applies the flags for texture scroll to the given material. This is for compatiblity with BlendToSMBStage2, more flags may be added in the future, and any more complex mesh/material flags can be assigned using the mesh/material preset feature.
+* Fixed exception that might occur when renaming models in the GMA
+* Fixed material indices not being properly preserved when multiple meshes are selected with differing indices
+* Fixed issue where right-clicking a node doesn't select the node right-clicked on
+* Fixed issue where the option to rename would appear when a node is clicked
+* Fixed exception when trying to delete unused textures in GMAs with null entries
+* Fixed issue where texture coordinate scaling may not apply. Primary and secondary texture scaling now are applied to objects defined in clockwise order, instead of just those in counterclockwise order.
+* Fixed tab order of mesh flag editor
+* Fixed tab order of model flag editor.
+* Fixed typos in the UI.
+* Fixed issue where overwriting a GMA or TPL would not update the file size correctly
+* Fixed issue where loading a new GMA or TPL while one was already loaded could lead to error messages
+* Fixed issue where pressing the Enter or Esc key did not confirm nor close all dialog boxes properly
+* Fixed a crash that could occur when a mesh was given an invalid material index
+* Fixed a crash that could occur when an OBJ was imported with no map_Kd element in the MTL.
+* Fixed a typo in the command line arguments (fxero instead of fzero)
+* Fixed issue where merging GMA/TPLs would not mark the GMA and TPL as modified
+* Fixed issue where aterial flag changes did not trigger the viewer to refresh and display the changes
+* Fixed vague errors that could occur when a face is untextured, or when a texture file has an invalid path
+* Fixed issue where removing unused textures could take a long time
+* Fixed issue where bulk importing textures could take a long time
+* Fixed issue where Blender's default OBJ elements would throw warnings	
+* Fixed issue where deleting a model in a GMA would not mark the GMA as dirty
+* Fixed vague errors that could occur when a face is untextured, or when a texture file has an invalid path
+* Fixed issue where removing unused textures could take a long time
+* Fixed issue where bulk importing textures could take a long time
+* Fixed an issue where the tree for models/materials would collapse after closing the mesh flag editor dialog box.
+* Changed default material flags to 0x07D4 instead of 0x0000.
+* Changed references to materials and texture IDs such that they are universally referenced to in terms of hexadecimal.
+* Changed the labelling of the mipmap count such that it starts from 1 universally.
+* Changed all references to 'texture coordinate' to 'UV map' for clarification. 

@@ -8,3 +8,7 @@ I would like to thank the following people for making this program possible:
 Additional credits for the old C++ version of the model viewer:
 - The creators of the Qt library, for making it easy to create cross-platform GUI applications.
 - The creators of libQGLViewer, for making possible to someone like me to create a model viewer.
+
+Thanks to toothy7564#2339 for information about primary/secondary/tertiary material indices.
+Thanks to Yoshi#5675 for their implementation of the -setMaterialFlags and -setMeshFlags command line arguments.
+Thanks to Paniel#1403 for their implementation of the -mergeGmaTpl, -fixScrollingTextures and -fixTransparencyMeshes command line arguments.

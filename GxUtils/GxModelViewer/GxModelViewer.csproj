@@ -5,12 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{407E4B49-2E78-498D-95D0-176B476C5B68}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GxModelViewer</RootNamespace>
     <AssemblyName>GxModelViewer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,6 +37,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>0_1.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -63,8 +67,19 @@
       <Project>{ab5aa934-9b3f-4509-82a2-b79be5929aa5}</Project>
       <Name>LibGxTexture</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TreeViewMS\TreeViewMS.csproj">
+      <Project>{7c2cce0a-a288-4869-a7b7-cc0d18af3b8c}</Project>
+      <Name>TreeViewMS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddTextureHeader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddTextureHeader.Designer.cs">
+      <DependentUpon>AddTextureHeader.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlagHelper.cs" />
     <Compile Include="MaterialFlagEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +97,12 @@
     </Compile>
     <Compile Include="ModelFlagEditor.Designer.cs">
       <DependentUpon>ModelFlagEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FlagsWarningLogDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FlagsWarningLogDialog.Designer.cs">
+      <DependentUpon>FlagsWarningLogDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="ObjMtlWarningLogDialog.cs">
       <SubType>Form</SubType>
@@ -103,8 +124,17 @@
       <DependentUpon>ModelViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="TranslateMesh.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TranslateMesh.Designer.cs">
+      <DependentUpon>TranslateMesh.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddTextureHeader.resx">
+      <DependentUpon>AddTextureHeader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GxTextureFormatPickerDialog.resx">
       <DependentUpon>GxTextureFormatPickerDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -120,9 +150,21 @@
     <EmbeddedResource Include="ModelViewer.resx">
       <DependentUpon>ModelViewer.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FlagsWarningLogDialog.resx">
+      <DependentUpon>FlagsWarningLogDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ObjMtlWarningLogDialog.resx">
       <DependentUpon>ObjMtlWarningLogDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TranslateMesh.resx">
+      <DependentUpon>TranslateMesh.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="0_1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace LibGxFormat.Gma
 {
@@ -29,7 +30,7 @@ namespace LibGxFormat.Gma
         /// </summary>
         /// <param name="model">The model to load the .GMA file from.</param>
         /// <param name="textureIndexMapping">Correspondence between the textures defined in the model materials and .TPL texture indices.</param>
-        public Gma(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping)
+        public Gma(ObjMtlModel model, Dictionary<Bitmap, int> textureIndexMapping, string presetFolder)
             : this()
         {
             if (model.Objects.ContainsKey("") && model.Objects[""].Meshes.SelectMany(m => m.Faces).Any())
@@ -37,7 +38,7 @@ namespace LibGxFormat.Gma
 
             foreach (KeyValuePair<string, ObjMtlObject> objectEntry in model.Objects)
             {
-                Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping);
+                Gcmf modelObject = new Gcmf(objectEntry.Value, textureIndexMapping, presetFolder);
                 this.Add(new GmaEntry(objectEntry.Key, modelObject));
             }
         }
@@ -278,10 +279,20 @@ namespace LibGxFormat.Gma
             {
                 if (entry != null)
                 {
-                    // Define a new object for the model
-                    renderer.BeginObject(entry.Name);
-                    entry.ModelObject.Render(renderer);
-                    renderer.EndObject();
+                    try
+                    {
+                        // Define a new object for the model
+                        renderer.BeginObject(entry.Name);
+                        entry.ModelObject.Render(renderer);
+                        renderer.EndObject();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(("Model " + entry.Name + " failed to render for the following reason:\n\n" + e.Message), "Render Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        renderer.EndObject();
+                        renderer.EndObject();
+                        renderer.ClearMaterialList();
+                    }
                 }
                 else
                 {

@@ -47,5 +47,6 @@ namespace LibGxFormat.Gma
             Name = name;
             ModelObject = modelObject;
         }
+
     };
 }
