@@ -594,8 +594,14 @@ namespace LibGxFormat.ModelLoader
                     "{0}: Transparency declaration before starting a material.", mtlParser.GetFilePositionStr()));
             }
 
-            float transparencyValue = float.Parse(mtlParser.ReadRestOfLine().Trim());
+            float transparencyValue;
+            if (!float.TryParse(mtlParser.ReadRestOfLine().Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out transparencyValue))
+            {
+                throw new InvalidObjMtlFileException(string.Format(
+                    "{0}: Expected floating point number.", objParser.GetFilePositionStr()));
+            }
             currentLoadMaterial.Transparency = transparencyValue;
+
         }
     }
 }
