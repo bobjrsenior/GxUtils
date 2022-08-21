@@ -192,6 +192,25 @@ namespace LibGxFormat.Gma
                     ReadNumberOfType(input, is16Bit));
             }
 
+            if ((vertexFlags & (uint)GcmfVertexFlags.NormalBitangentTangent) != 0)
+            {
+                // TODO should this use readNum or is it always a float?
+                Normal2 = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
+
+                Bitangent = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
+
+                Tangent = new Vector3(
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false),
+                    ReadNumberOfType(input, false));
+            }
+
             if ((vertexFlags & (uint)GcmfVertexFlags.Color) != 0)
             {
                 VertexColor = UnpackColorRGBA(input.ReadUInt32());
@@ -218,24 +237,7 @@ namespace LibGxFormat.Gma
                     ReadNumberOfType(input, is16Bit));
             }
 
-            if ((vertexFlags & (uint)GcmfVertexFlags.NormalBitangentTangent) != 0)
-            {
-                // TODO should this use readNum or is it always a float?
-                Normal2 = new Vector3(
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false));
-
-                Bitangent = new Vector3(
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false));
-
-                Tangent = new Vector3(
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false),
-                    ReadNumberOfType(input, false));
-            }
+            
         }
 
         private static int SizeOfNumberOfType(bool is16Bit)
