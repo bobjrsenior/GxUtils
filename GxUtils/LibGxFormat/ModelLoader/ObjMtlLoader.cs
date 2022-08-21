@@ -598,7 +598,7 @@ namespace LibGxFormat.ModelLoader
             if (!float.TryParse(mtlParser.ReadRestOfLine().Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out transparencyValue))
             {
                 throw new InvalidObjMtlFileException(string.Format(
-                    "{0}: Expected floating point number.", objParser.GetFilePositionStr()));
+                    "{0}: Expected floating point number.", mtlParser.GetFilePositionStr()));
             }
             currentLoadMaterial.Transparency = transparencyValue;
 
