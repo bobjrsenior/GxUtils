@@ -156,19 +156,27 @@ namespace LibGxTexture
             int alphaCount = 0;
             for(int i = 3; i < 64; i+=4)
             {
-
+                // How invisible should a pixel be to consider it and Alpha pixel?
+                // A lower value means less visible (values are 0-256)
                 if (tile[i] <= 128)
                 {
                     ++alphaCount;
                 }
             }
 
-            if(alphaCount >= 4)
+            // We have to choose between a 4 color palette or a 3 color palette
+            // with Alpha as the 4th color. This determines how many Alpha pixels
+            // are enough to switch to the 3 color+Alpha palette
+            if(alphaCount >= 3)
             {
                 alphaBlock = true;
             }
             else if(alphaCount > 0)
             {
+                // If there are alpha pixels in a non-alpha block
+                // Change the alpha pixels to a color in the palette
+
+                // Gets a template color to set the Alpha pixels to
                 for (int i = 0; i < 64; i += 4)
                 {
                     if (tile[i + 3] == 255)
@@ -181,6 +189,7 @@ namespace LibGxTexture
                     }
                 }
 
+                // Go through and set the alpha pixels to the template color
                 for (int i = 0; i < 64; i += 4)
                 {
                     if (tile[i + 3] <= 128)

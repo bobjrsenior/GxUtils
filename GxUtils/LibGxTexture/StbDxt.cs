@@ -162,8 +162,8 @@ namespace LibGxTexture
 
         static void EvalAlphaColors(byte[] color, int colorIdx, ushort c0, ushort c1)
         {
-            From16Bit(color, colorIdx + 4, c1);
-            From16Bit(color, colorIdx + 0, c0);
+            From16Bit(color, colorIdx + 0, c1);
+            From16Bit(color, colorIdx + 4, c0);
             Lerp12RGB(color, colorIdx + 8, color, colorIdx + 0, color, colorIdx + 4);
             From16Bit(color, colorIdx + 12, c0);
         }
@@ -524,6 +524,15 @@ namespace LibGxTexture
 
             pmax16 = As16Bit(block[maxp + 0], block[maxp + 1], block[maxp + 2]);
             pmin16 = As16Bit(block[minp + 0], block[minp + 1], block[minp + 2]);
+
+            // Make sure the min color is not bigger than the max color
+            // Can happen if they are close together in value
+            if (pmin16 > pmax16)
+            {
+                ushort temp = pmin16;
+                pmin16 = pmax16;
+                pmax16 = temp;
+            }
         }
 
         static int sclamp(float y, int p0, int p1)
@@ -621,6 +630,8 @@ namespace LibGxTexture
         // Color block compression
         static void CompressColorBlock(byte[] dest, int destIdx, byte[] block, int blockIdx, CompressionMode mode)
         {
+            // The mask here is the palette index for each pixel in the block
+            // Each one is a 2 bit index since there are 4 colors in the palette
             uint mask;
             int i;
             bool dither;
@@ -683,6 +694,8 @@ namespace LibGxTexture
                 mask ^= 0x55555555;
             }
 
+            // An non-alpha palette is signified by the first palette entry being LARGER
+            // than the second one so put the smaller palette color first
             dest[destIdx+0] = (byte) (max16);
             dest[destIdx+1] = (byte) (max16 >> 8);
             dest[destIdx+2] = (byte) (min16);
@@ -704,6 +717,8 @@ namespace LibGxTexture
             int refinecount;
             ushort max16;
             ushort min16;
+            // The mask here is the palette index for each pixel in the block
+            // Each one is a 2 bit index since there are 3 colors + alpha in the palette
             uint mask;
             byte[] color = new byte[4 * 4];
             //dither = (mode & CompressionMode.Dither) != 0;
@@ -726,21 +741,29 @@ namespace LibGxTexture
             // Go through and check for which pixels should be transparent
             for (int i = 0; i < 16; ++i)
             {
+                // In the 3 color+alpha palette, the alpha color is the 4th entry (0x3 or 11b)
+                // If we find an alpha pixel, make sure to set it's palette entry to alpha
                 if (block[(i * 4) + 3] <= 128)
                 {
-                    mask = mask ^ (((uint)0x3) << (2 * i));
+                    mask = mask | (((uint)0x3) << (2 * i));
                 }
-                else if((mask >> (30 - (2 * i)) & 0x3) == 3)
+                // Never seems to get used?
+                // Meant to redirect non-alpha pixels that were mistakenly given the alpha palette
+                // index to another palette index
+                //else if((mask >> (30 - (2 * i)) & 0x3) == 3)
+                else if (((mask >> (2 * i)) & 0x3) == ((uint)0x3))
                 {
-                    mask &= (~((uint) 1 << ((2 * i))));
-                    mask &= (~((uint) 1 << ((2 * i) + 1)));
+                    mask &= (~((uint)1 << ((2 * i))));
+                    mask &= (~((uint)1 << ((2 * i) + 1)));
                 }
             }
-
-            dest[destIdx + 2] = (byte)(min16);
-            dest[destIdx + 3] = (byte)(min16 >> 8);
-            dest[destIdx + 0] = (byte)(max16);
-            dest[destIdx + 1] = (byte)(max16 >> 8);
+            
+            // An alpha palette is signified by the first palette entry being SMALLER
+            // than the second one so put the smaller palette color first
+            dest[destIdx + 0] = (byte)(min16);
+            dest[destIdx + 1] = (byte)(min16 >> 8);
+            dest[destIdx + 2] = (byte)(max16);
+            dest[destIdx + 3] = (byte)(max16 >> 8);
             dest[destIdx + 4] = (byte)(mask);
             dest[destIdx + 5] = (byte)(mask >> 8);
             dest[destIdx + 6] = (byte)(mask >> 16);
