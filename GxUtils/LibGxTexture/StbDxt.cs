@@ -694,12 +694,18 @@ namespace LibGxTexture
                 mask ^= 0x55555555;
             }
 
+            // Write out our calculated data
+            // Since uints are stored in little endian while the game expects big endian,
+            // we write the bytes for the uint backwards
+
             // An non-alpha palette is signified by the first palette entry being LARGER
             // than the second one so put the smaller palette color first
             dest[destIdx+0] = (byte) (max16);
             dest[destIdx+1] = (byte) (max16 >> 8);
             dest[destIdx+2] = (byte) (min16);
             dest[destIdx+3] = (byte) (min16 >> 8);
+
+            // Copy in our calculated indices into the palette
             dest[destIdx+4] = (byte) (mask);
             dest[destIdx+5] = (byte) (mask >> 8);
             dest[destIdx+6] = (byte) (mask >> 16);
@@ -750,20 +756,25 @@ namespace LibGxTexture
                 // Never seems to get used?
                 // Meant to redirect non-alpha pixels that were mistakenly given the alpha palette
                 // index to another palette index
-                //else if((mask >> (30 - (2 * i)) & 0x3) == 3)
                 else if (((mask >> (2 * i)) & 0x3) == ((uint)0x3))
                 {
                     mask &= (~((uint)1 << ((2 * i))));
                     mask &= (~((uint)1 << ((2 * i) + 1)));
                 }
             }
-            
+
+            // Write out our calculated data
+            // Since uints are stored in little endian while the game expects big endian,
+            // we write the bytes for the uint backwards
+
             // An alpha palette is signified by the first palette entry being SMALLER
             // than the second one so put the smaller palette color first
             dest[destIdx + 0] = (byte)(min16);
             dest[destIdx + 1] = (byte)(min16 >> 8);
             dest[destIdx + 2] = (byte)(max16);
             dest[destIdx + 3] = (byte)(max16 >> 8);
+
+            // Copy in our calculated indices into the palette
             dest[destIdx + 4] = (byte)(mask);
             dest[destIdx + 5] = (byte)(mask >> 8);
             dest[destIdx + 6] = (byte)(mask >> 16);
