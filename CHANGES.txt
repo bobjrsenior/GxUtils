@@ -60,7 +60,9 @@
 * Fixed issue where removing unused textures could take a long time
 * Fixed issue where bulk importing textures could take a long time
 * Fixed an issue where the tree for models/materials would collapse after closing the mesh flag editor dialog box.
+* Fixed an issue with importing a CMPR textures where a pixel block with partial transparency would have no transparent pixels.
 * Changed default material flags to 0x07D4 instead of 0x0000.
 * Changed references to materials and texture IDs such that they are universally referenced to in terms of hexadecimal.
 * Changed the labelling of the mipmap count such that it starts from 1 universally.
-* Changed all references to 'texture coordinate' to 'UV map' for clarification. 
+* Changed all references to 'texture coordinate' to 'UV map' for clarification.
+* Changed so that a pixel block is considered an alpha bloack if 3 pixels are transparent instead of 4.
